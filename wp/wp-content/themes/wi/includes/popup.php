@@ -1,7 +1,8 @@
 <?php
 
-function tox_popup_custom_frontand() {
-    if (get_field('popup_-_wlacz__wylacz',wpmlID(2)) != "" && get_field('popup_-_wlacz__wylacz',wpmlID(2)) == 1 && wpmlID(2) == get_the_ID()) {
+function tox_popup_custom_frontand()
+{
+    if (get_field('popup_-_wlacz__wylacz', wpmlID(2)) != "" && get_field('popup_-_wlacz__wylacz', wpmlID(2)) == 1 && wpmlID(2) == get_the_ID()) {
         ?>
         <style>
             #wi-popup-2 {
@@ -82,13 +83,13 @@ function tox_popup_custom_frontand() {
         <?php if (!isset($_COOKIE['apflotapopup'])) { ?>
             <span id="wi-popup-2" class="<?php echo $class_popup; ?>">
                 <span class="wi-popup-2-wrap">
-                    <?php if(get_field('popup_-_link',wpmlID(2))!="") { ?><a href="<?php echo get_field('popup_-_link',wpmlID(2)); ?>" target="<?php echo get_field('popup_-_cel_odnosnik',wpmlID(2)); ?>"><?php } ?>
-                        <?php if(get_field('popup_-_grafika',wpmlID(2)) != "") { ?>
-                            <img src="<?php echo get_field('popup_-_grafika',wpmlID(2)); ?>" />
+                    <?php if (get_field('popup_-_link', wpmlID(2)) != "") { ?><a href="<?php echo get_field('popup_-_link', wpmlID(2)); ?>" target="<?php echo get_field('popup_-_cel_odnosnik', wpmlID(2)); ?>"><?php } ?>
+                        <?php if (get_field('popup_-_grafika', wpmlID(2)) != "") { ?>
+                            <img src="<?php echo get_field('popup_-_grafika', wpmlID(2)); ?>" />
                         <?php } else { ?>    
-                            <span class="wi-popup-2-wrap-content"><?php echo get_field('pop-up_-_tresc',wpmlID(2)); ?></span>
+                            <span class="wi-popup-2-wrap-content"><?php echo get_field('pop-up_-_tresc', wpmlID(2)); ?></span>
                         <?php } ?>
-                    <?php if(get_field('popup_-_link',wpmlID(2))!="") { ?></a><?php } ?>
+                    <?php if (get_field('popup_-_link', wpmlID(2)) != "") { ?></a><?php } ?>
                     <span class="wi-popup-2-close">&#10006;</span>
                 </span>
             </span>

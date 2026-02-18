@@ -1,5 +1,5 @@
-<?php // Contact form gray // ?> 
-<?php if($ceLayout == 'contact_form_gray') { ?>  
+<?php // Contact form gray //?> 
+<?php if ($ceLayout == 'contact_form_gray') { ?>  
     <div id="ceID<?php echo $ceIteration; ?>" class="ceInNumbers">
         <div id="sectionContactGormGray">
             <?php containerStart(get_sub_field('container')); ?>

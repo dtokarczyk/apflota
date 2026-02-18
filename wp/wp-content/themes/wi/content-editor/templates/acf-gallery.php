@@ -1,4 +1,4 @@
-<?php // Gallery //  ?>
+<?php // Gallery //?>
 <?php if ($ceLayout == 'gallery') { ?>
     <?php containerStart(get_sub_field('container')); ?>
         <div id="ceID<?php echo $ceIteration; ?>" class="ceGallery">

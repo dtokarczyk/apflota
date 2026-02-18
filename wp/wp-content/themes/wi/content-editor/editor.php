@@ -1,9 +1,9 @@
 <div id="contentEditor"> 
     <?php
         if (have_rows('content_editor', get_the_ID())) {
-            
+
             @include_once 'shortcode_function.php';
-            
+
             $ceIteration = 0;
             while (have_rows('content_editor', get_the_ID())) {
                 the_row();
@@ -22,6 +22,6 @@
             }
             echo '<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls"><div class="slides"></div><h3 class="title"></h3><a class="prev">‹</a><a class="next">›</a><a class="close">×</a><a class="play-pause"></a><ol class="indicator"></ol></div>';
         }
-        wp_reset_query();
+    wp_reset_query();
     ?>
 </div>

@@ -1,21 +1,24 @@
 <?php
 
 // Register image
-function ce_register_image() {
+function ce_register_image()
+{
     //add_image_size('ce_img-640x480', 640, 480, true);
     //add_image_size('ce_img-960xX', 960, 2000, false);
 }
 add_action('after_setup_theme', 'ce_register_image');
 
-// JSON layouts save 
- 
-function ce_json_save_layouts ( $path ) {
+// JSON layouts save
+
+function ce_json_save_layouts($path)
+{
     $path = get_stylesheet_directory() . '/content-editor/acf/';
     return $path;
 }
 //add_filter('acf/settings/save_json', 'ce_json_save_layouts');
 
-function ce_json_load_layouts( $paths ) {
+function ce_json_load_layouts($paths)
+{
     unset($paths[0]);
     $paths[] = get_stylesheet_directory() . '/content-editor/acf/';
     return $paths;
@@ -25,7 +28,8 @@ function ce_json_load_layouts( $paths ) {
 
 // Hidden layout
 
-function ce_hidden_layout() { ?>
+function ce_hidden_layout()
+{ ?>
     <style>
         /* Global */
         .term-php #wpcontent #edittag {
@@ -65,22 +69,28 @@ function ce_hidden_layout() { ?>
         }
         <?php
             $directory = __DIR__  . '/templates/';
-            $array = array_diff(scandir($directory), array('..', '.'));
+    $array = array_diff(scandir($directory), array('..', '.'));
 
-            foreach ($array as &$item) {
-                if(substr($item, 0, 1) != "_" && strpos($item, 'acf') !== false) {
-                    $item = str_replace("acf-", "", 
-                                str_replace("acf_", "", 
-                                    str_replace(".php", "", 
-                                        $item
-                                    )
-                                )
-                            );
-                    echo '.acf-fc-popup a[data-layout="' . $item . '"] { display: block; }';
-                }
-            }
-        ?>
+    foreach ($array as &$item) {
+        if (substr($item, 0, 1) != "_" && strpos($item, 'acf') !== false) {
+            $item = str_replace(
+                "acf-",
+                "",
+                str_replace(
+                    "acf_",
+                    "",
+                    str_replace(
+                        ".php",
+                        "",
+                        $item
+                    )
+                )
+            );
+            echo '.acf-fc-popup a[data-layout="' . $item . '"] { display: block; }';
+        }
+    }
+    ?>
     </style>
 <?php }
-add_action( 'admin_footer', 'ce_hidden_layout');
+add_action('admin_footer', 'ce_hidden_layout');
 ?>

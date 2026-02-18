@@ -1,5 +1,5 @@
-<?php // Editor gray background // ?>
-<?php if( $ceLayout == 'editor_gray_background' ) { ?>
+<?php // Editor gray background //?>
+<?php if ($ceLayout == 'editor_gray_background') { ?>
     <div class="ceGrayBackground">
         <?php containerStart(get_sub_field('container')); ?>
             <div id="ceID<?php echo $ceIteration; ?>" class="ceEditorColumn ceEditorColumn1">

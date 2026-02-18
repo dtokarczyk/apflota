@@ -39,8 +39,8 @@
 </head>
 
 <body <?php body_class(); ?> lang="<?php if (function_exists('icl_object_id')) {
-                                        echo ICL_LANGUAGE_CODE;
-                                    } ?>" path="<?php echo home_url(); ?>">
+    echo ICL_LANGUAGE_CODE;
+} ?>" path="<?php echo home_url(); ?>">
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MNW9RQCM"
@@ -48,7 +48,7 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <div id="sectionLoader"></div>
-    hello world
+
     <header>
         <div class="sectionHeaderBox displayFlex flexXbeetwen flexYcenter">
             <div class="sectionHeaderLogo displayFlex flexXstart flexYcenter">
@@ -64,7 +64,7 @@
                             'theme_location' => 'menu',
                             'items_wrap' => '%3$s',
                             'depth' => 2,
-                            'walker' => new BS3_Walker_Nav_Menu
+                            'walker' => new BS3_Walker_Nav_Menu()
                         )); ?>
                     </ul>
                     <ul class="sectionHeaderMenuUl sectionHeaderMenuUl2">
@@ -125,6 +125,8 @@
 
 
     <?php if (is_front_page() || is_home() || get_field('topbanner_-_typ') == 1) {
+    } elseif (is_post_type_archive('blog') || is_singular('blog') || is_tax('blog-category')) {
+        // Blog has its own hero in archive-blog.php / single-blog.php
     } else { ?>
         <div id="topBanner" class="<?php if (get_post_type() == 'post') { ?>topBannerOffer<?php } ?><?php if (get_post_type() == 'post' && is_single()) { ?>Single<?php } ?>">
             <div class="topBanner">

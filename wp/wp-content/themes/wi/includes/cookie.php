@@ -1,27 +1,30 @@
-<?php 
+<?php
 
 add_action('admin_menu', 'ac_cookie_menu');
-function ac_cookie_menu() {
-    add_menu_page( 
-        __( 'Cookie Settings Page', 'textdomain' ),
+function ac_cookie_menu()
+{
+    add_menu_page(
+        __('Cookie Settings Page', 'textdomain'),
         'Cookie Settings',
         'manage_options',
         'ac_custom_cookie_page',
         'ac_settings_cookie_page',
         'dashicons-star-half',
         300
-    ); 
-    add_action( 'admin_init', 'register_cookie_settings' );
+    );
+    add_action('admin_init', 'register_cookie_settings');
 }
-function register_cookie_settings() {
-	register_setting( 'ac-settings-group', 'ac_cookie_id' );
+function register_cookie_settings()
+{
+    register_setting('ac-settings-group', 'ac_cookie_id');
 }
-function ac_settings_cookie_page() {
-?>
+function ac_settings_cookie_page()
+{
+    ?>
 <div class="wrap">
 <form method="post" action="options.php">
-    <?php settings_fields( 'ac-settings-group' ); ?>
-    <?php do_settings_sections( 'ac-settings-group' ); ?>
+    <?php settings_fields('ac-settings-group'); ?>
+    <?php do_settings_sections('ac-settings-group'); ?>
     <table class="form-table">
     	<tr valign="top">
         	<th scope="row"></th>
@@ -30,15 +33,15 @@ function ac_settings_cookie_page() {
             <tr valign="top">
             <th scope="row">Select cookie page</th>
             <td>
-                <?php 
-                    $args = array(
-                       'depth'                 => -1,
-                       'selected'              => get_option('ac_cookie_id'),
-                       'echo'                  => 1,
-                       'name'                  => 'ac_cookie_id',
-                   );                   
-                    wp_dropdown_pages( $args );
-                ?>
+                <?php
+                        $args = array(
+                           'depth'                 => -1,
+                           'selected'              => get_option('ac_cookie_id'),
+                           'echo'                  => 1,
+                           'name'                  => 'ac_cookie_id',
+                       );
+    wp_dropdown_pages($args);
+    ?>
             </td>
         </tr>         
      </table> 
@@ -46,30 +49,32 @@ function ac_settings_cookie_page() {
 </form>
 
 </div>
-<?php } 
-function return_cookie_url(){
+<?php }
+function return_cookie_url()
+{
     $id = get_option('ac_cookie_id');
     $url = get_the_permalink($id);
-    if ( function_exists('icl_object_id') ) {
-        $url = get_the_permalink(icl_object_id($id,'page',false,ICL_LANGUAGE_CODE));
-    }  
+    if (function_exists('icl_object_id')) {
+        $url = get_the_permalink(icl_object_id($id, 'page', false, ICL_LANGUAGE_CODE));
+    }
     return $url;
 }
-function ac_show_cookie_bar(){
+function ac_show_cookie_bar()
+{
     ob_start();
     ?>
     <div id='ac_cookie_bar'>
         <div>
             <div>
-                <?php 
+                <?php
                     $id = get_option('ac_cookie_id');
-                    $url = get_the_permalink($id);
-                    if ( function_exists('icl_object_id') ) {
-                        $url = get_the_permalink(icl_object_id($id,'page',false,ICL_LANGUAGE_CODE));
-                    }
-                ?>
-                <div><?php echo get_field('cookies_-_info',wpmlID(2)); ?></div>
-                <div id="ac_close_cookie_bar" onclick="wi_create_cookie('wi_cookie_info','hide',100);wi_remove_cookie_bar();"><?php echo get_field('cookies_-_close',wpmlID(2)); ?></div>
+    $url = get_the_permalink($id);
+    if (function_exists('icl_object_id')) {
+        $url = get_the_permalink(icl_object_id($id, 'page', false, ICL_LANGUAGE_CODE));
+    }
+    ?>
+                <div><?php echo get_field('cookies_-_info', wpmlID(2)); ?></div>
+                <div id="ac_close_cookie_bar" onclick="wi_create_cookie('wi_cookie_info','hide',100);wi_remove_cookie_bar();"><?php echo get_field('cookies_-_close', wpmlID(2)); ?></div>
             </div>
         </div>         
     </div>
@@ -104,7 +109,8 @@ function ac_show_cookie_bar(){
     ob_end_flush();
 }
 
-function ac_cookie_add_footer_styles() {
+function ac_cookie_add_footer_styles()
+{
     ob_start();
     ?>
         <style>
@@ -176,7 +182,7 @@ function ac_cookie_add_footer_styles() {
     ob_end_flush();
 }
 
-if(!isset($_COOKIE['wi_cookie_info'])){
-    add_action( 'get_footer', 'ac_cookie_add_footer_styles' );
-    add_action( 'get_footer', 'ac_show_cookie_bar' );
+if (!isset($_COOKIE['wi_cookie_info'])) {
+    add_action('get_footer', 'ac_cookie_add_footer_styles');
+    add_action('get_footer', 'ac_show_cookie_bar');
 }

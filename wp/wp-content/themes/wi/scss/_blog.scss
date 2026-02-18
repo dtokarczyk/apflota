@@ -1,0 +1,481 @@
+// Blog styles – uses theme variables and mixins (imported in style.scss)
+
+// ========== Archive ==========
+.blog-archive {
+  padding-bottom: 4rem;
+}
+
+// Hero
+.blog-hero {
+  position: relative;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  overflow: hidden;
+}
+
+.blog-hero-bg {
+  @include position(absolute, 0, 0, 0, 0);
+  @include backgroundIMG(center, cover);
+  z-index: 0;
+}
+
+.blog-hero-overlay {
+  @include position(absolute, 0, 0, 0, 0);
+  background: rgba($colorGrayDark, 0.5);
+  z-index: 1;
+}
+
+.blog-hero-inner {
+  position: relative;
+  z-index: 2;
+  padding: 3rem 0;
+}
+
+.blog-hero-title {
+  color: #fff;
+  margin: 0 0 1rem;
+  font-size: $FontSizeH1;
+  font-weight: 700;
+  line-height: 1.2;
+  @media (max-width: 992px) {
+    font-size: $FontSizeH2;
+  }
+  @media (max-width: 768px) {
+    font-size: $FontSizeH3;
+  }
+}
+
+.blog-hero-subtitle {
+  color: #fff;
+  margin: 0;
+  font-size: $FontSize;
+  opacity: 0.95;
+  max-width: 600px;
+}
+
+// Category bar
+.blog-category-bar {
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $colorGray3;
+}
+
+.blog-category-link {
+  padding: 0.4rem 0.8rem;
+  font-size: $FontSize;
+  color: $colorGrayDark;
+  text-decoration: none;
+  border-radius: 4px;
+  @include transitionDuration(0.2s, color background-color);
+  &:hover {
+    color: $colorRed;
+  }
+}
+
+.blog-category-link-active {
+  background: $colorRed;
+  color: #fff !important;
+  &:hover {
+    color: #fff !important;
+    background: $colorRedLight;
+  }
+}
+
+// Grid
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.blog-card {
+  background: #fff;
+  border: 1px solid $colorGray3;
+  border-radius: 4px;
+  overflow: hidden;
+  @include transitionDuration(0.2s, box-shadow border-color);
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: $colorGray2;
+  }
+}
+
+.blog-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.blog-card-image {
+  aspect-ratio: 460 / 280;
+  overflow: hidden;
+  background: $colorGrayLight;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.blog-card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: $colorGray3;
+}
+
+.blog-card-body {
+  padding: 1.2rem 1.25rem;
+}
+
+.blog-card-category {
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $colorRed;
+  margin-bottom: 0.5rem;
+}
+
+.blog-card-title {
+  font-size: $FontSizeH5;
+  margin: 0 0 0.6rem;
+  line-height: 1.35;
+  font-weight: 700;
+  @include transitionDuration(0.2s, color);
+  .blog-card-link:hover & {
+    color: $colorRed;
+  }
+  @media (max-width: 768px) {
+    font-size: $FontSizeH6;
+  }
+}
+
+.blog-card-meta {
+  font-size: 1.3rem;
+  color: $colorGray;
+}
+
+.blog-card-reading-time {
+  font-style: italic;
+}
+
+.blog-no-posts {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: $colorGray;
+}
+
+// Pagination (uses existing .paginationNewBox from theme – no overrides needed)
+#blogArchive .paginationNewBox {
+  margin-top: 2rem;
+}
+
+// ========== Single ==========
+.blog-single {
+  padding-bottom: 4rem;
+}
+
+.blog-single-hero {
+  margin-bottom: 2rem;
+  overflow: hidden;
+  max-height: 500px;
+  .blog-single-hero-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.blog-single-layout {
+  gap: 2rem;
+  align-items: flex-start;
+  @media (min-width: 993px) {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+  }
+}
+
+.blog-single-main {
+  min-width: 0;
+}
+
+.blog-single-meta {
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: $colorGray;
+}
+
+.blog-single-reading-time {
+  &::after {
+    content: ' · ';
+    margin-left: 0.25rem;
+  }
+}
+
+.blog-single-category {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $colorRed;
+}
+
+.blog-single-title {
+  font-size: $FontSizeH2;
+  margin: 0 0 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  @media (max-width: 768px) {
+    font-size: $FontSizeH3;
+  }
+}
+
+.blog-single-summary {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: $colorGrayLight;
+  border-left: 4px solid $colorRed;
+  font-size: $FontSize;
+  line-height: $line-height;
+}
+
+.blog-single-date-share {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $colorGray3;
+}
+
+.blog-single-date {
+  font-size: 1.4rem;
+  color: $colorGray;
+}
+
+.blog-single-share-label {
+  margin-right: 0.75rem;
+  font-size: 1.4rem;
+  color: $colorGray;
+}
+
+.blog-single-share-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  @include transitionDuration(0.2s, opacity transform);
+  &:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.blog-single-share-fb {
+  background: #1877f2;
+}
+
+.blog-single-share-linkedin {
+  background: #0a66c2;
+}
+
+// TOC
+.blog-toc {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  background: $colorGrayLight;
+  border-radius: 4px;
+}
+
+.blog-toc-title {
+  font-size: $FontSizeH6;
+  margin: 0 0 1rem;
+  font-weight: 700;
+}
+
+.blog-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.blog-toc-item {
+  margin-bottom: 0.4rem;
+}
+
+.blog-toc-link {
+  font-size: 1.4rem;
+  color: $colorGrayDark;
+  text-decoration: none;
+  @include transitionDuration(0.2s, color);
+  &:hover {
+    color: $colorRed;
+  }
+}
+
+.blog-toc-sublist {
+  list-style: none;
+  margin: 0.5rem 0 0 1rem;
+  padding: 0;
+  border-left: 2px solid $colorGray3;
+  padding-left: 1rem;
+  .blog-toc-item {
+    margin-bottom: 0.3rem;
+  }
+  .blog-toc-link {
+    font-size: 1.3rem;
+  }
+}
+
+.blog-single-content {
+  margin-bottom: 2rem;
+  font-size: $FontSize;
+  line-height: $line-height;
+  h2, h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 2rem;
+  }
+}
+
+// Like / Dislike
+.blog-single-feedback {
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid $colorGray3;
+}
+
+.blog-single-feedback-label {
+  font-size: $FontSize;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.blog-like-btn,
+.blog-dislike-btn {
+  cursor: pointer;
+  margin-right: 0.5rem;
+  &.blog-voted {
+    cursor: default;
+    opacity: 0.7;
+  }
+}
+
+.blog-like-icon,
+.blog-dislike-icon {
+  margin-right: 0.35rem;
+}
+
+// Related
+.blog-related {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid $colorGray3;
+}
+
+.blog-related-title {
+  font-size: $FontSizeH4;
+  margin: 0 0 1.5rem;
+  font-weight: 700;
+}
+
+.blog-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.blog-related-card {
+  border: 1px solid $colorGray3;
+  border-radius: 4px;
+  overflow: hidden;
+  @include transitionDuration(0.2s, box-shadow);
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.blog-related-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.blog-related-card-image {
+  aspect-ratio: 460 / 280;
+  overflow: hidden;
+  background: $colorGrayLight;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.blog-related-card-body {
+  padding: 1rem;
+}
+
+.blog-related-card-title {
+  font-size: $FontSizeH6;
+  margin: 0;
+  line-height: 1.35;
+  font-weight: 700;
+  @include transitionDuration(0.2s, color);
+  .blog-related-card-link:hover & {
+    color: $colorRed;
+  }
+}
+
+// Sidebar sticky
+.blog-single-sidebar {
+  @media (min-width: 993px) {
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+.blog-sidebar-banner-sticky {
+  border: 1px solid $colorGray3;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.blog-sidebar-banner-link {
+  display: block;
+  text-decoration: none;
+  @include transitionDuration(0.2s, opacity);
+  &:hover {
+    opacity: 0.92;
+  }
+}

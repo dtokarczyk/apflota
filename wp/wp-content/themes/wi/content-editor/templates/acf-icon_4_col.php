@@ -1,10 +1,11 @@
-<?php // Icon 4 col // ?> 
-<?php if($ceLayout == 'icon_4_col') { ?>  
+<?php // Icon 4 col //?> 
+<?php if ($ceLayout == 'icon_4_col') { ?>  
     <?php containerStart(get_sub_field('container')); ?>
         <div id="ceID<?php echo $ceIteration; ?>" class="ceIcon4columns">
-            <?php if( have_rows("icon_4_columns") ) { ?>
+            <?php if (have_rows("icon_4_columns")) { ?>
                 <div class="ceIcon4columnsBox displayFlex flexWrap flexXstart flexYstart">
-                    <?php while( have_rows("icon_4_columns") ) { the_row(); ?>
+                    <?php while (have_rows("icon_4_columns")) {
+                        the_row(); ?>
                         <div class="ceIcon4columnsItem">
                             <div class="ceIcon4columnsIcon">
                                 <img src="<?php echo get_sub_field('icon'); ?>" />

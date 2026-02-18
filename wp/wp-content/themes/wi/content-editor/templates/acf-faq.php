@@ -1,13 +1,14 @@
-<?php // FAQ // ?> 
-<?php if($ceLayout == 'faq') { ?>  
+<?php // FAQ //?> 
+<?php if ($ceLayout == 'faq') { ?>  
     <div class="ceGrayBackground">
         <?php containerStart(get_sub_field('container')); ?>
             <div id="ceID<?php echo $ceIteration; ?>" class="ceFaq">
-                <?php if(get_sub_field('heading') != '') { ?>  
+                <?php if (get_sub_field('heading') != '') { ?>  
                     <div class="ceFaqTitle"><?php echo get_sub_field('heading'); ?></div>
                 <?php } ?>
-                <?php if( have_rows("faq") ) { ?>
-                    <?php while( have_rows("faq") ) { the_row(); ?>
+                <?php if (have_rows("faq")) { ?>
+                    <?php while (have_rows("faq")) {
+                        the_row(); ?>
                         <div class="ceFaqBox">
                             <div class="ceFaqQuestion">
                                 <div class="ceFaqQuestionTitle">

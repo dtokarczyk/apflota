@@ -1,5 +1,5 @@
-<?php // Space  // ?>
-<?php if( $ceLayout == 'space' ) { ?>
+<?php // Space  //?>
+<?php if ($ceLayout == 'space') { ?>
     <div id="ceID<?php echo $ceIteration; ?>" class="ceSpace ceSpace<?php echo $ceIteration; ?> ceSpaceBG<?php echo get_sub_field('color_bg'); ?>">
         <style>
             .ceSpace<?php echo $ceIteration; ?> {
