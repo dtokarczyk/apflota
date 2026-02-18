@@ -1,0 +1,37 @@
+services:
+  mysql8:
+    image: mysql:8
+    container_name: apflota-mysql8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: 01586818_webidea
+      MYSQL_USER: 01586818_webidea
+      MYSQL_PASSWORD: DockerPass1234%
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql.orig:ro
+      - ./docker/mysql/00-import-database.sh:/docker-entrypoint-initdb.d/00-import-database.sh:ro
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: apflota-wordpress
+    restart: unless-stopped
+    depends_on:
+      - mysql8
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql8:3306
+      WORDPRESS_DB_NAME: 01586818_webidea
+      WORDPRESS_DB_USER: 01586818_webidea
+      WORDPRESS_DB_PASSWORD: DockerPass1234%
+    volumes:
+      - ./wp:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/99-custom.ini:ro
+
+volumes:
+  mysql_data:

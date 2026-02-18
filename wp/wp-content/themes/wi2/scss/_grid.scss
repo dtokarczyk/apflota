@@ -1,0 +1,54 @@
+// Display block
+.displaBlock {
+    display: block!important;
+}
+.displaInlineBlock {
+    display: inline-block!important;
+}
+
+// Display flex
+.displayFlex,
+.displaFlex {
+    display: flex!important;
+}
+.displaInlineFlex {
+    display: inline-flex!important;
+}
+
+// flex wrap
+.flexWrap {
+    flex-wrap: wrap;
+}
+
+// flex X
+.flexXstart {
+    justify-content: flex-start; 
+}
+.flexXend {
+    justify-content: flex-end;
+}
+.flexXcenter {
+    justify-content: center;
+}
+.flexXbetween {
+    justify-content: space-between;
+}
+
+// flex Y
+.flexYstart {
+    align-items: flex-start;
+}
+.flexYend {
+    align-items: flex-end;
+}
+.flexYcenter {
+    align-items: center
+}
+.flexYstretch {
+    align-items: stretch;
+}
+
+// flex wrap
+.center {
+    text-align: center;
+}

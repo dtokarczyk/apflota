@@ -1,0 +1,159 @@
+@use 'sass:math';
+
+@mixin transitionDuration($duration, $property) {
+    -webkit-transition-duration: $duration;
+    -moz-transition-duration: $duration;
+    -o-transition-duration: $duration;
+    transition-duration: $duration;
+    
+    -webkit-transition-property: $property;
+    -moz-transition-property: $property;
+    -o-transition-property: $property;
+    transition-property: $property;    
+}
+
+
+@mixin position($position, $top, $right, $bottom, $left) {
+    position: $position;
+    @if $top != "" {
+        top: $top;
+    }
+    @if $right != "" {
+        right: $right;
+    }
+    @if $bottom != "" {
+        bottom: $bottom;
+    }
+    @if $left != "" {
+        left: $left;
+    }
+}
+
+
+@mixin backgroundIMG($position:center,$size:cover) {
+    background-position: $position!important;
+    background-repeat: no-repeat!important;
+    background-size: $size!important;
+}
+
+
+@mixin responsive_padding($paddingTop, $paddingRight, $paddingBottom, $paddingLeft) {
+    padding: $paddingTop $paddingRight $paddingBottom $paddingLeft;
+    @media (max-width: 1920px) {
+        padding: $paddingTop * 0.95 $paddingRight * 0.95 $paddingBottom * 0.95 $paddingLeft * 0.95;
+    }
+    @media (max-width: 1600px) {
+        padding: $paddingTop * 0.9 $paddingRight * 0.9 $paddingBottom * 0.9 $paddingLeft * 0.9;
+    }
+    @media (max-width: 1360px) {
+        padding: $paddingTop * 0.8 $paddingRight * 0.8 $paddingBottom * 0.8 $paddingLeft * 0.8;
+    }
+    @media (max-width: 1200px) {
+        padding: $paddingTop * 0.7 $paddingRight * 0.7 $paddingBottom * 0.7 $paddingLeft * 0.7;
+    }
+    @media (max-width: 1080px) {
+        padding: $paddingTop * 0.6 $paddingRight * 0.6 $paddingBottom * 0.6 $paddingLeft * 0.6;
+    }
+    @media (max-width: 992px) {
+        padding: $paddingTop * 0.5 $paddingRight * 0.5 $paddingBottom * 0.5 $paddingLeft * 0.5;
+    }
+    @media (max-width: 768px) {
+        padding: $paddingTop * 0.45 $paddingRight * 0.45 $paddingBottom * 0.45 $paddingLeft * 0.45;
+    }
+    @media (max-width: 450px) {
+        padding: $paddingTop * 0.4 $paddingRight * 0.4 $paddingBottom * 0.4 $paddingLeft * 0.4;
+    }
+}
+
+
+@mixin responsive_margin($marginTop, $marginRight, $marginBottom, $marginLeft) {
+    margin: $marginTop $marginRight $marginBottom $marginLeft;
+    @media (max-width: 1920px) {
+        margin: $marginTop * 0.95 $marginRight * 0.95 $marginBottom * 0.95 $marginLeft * 0.95;
+    }
+    @media (max-width: 1600px) {
+        margin: $marginTop * 0.9 $marginRight * 0.9 $marginBottom * 0.9 $marginLeft * 0.9;
+    }
+    @media (max-width: 1360px) {
+        margin: $marginTop * 0.8 $marginRight * 0.8 $marginBottom * 0.8 $marginLeft * 0.8;
+    }
+    @media (max-width: 1200px) {
+        margin: $marginTop * 0.7 $marginRight * 0.7 $marginBottom * 0.7 $marginLeft * 0.7;
+    }
+    @media (max-width: 1080px) {
+        margin: $marginTop * 0.6 $marginRight * 0.6 $marginBottom * 0.6 $marginLeft * 0.6;
+    }
+    @media (max-width: 992px) {
+        margin: $marginTop * 0.5 $marginRight * 0.5 $marginBottom * 0.5 $marginLeft * 0.5;
+    }
+    @media (max-width: 768px) {
+        margin: $marginTop * 0.45 $marginRight * 0.45 $marginBottom * 0.45 $marginLeft * 0.45;
+    }
+    @media (max-width: 450px) {
+        margin: $marginTop * 0.4 $marginRight * 0.4 $marginBottom * 0.4 $marginLeft * 0.4;
+    }
+}
+
+@function wiVW($pxSize) { 
+    $pxScale: math.div(1920, 100) * 1px;
+    @return math.div($pxSize, $pxScale);
+}
+@function wiPX($vwSize, $vwWidth) { 
+    $vwScale: ($vwSize * $vwWidth);
+    @return math.div($vwScale, 100);
+}
+@mixin fontSize($sizeMax, $maxWidth) {
+    font-size: wiVW($sizeMax) * 1vw;
+    @media (max-width: $maxWidth) {
+        font-size: wiPX(wiVW($sizeMax), $maxWidth);
+    }
+    @media (min-width: 1920px) {
+        font-size: $sizeMax;
+    }
+}
+
+@mixin fontSize1920($sizeMax, $maxWidth) {
+    font-size: wiVW($sizeMax) * 1vw;
+    @media (max-width: $maxWidth) {
+        font-size: wiPX(wiVW($sizeMax), $maxWidth);
+    }
+    @media (min-width: 1920px) {
+        font-size: $sizeMax;
+    }
+}
+
+
+// Flexbox SASS mixins
+
+// Flexbox display
+@mixin flexbox() {
+    display: flex;
+}
+// Flex Line Wrapping
+@mixin flex-wrap($wrap) {
+    flex-wrap: $wrap;
+}
+// Display Order
+@mixin order($val) {
+    order: $val;
+}
+// Axis Alignment
+@mixin justify-content($justify) {
+    justify-content: $justify;
+}
+// Packing Flex Lines
+@mixin align-content($align) {
+    align-content: $align;
+}
+// Cross-axis Alignment
+@mixin align-items($align) {
+    align-items: $align;
+}
+// Flex Center
+@mixin flex-center() {
+    @include flexbox();
+    @include justify-content(center);
+    @include flex-wrap(wrap);
+    @include align-items(center);
+    @include align-content(center);
+}
