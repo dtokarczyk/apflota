@@ -9,7 +9,7 @@ $hero_title   = get_field('blog_hero_title', 'option');
 $hero_subtitle = get_field('blog_hero_subtitle', 'option');
 $hero_image   = get_field('blog_hero_image', 'option');
 $current_slug  = get_query_var('kategoria');
-$is_blog_main  = empty($current_slug); // "Wszystkie posty blogowe" – show hero with overlay
+$is_blog_main  = empty($current_slug); // "Wszystkie artykuły" – show hero with overlay
 
 $categories = get_terms([
 	'taxonomy'   => 'blog-category',
@@ -65,7 +65,7 @@ $categories = get_terms([
 		<?php endif; ?>
 		<!-- Category bar -->
 		<nav class="blog-category-bar displayFlex flexWrap flexXstart flexYcenter">
-			<a href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" class="blog-category-link <?php echo empty($current_slug) ? 'blog-category-link-active' : ''; ?>"><?php esc_html_e('Wszystkie posty blogowe', 'wi'); ?></a>
+			<a href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" class="blog-category-link <?php echo empty($current_slug) ? 'blog-category-link-active' : ''; ?>"><?php esc_html_e('Wszystkie artykuły', 'wi'); ?></a>
 			<?php if ($categories && ! is_wp_error($categories)) : ?>
 				<?php foreach ($categories as $term) : ?>
 					<?php
@@ -86,7 +86,7 @@ $categories = get_terms([
 					<?php get_template_part('template-parts/blog', 'card'); ?>
 				<?php endwhile; ?>
 			<?php else : ?>
-				<p class="blog-no-posts"><?php esc_html_e('Brak postów blogowych.', 'wi'); ?></p>
+				<p class="blog-no-posts"><?php esc_html_e('Brak artykułów.', 'wi'); ?></p>
 			<?php endif; ?>
 		</div>
 

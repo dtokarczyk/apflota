@@ -6,41 +6,41 @@
 get_header();
 
 while (have_posts()) : the_post();
-    $post_id       = get_the_ID();
-    $blog_page_id  = function_exists('wpmlID') ? wpmlID(2) : 2;
-    $big_image     = get_field('blog_big_image');
-    $reading_time   = get_field('blog_reading_time');
-    if (empty(trim((string) $reading_time))) {
-        $reading_time = '5 min';
-    }
-    $summary        = get_field('blog_summary');
-    $likes          = (int) get_field('blog_likes');
-    $dislikes       = (int) get_field('blog_dislikes');
-    $banner_override = get_field('blog_sidebar_banner_override');
-    $sidebar_banner  = (is_array($banner_override) && ! empty($banner_override['url'])) ? $banner_override : get_field('blog_sidebar_banner', 'option');
-    $link_override   = get_field('blog_sidebar_banner_link_override');
-    $sidebar_link    = (is_string($link_override) && $link_override !== '') ? $link_override : get_field('blog_sidebar_banner_link', 'option');
+	$post_id       = get_the_ID();
+	$blog_page_id  = function_exists('wpmlID') ? wpmlID(2) : 2;
+	$big_image     = get_field('blog_big_image');
+	$reading_time   = get_field('blog_reading_time');
+	if (empty(trim((string) $reading_time))) {
+		$reading_time = '5 min';
+	}
+	$summary        = get_field('blog_summary');
+	$likes          = (int) get_field('blog_likes');
+	$dislikes       = (int) get_field('blog_dislikes');
+	$banner_override = get_field('blog_sidebar_banner_override');
+	$sidebar_banner  = (is_array($banner_override) && ! empty($banner_override['url'])) ? $banner_override : get_field('blog_sidebar_banner', 'option');
+	$link_override   = get_field('blog_sidebar_banner_link_override');
+	$sidebar_link    = (is_string($link_override) && $link_override !== '') ? $link_override : get_field('blog_sidebar_banner_link', 'option');
 
-    $content = apply_filters('the_content', get_the_content());
-    $toc_data = wi_generate_toc($content);
-    $content_with_ids = $toc_data['content'];
-    $toc_html = $toc_data['toc_html'];
+	$content = apply_filters('the_content', get_the_content());
+	$toc_data = wi_generate_toc($content);
+	$content_with_ids = $toc_data['content'];
+	$toc_html = $toc_data['toc_html'];
 
-    $primary_term = wi_blog_get_primary_category_term($post_id);
-    $category_name = $primary_term ? $primary_term->name : '';
-    $share_url = urlencode(get_permalink());
-    $share_title = urlencode(get_the_title());
-    $share_text = urlencode(wp_trim_words($summary ?: get_the_excerpt(), 20));
-    $fb_share = 'https://www.facebook.com/sharer/sharer.php?u=' . $share_url;
-    $linkedin_share = 'https://www.linkedin.com/sharing/share-offsite/?url=' . $share_url;
-    ?>
+	$primary_term = wi_blog_get_primary_category_term($post_id);
+	$category_name = $primary_term ? $primary_term->name : '';
+	$share_url = urlencode(get_permalink());
+	$share_title = urlencode(get_the_title());
+	$share_text = urlencode(wp_trim_words($summary ?: get_the_excerpt(), 20));
+	$fb_share = 'https://www.facebook.com/sharer/sharer.php?u=' . $share_url;
+	$linkedin_share = 'https://www.linkedin.com/sharing/share-offsite/?url=' . $share_url;
+?>
 
-<section id="blogSingle" class="blog-single">
-	<div class="blog-single-container">
-		<?php if (function_exists('qt_custom_breadcrumbs')) {
-		    qt_custom_breadcrumbs();
-		} ?>
-	</div>
+	<section id="blogSingle" class="blog-single">
+		<div class="blog-single-container">
+			<?php if (function_exists('qt_custom_breadcrumbs')) {
+				qt_custom_breadcrumbs();
+			} ?>
+		</div>
 		<!-- Hero: full-width image, title in container -->
 		<?php if (! empty($big_image['sizes']['blog-hero']) || ! empty($big_image['url'])) : ?>
 			<div class="blog-single-hero">
@@ -57,13 +57,13 @@ while (have_posts()) : the_post();
 				</div>
 			</div>
 		<?php endif; ?>
-	<?php if (empty($big_image['sizes']['blog-hero']) && empty($big_image['url'])) : ?>
-		<div class="blog-single-container">
-			<h1 class="blog-single-title"><?php the_title(); ?></h1>
-		</div>
-	<?php endif; ?>
+		<?php if (empty($big_image['sizes']['blog-hero']) && empty($big_image['url'])) : ?>
+			<div class="blog-single-container">
+				<h1 class="blog-single-title"><?php the_title(); ?></h1>
+			</div>
+		<?php endif; ?>
 
-	<div class="blog-single-container">
+		<div class="blog-single-container">
 			<div class="blog-single-layout">
 				<!-- Main content -->
 				<div class="blog-single-main">
@@ -109,27 +109,31 @@ while (have_posts()) : the_post();
 					<div class="blog-single-feedback displayFlex flexWrap flexXstart flexYcenter">
 						<span class="blog-single-feedback-label"><?php esc_html_e('Czy artykuł był pomocny?', 'wi'); ?></span>
 						<button type="button" class="blog-like-btn button buttonTransparent displayFlex flexXcenter flexYcenter" data-post-id="<?php echo absint($post_id); ?>" data-type="like" aria-label="<?php esc_attr_e('Tak', 'wi'); ?>">
-							<svg class="blog-feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+							<svg class="blog-feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+							</svg>
 							<span class="blog-like-count"><?php echo $likes; ?></span>
 						</button>
 						<button type="button" class="blog-dislike-btn button buttonTransparent displayFlex flexXcenter flexYcenter" data-post-id="<?php echo absint($post_id); ?>" data-type="dislike" aria-label="<?php esc_attr_e('Nie', 'wi'); ?>">
-							<svg class="blog-feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg>
+							<svg class="blog-feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3" />
+							</svg>
 							<span class="blog-dislike-count"><?php echo $dislikes; ?></span>
 						</button>
 					</div>
 					<?php
-                    $related = wi_get_related_blog_posts($post_id, 3);
-    if ($related->have_posts()) : ?>
+					$related = wi_get_related_blog_posts($post_id, 3);
+					if ($related->have_posts()) : ?>
 						<div class="blog-related">
-							<h2 class="blog-related-title"><?php esc_html_e('Powiązane posty blogowe', 'wi'); ?></h2>
+							<h2 class="blog-related-title"><?php esc_html_e('Powiązane artykuły', 'wi'); ?></h2>
 							<div class="blog-grid">
 								<?php
-                set_query_var('blog_card_heading', 'h3');
-        while ($related->have_posts()) : $related->the_post();
-            get_template_part('template-parts/blog', 'card');
-        endwhile;
-        wp_reset_postdata();
-        ?>
+								set_query_var('blog_card_heading', 'h3');
+								while ($related->have_posts()) : $related->the_post();
+									get_template_part('template-parts/blog', 'card');
+								endwhile;
+								wp_reset_postdata();
+								?>
 							</div>
 						</div>
 					<?php endif; ?>

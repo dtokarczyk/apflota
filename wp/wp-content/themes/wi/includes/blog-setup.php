@@ -8,21 +8,21 @@
 function wi_register_blog_cpt()
 {
     $labels = [
-        'name'                  => _x('Posty blogowe', 'Post Type General Name', 'wi'),
+        'name'                  => _x('Artykuły', 'Post Type General Name', 'wi'),
         'singular_name'         => _x('Post blogowy', 'Post Type Singular Name', 'wi'),
         'menu_name'             => __('Blog', 'wi'),
         'name_admin_bar'        => __('Post blogowy', 'wi'),
         'archives'              => __('Archiwum postów blogowych', 'wi'),
-        'attributes'            => __('Atrybuty postu blogowego', 'wi'),
+        'attributes'            => __('Atrybuty artykułu', 'wi'),
         'parent_item_colon'     => __('Nadrzędny post blogowy:', 'wi'),
-        'all_items'             => __('Wszystkie posty blogowe', 'wi'),
+        'all_items'             => __('Wszystkie artykuły', 'wi'),
         'add_new_item'          => __('Dodaj nowy post blogowy', 'wi'),
         'add_new'               => __('Dodaj nowy', 'wi'),
         'new_item'              => __('Nowy post blogowy', 'wi'),
         'edit_item'             => __('Edytuj post blogowy', 'wi'),
         'update_item'           => __('Aktualizuj post blogowy', 'wi'),
         'view_item'             => __('Zobacz post blogowy', 'wi'),
-        'view_items'            => __('Zobacz posty blogowe', 'wi'),
+        'view_items'            => __('Zobacz artykuły', 'wi'),
         'search_items'          => __('Szukaj postów blogowych', 'wi'),
         'not_found'             => __('Nie znaleziono', 'wi'),
         'not_found_in_trash'    => __('Brak w koszu', 'wi'),
@@ -30,8 +30,8 @@ function wi_register_blog_cpt()
         'set_featured_image'    => __('Ustaw obrazek wyróżniający', 'wi'),
         'remove_featured_image' => __('Usuń obrazek wyróżniający', 'wi'),
         'use_featured_image'    => __('Jako obrazek wyróżniający', 'wi'),
-        'insert_into_item'      => __('Wstaw do postu blogowego', 'wi'),
-        'uploaded_to_this_item' => __('Wgrano do tego postu blogowego', 'wi'),
+        'insert_into_item'      => __('Wstaw do artykułu', 'wi'),
+        'uploaded_to_this_item' => __('Wgrano do tego artykułu', 'wi'),
         'items_list'            => __('Lista postów blogowych', 'wi'),
         'items_list_navigation' => __('Nawigacja listy postów blogowych', 'wi'),
         'filter_items_list'     => __('Filtruj listę postów blogowych', 'wi'),
@@ -140,7 +140,7 @@ function wi_register_blog_acf_field_groups()
     // Blog post fields (CPT blog)
     acf_add_local_field_group([
         'key'                   => 'group_blog_post',
-        'title'                 => __('Ustawienia postu blogowego', 'wi'),
+        'title'                 => __('Ustawienia artykułu', 'wi'),
         'fields'                => [
             [
                 'key'   => 'field_blog_small_image',
@@ -152,7 +152,7 @@ function wi_register_blog_acf_field_groups()
             ],
             [
                 'key'   => 'field_blog_big_image',
-                'label' => __('Duży obrazek (hero postu blogowego)', 'wi'),
+                'label' => __('Duży obrazek (hero artykułu)', 'wi'),
                 'name'  => 'blog_big_image',
                 'type'  => 'image',
                 'return_format' => 'array',
@@ -179,7 +179,7 @@ function wi_register_blog_acf_field_groups()
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-                'instructions' => __('Opcjonalnie: ustaw inny banner niż globalny dla tego postu blogowego.', 'wi'),
+                'instructions' => __('Opcjonalnie: ustaw inny banner niż globalny dla tego artykułu.', 'wi'),
             ],
             [
                 'key'   => 'field_blog_sidebar_banner_link_override',
@@ -223,13 +223,13 @@ function wi_register_blog_acf_field_groups()
         'key'                   => 'group_blog_options',
         'title'                 => __('Ustawienia bloga', 'wi'),
         'fields'                => [
-            // Hero header (shown only on main blog archive – "Wszystkie posty blogowe")
+            // Hero header (shown only on main blog archive – "Wszystkie artykuły")
             [
                 'key'   => 'field_blog_hero_title',
                 'label' => __('Hero – tytuł', 'wi'),
                 'name'  => 'blog_hero_title',
                 'type'  => 'text',
-                'instructions' => __('Wyświetlany na stronie „Wszystkie posty blogowe”. W widoku kategorii hero jest bez tła i overlay.', 'wi'),
+                'instructions' => __('Wyświetlany na stronie „Wszystkie artykuły”. W widoku kategorii hero jest bez tła i overlay.', 'wi'),
             ],
             [
                 'key'   => 'field_blog_hero_subtitle',
@@ -245,7 +245,7 @@ function wi_register_blog_acf_field_groups()
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-                'instructions' => __('Obrazek w tle nagłówka („Wszystkie posty blogowe”). Zalecana szerokość ok. 1920 px.', 'wi'),
+                'instructions' => __('Obrazek w tle nagłówka („Wszystkie artykuły”). Zalecana szerokość ok. 1920 px.', 'wi'),
             ],
             // Sidebar banner
             [

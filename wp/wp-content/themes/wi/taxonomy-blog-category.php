@@ -41,7 +41,7 @@ $categories = get_terms([
 
 		<!-- Category bar -->
 		<nav class="blog-category-bar displayFlex flexWrap flexXstart flexYcenter">
-			<a href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" class="blog-category-link"><?php esc_html_e('Wszystkie posty blogowe', 'wi'); ?></a>
+			<a href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" class="blog-category-link"><?php esc_html_e('Wszystkie artykuły', 'wi'); ?></a>
 			<?php if ($categories && ! is_wp_error($categories)) : ?>
 				<?php foreach ($categories as $term) : ?>
 					<?php
@@ -62,7 +62,7 @@ $categories = get_terms([
 					<?php get_template_part('template-parts/blog', 'card'); ?>
 				<?php endwhile; ?>
 			<?php else : ?>
-				<p class="blog-no-posts"><?php esc_html_e('Brak postów blogowych.', 'wi'); ?></p>
+				<p class="blog-no-posts"><?php esc_html_e('Brak artykułów.', 'wi'); ?></p>
 			<?php endif; ?>
 		</div>
 
