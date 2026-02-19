@@ -90,6 +90,8 @@ create_posts() {
       --post_title="$title" \
       --porcelain)
     "${WP_CMD[@]}" post term add "$post_id" blog-category "$cat_id" --by=id
+    # Set main category for permalink: /blog/{category-slug}/{post-slug}/
+    "${WP_CMD[@]}" post meta update "$post_id" blog_main_category "$cat_id"
   done
 }
 

@@ -498,7 +498,8 @@ function phoneUrl($value)
 
 function set_posts_per_page_for_custom($query)
 {
-    if (!is_admin() && $query->is_main_query() && is_post_type_archive('blog')) {
+    // Blog archive and blog category (e.g. /blog/kierowca/) – 9 posts per page
+    if (!is_admin() && $query->is_main_query() && (is_post_type_archive('blog') || is_tax('blog-category'))) {
         $query->set('posts_per_page', '9');
     }
     if (!is_admin() && $query->is_main_query() && is_search()) {

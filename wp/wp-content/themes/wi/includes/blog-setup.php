@@ -8,36 +8,36 @@
 function wi_register_blog_cpt()
 {
     $labels = [
-        'name'                  => _x('Wpisy', 'Post Type General Name', 'wi'),
-        'singular_name'         => _x('Wpis', 'Post Type Singular Name', 'wi'),
+        'name'                  => _x('Posty blogowe', 'Post Type General Name', 'wi'),
+        'singular_name'         => _x('Post blogowy', 'Post Type Singular Name', 'wi'),
         'menu_name'             => __('Blog', 'wi'),
-        'name_admin_bar'        => __('Wpis', 'wi'),
-        'archives'              => __('Archiwum wpisów', 'wi'),
-        'attributes'            => __('Atrybuty wpisu', 'wi'),
-        'parent_item_colon'     => __('Nadrzędny wpis:', 'wi'),
-        'all_items'             => __('Wszystkie wpisy', 'wi'),
-        'add_new_item'          => __('Dodaj nowy wpis', 'wi'),
+        'name_admin_bar'        => __('Post blogowy', 'wi'),
+        'archives'              => __('Archiwum postów blogowych', 'wi'),
+        'attributes'            => __('Atrybuty postu blogowego', 'wi'),
+        'parent_item_colon'     => __('Nadrzędny post blogowy:', 'wi'),
+        'all_items'             => __('Wszystkie posty blogowe', 'wi'),
+        'add_new_item'          => __('Dodaj nowy post blogowy', 'wi'),
         'add_new'               => __('Dodaj nowy', 'wi'),
-        'new_item'              => __('Nowy wpis', 'wi'),
-        'edit_item'             => __('Edytuj wpis', 'wi'),
-        'update_item'           => __('Aktualizuj wpis', 'wi'),
-        'view_item'             => __('Zobacz wpis', 'wi'),
-        'view_items'            => __('Zobacz wpisy', 'wi'),
-        'search_items'          => __('Szukaj wpisów', 'wi'),
+        'new_item'              => __('Nowy post blogowy', 'wi'),
+        'edit_item'             => __('Edytuj post blogowy', 'wi'),
+        'update_item'           => __('Aktualizuj post blogowy', 'wi'),
+        'view_item'             => __('Zobacz post blogowy', 'wi'),
+        'view_items'            => __('Zobacz posty blogowe', 'wi'),
+        'search_items'          => __('Szukaj postów blogowych', 'wi'),
         'not_found'             => __('Nie znaleziono', 'wi'),
         'not_found_in_trash'    => __('Brak w koszu', 'wi'),
         'featured_image'        => __('Obrazek wyróżniający', 'wi'),
         'set_featured_image'    => __('Ustaw obrazek wyróżniający', 'wi'),
         'remove_featured_image' => __('Usuń obrazek wyróżniający', 'wi'),
         'use_featured_image'    => __('Jako obrazek wyróżniający', 'wi'),
-        'insert_into_item'      => __('Wstaw do wpisu', 'wi'),
-        'uploaded_to_this_item' => __('Wgrano do tego wpisu', 'wi'),
-        'items_list'            => __('Lista wpisów', 'wi'),
-        'items_list_navigation' => __('Nawigacja listy wpisów', 'wi'),
-        'filter_items_list'     => __('Filtruj listę wpisów', 'wi'),
+        'insert_into_item'      => __('Wstaw do postu blogowego', 'wi'),
+        'uploaded_to_this_item' => __('Wgrano do tego postu blogowego', 'wi'),
+        'items_list'            => __('Lista postów blogowych', 'wi'),
+        'items_list_navigation' => __('Nawigacja listy postów blogowych', 'wi'),
+        'filter_items_list'     => __('Filtruj listę postów blogowych', 'wi'),
     ];
     $args = [
-        'label'               => __('Wpis', 'wi'),
+        'label'               => __('Post blogowy', 'wi'),
         'labels'              => $labels,
         'supports'            => ['title', 'editor', 'thumbnail', 'excerpt'],
         'hierarchical'        => false,
@@ -91,11 +91,11 @@ function wi_register_blog_category_taxonomy()
 }
 add_action('init', 'wi_register_blog_category_taxonomy', 0);
 
-// Custom rewrite rules: category archive blog/slug/, single post blog/i/post-slug/
+// Custom rewrite rules: single post blog/{category-slug}/{post-slug}/, category archive blog/slug/
 function wi_blog_add_rewrite_rules()
 {
-    // Single post: blog/i/wpis-blogowy/ (must be before one-segment rule)
-    add_rewrite_rule('^blog/i/([^/]+)/?$', 'index.php?post_type=blog&name=$matches[1]', 'top');
+    // Single post: blog/{category-slug}/{post-slug}/ (two segments; must be before one-segment rule)
+    add_rewrite_rule('^blog/([^/]+)/([^/]+)/?$', 'index.php?post_type=blog&name=$matches[2]', 'top');
     // Category archive: blog/przyszlosc/
     add_rewrite_rule('^blog/([^/]+)/?$', 'index.php?blog-category=$matches[1]', 'top');
 }
@@ -104,7 +104,7 @@ add_action('init', 'wi_blog_add_rewrite_rules', 1);
 // Flush rewrite rules once when version changes
 function wi_blog_maybe_flush_rewrite_rules()
 {
-    $version = 3;
+    $version = 4;
     if ((int) get_option('wi_blog_rewrite_flushed') === $version) {
         return;
     }
@@ -140,8 +140,21 @@ function wi_register_blog_acf_field_groups()
     // Blog post fields (CPT blog)
     acf_add_local_field_group([
         'key'                   => 'group_blog_post',
-        'title'                 => __('Ustawienia wpisu bloga', 'wi'),
+        'title'                 => __('Ustawienia postu blogowego', 'wi'),
         'fields'                => [
+            [
+                'key'           => 'field_blog_main_category',
+                'label'         => __('Główna kategoria', 'wi'),
+                'name'          => 'blog_main_category',
+                'type'          => 'taxonomy',
+                'taxonomy'      => 'blog-category',
+                'field_type'    => 'select',
+                'return_format' => 'object',
+                'allow_null'    => 1,
+                'multiple'      => 0,
+                'add_term'      => 0,
+                'instructions'  => __('Używana w adresie wpisu: /blog/[slug-kategorii]/[slug-wpisu]/', 'wi'),
+            ],
             [
                 'key'   => 'field_blog_small_image',
                 'label' => __('Mały obrazek (karta listy)', 'wi'),
@@ -152,7 +165,7 @@ function wi_register_blog_acf_field_groups()
             ],
             [
                 'key'   => 'field_blog_big_image',
-                'label' => __('Duży obrazek (hero wpisu)', 'wi'),
+                'label' => __('Duży obrazek (hero postu blogowego)', 'wi'),
                 'name'  => 'blog_big_image',
                 'type'  => 'image',
                 'return_format' => 'array',
@@ -179,14 +192,14 @@ function wi_register_blog_acf_field_groups()
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-                'instructions' => __('Opcjonalnie: ustaw inny banner niż globalny dla tego wpisu.', 'wi'),
+                'instructions' => __('Opcjonalnie: ustaw inny banner niż globalny dla tego postu blogowego.', 'wi'),
             ],
             [
                 'key'   => 'field_blog_sidebar_banner_link_override',
                 'label' => __('Link bannera (nadpisanie)', 'wi'),
                 'name'  => 'blog_sidebar_banner_link_override',
                 'type'  => 'url',
-                'instructions' => __('Link dla bannera nadpisanego w tym wpisie.', 'wi'),
+                'instructions' => __('Link dla bannera nadpisanego w tym poście blogowym.', 'wi'),
             ],
             [
                 'key'     => 'field_blog_likes',
@@ -223,13 +236,13 @@ function wi_register_blog_acf_field_groups()
         'key'                   => 'group_blog_options',
         'title'                 => __('Ustawienia bloga', 'wi'),
         'fields'                => [
-            // Hero header (shown only on main blog archive – "Wszystkie wpisy")
+            // Hero header (shown only on main blog archive – "Wszystkie posty blogowe")
             [
                 'key'   => 'field_blog_hero_title',
                 'label' => __('Hero – tytuł', 'wi'),
                 'name'  => 'blog_hero_title',
                 'type'  => 'text',
-                'instructions' => __('Wyświetlany na stronie „Wszystkie wpisy”. W widoku kategorii hero jest bez tła i overlay.', 'wi'),
+                'instructions' => __('Wyświetlany na stronie „Wszystkie posty blogowe”. W widoku kategorii hero jest bez tła i overlay.', 'wi'),
             ],
             [
                 'key'   => 'field_blog_hero_subtitle',
@@ -245,7 +258,7 @@ function wi_register_blog_acf_field_groups()
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-                'instructions' => __('Obrazek w tle nagłówka („Wszystkie wpisy”). Zalecana szerokość ok. 1920 px.', 'wi'),
+                'instructions' => __('Obrazek w tle nagłówka („Wszystkie posty blogowe”). Zalecana szerokość ok. 1920 px.', 'wi'),
             ],
             // Sidebar banner
             [
@@ -311,14 +324,19 @@ function wi_blog_query_vars($vars)
 }
 add_filter('query_vars', 'wi_blog_query_vars');
 
-// Permalink for blog posts: blog/i/post-slug
+// Permalink for blog posts: blog/{main-category-slug}/{post-slug}/ or blog/i/{post-slug}/ fallback
 function wi_blog_post_permalink($post_url, $post)
 {
     if (! $post || $post->post_type !== 'blog' || $post->post_status !== 'publish') {
         return $post_url;
     }
+    $segment = 'i';
+    $term = get_field('blog_main_category', $post->ID);
+    if ($term && is_object($term) && ! empty($term->slug)) {
+        $segment = $term->slug;
+    }
     $home = trailingslashit(home_url());
-    return $home . 'blog/i/' . $post->post_name . '/';
+    return $home . 'blog/' . $segment . '/' . $post->post_name . '/';
 }
 add_filter('post_type_link', 'wi_blog_post_permalink', 10, 2);
 
@@ -345,3 +363,33 @@ function wi_blog_archive_tax_query($query)
     ]);
 }
 add_action('pre_get_posts', 'wi_blog_archive_tax_query');
+
+// --- Yoast SEO integration for blog CPT ---
+
+// Ensure blog CPT is accessible to Yoast (metabox, meta output, indexables).
+add_filter('wpseo_accessible_post_types', 'wi_blog_yoast_accessible_post_types');
+function wi_blog_yoast_accessible_post_types($post_types)
+{
+    if (! is_array($post_types)) {
+        $post_types = [];
+    }
+    if (! in_array('blog', $post_types, true)) {
+        $post_types[] = 'blog';
+    }
+    return $post_types;
+}
+
+// Ensure Yoast creates indexables for blog posts (canonical, meta description, OG).
+add_filter('wpseo_indexable_excluded_post_types', 'wi_blog_yoast_indexable_post_types');
+function wi_blog_yoast_indexable_post_types($excluded)
+{
+    if (! is_array($excluded)) {
+        return $excluded;
+    }
+    $key = array_search('blog', $excluded, true);
+    if ($key !== false) {
+        unset($excluded[$key]);
+        $excluded = array_values($excluded);
+    }
+    return $excluded;
+}

@@ -553,6 +553,31 @@ ol.breadcrumb {
     margin-bottom: 0.75rem;
     scroll-margin-top: 2rem;
   }
+
+  // Blockquote – visible quote styling
+  blockquote {
+    position: relative;
+    margin: 1.5rem 0;
+    padding: 1.25rem 1.5rem 1.25rem 2.5rem;
+    border-left: 4px solid $colorRed;
+    background: rgba(0, 0, 0, 0.04);
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.85);
+    &::before {
+      content: '"';
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      font-size: 2.25rem;
+      line-height: 1;
+      font-style: normal;
+      color: $colorRed;
+      opacity: 0.7;
+    }
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 // Like / Dislike

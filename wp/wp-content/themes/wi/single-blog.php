@@ -124,7 +124,7 @@ while (have_posts()) : the_post();
                     $related = wi_get_related_blog_posts($post_id, 3);
     if ($related->have_posts()) : ?>
 						<div class="blog-related">
-							<h2 class="blog-related-title"><?php esc_html_e('Powiązane wpisy', 'wi'); ?></h2>
+							<h2 class="blog-related-title"><?php esc_html_e('Powiązane posty blogowe', 'wi'); ?></h2>
 							<div class="blog-grid">
 								<?php
                 set_query_var('blog_card_heading', 'h3');
