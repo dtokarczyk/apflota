@@ -7,7 +7,7 @@
 // Register Custom Post Type: blog
 function wi_register_blog_cpt()
 {
-    $labels = array(
+    $labels = [
         'name'                  => _x('Wpisy', 'Post Type General Name', 'wi'),
         'singular_name'         => _x('Wpis', 'Post Type Singular Name', 'wi'),
         'menu_name'             => __('Blog', 'wi'),
@@ -35,11 +35,11 @@ function wi_register_blog_cpt()
         'items_list'            => __('Lista wpisów', 'wi'),
         'items_list_navigation' => __('Nawigacja listy wpisów', 'wi'),
         'filter_items_list'     => __('Filtruj listę wpisów', 'wi'),
-    );
-    $args = array(
+    ];
+    $args = [
         'label'               => __('Wpis', 'wi'),
         'labels'              => $labels,
-        'supports'            => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'supports'            => ['title', 'editor', 'thumbnail', 'excerpt'],
         'hierarchical'        => false,
         'public'              => true,
         'show_ui'             => true,
@@ -52,10 +52,10 @@ function wi_register_blog_cpt()
         'has_archive'         => true,
         'exclude_from_search' => false,
         'publicly_queryable'  => true,
-        'rewrite'             => array('slug' => 'blog', 'with_front' => false),
+        'rewrite'             => ['slug' => 'blog', 'with_front' => false],
         'capability_type'     => 'post',
         'show_in_rest'        => true,
-    );
+    ];
     register_post_type('blog', $args);
 }
 add_action('init', 'wi_register_blog_cpt', 0);
@@ -63,7 +63,7 @@ add_action('init', 'wi_register_blog_cpt', 0);
 // Register Taxonomy: blog-category
 function wi_register_blog_category_taxonomy()
 {
-    $labels = array(
+    $labels = [
         'name'              => _x('Kategorie bloga', 'taxonomy general name', 'wi'),
         'singular_name'     => _x('Kategoria bloga', 'taxonomy singular name', 'wi'),
         'search_items'      => __('Szukaj kategorii', 'wi'),
@@ -75,8 +75,8 @@ function wi_register_blog_category_taxonomy()
         'add_new_item'      => __('Dodaj nową kategorię', 'wi'),
         'new_item_name'     => __('Nazwa nowej kategorii', 'wi'),
         'menu_name'         => __('Kategorie bloga', 'wi'),
-    );
-    $args = array(
+    ];
+    $args = [
         'labels'            => $labels,
         'hierarchical'      => true,
         'public'            => true,
@@ -85,11 +85,33 @@ function wi_register_blog_category_taxonomy()
         'show_in_nav_menus' => true,
         'show_tagcloud'     => true,
         'query_var'         => true,
-        'rewrite'           => array('slug' => 'blog/kategoria', 'with_front' => false),
-    );
-    register_taxonomy('blog-category', array('blog'), $args);
+        'rewrite'           => ['slug' => 'blog', 'with_front' => false],
+    ];
+    register_taxonomy('blog-category', ['blog'], $args);
 }
 add_action('init', 'wi_register_blog_category_taxonomy', 0);
+
+// Custom rewrite rules: category archive blog/slug/, single post blog/i/post-slug/
+function wi_blog_add_rewrite_rules()
+{
+    // Single post: blog/i/wpis-blogowy/ (must be before one-segment rule)
+    add_rewrite_rule('^blog/i/([^/]+)/?$', 'index.php?post_type=blog&name=$matches[1]', 'top');
+    // Category archive: blog/przyszlosc/
+    add_rewrite_rule('^blog/([^/]+)/?$', 'index.php?blog-category=$matches[1]', 'top');
+}
+add_action('init', 'wi_blog_add_rewrite_rules', 1);
+
+// Flush rewrite rules once when version changes
+function wi_blog_maybe_flush_rewrite_rules()
+{
+    $version = 3;
+    if ((int) get_option('wi_blog_rewrite_flushed') === $version) {
+        return;
+    }
+    flush_rewrite_rules();
+    update_option('wi_blog_rewrite_flushed', $version);
+}
+add_action('init', 'wi_blog_maybe_flush_rewrite_rules', 99);
 
 // ACF Options page for global blog settings (sidebar banner)
 function wi_register_blog_options_page()
@@ -97,14 +119,14 @@ function wi_register_blog_options_page()
     if (! function_exists('acf_add_options_page')) {
         return;
     }
-    acf_add_options_page(array(
+    acf_add_options_page([
         'page_title' => __('Ustawienia bloga', 'wi'),
         'menu_title' => __('Ustawienia bloga', 'wi'),
         'menu_slug'  => 'ustawienia-bloga',
         'capability' => 'edit_posts',
         'redirect'   => false,
         'parent_slug' => 'edit.php?post_type=blog',
-    ));
+    ]);
 }
 add_action('acf/init', 'wi_register_blog_options_page');
 
@@ -116,41 +138,41 @@ function wi_register_blog_acf_field_groups()
     }
 
     // Blog post fields (CPT blog)
-    acf_add_local_field_group(array(
+    acf_add_local_field_group([
         'key'                   => 'group_blog_post',
         'title'                 => __('Ustawienia wpisu bloga', 'wi'),
-        'fields'                => array(
-            array(
+        'fields'                => [
+            [
                 'key'   => 'field_blog_small_image',
                 'label' => __('Mały obrazek (karta listy)', 'wi'),
                 'name'  => 'blog_small_image',
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-            ),
-            array(
+            ],
+            [
                 'key'   => 'field_blog_big_image',
                 'label' => __('Duży obrazek (hero wpisu)', 'wi'),
                 'name'  => 'blog_big_image',
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-            ),
-            array(
+            ],
+            [
                 'key'           => 'field_blog_reading_time',
                 'label'         => __('Czas czytania', 'wi'),
                 'name'          => 'blog_reading_time',
                 'type'          => 'text',
                 'placeholder'   => 'np. 3 min',
-            ),
-            array(
+            ],
+            [
                 'key'   => 'field_blog_summary',
                 'label' => __('Podsumowanie', 'wi'),
                 'name'  => 'blog_summary',
                 'type'  => 'textarea',
                 'rows'  => 4,
-            ),
-            array(
+            ],
+            [
                 'key'   => 'field_blog_sidebar_banner_override',
                 'label' => __('Banner boczny (nadpisanie)', 'wi'),
                 'name'  => 'blog_sidebar_banner_override',
@@ -158,15 +180,15 @@ function wi_register_blog_acf_field_groups()
                 'return_format' => 'array',
                 'preview_size' => 'medium',
                 'instructions' => __('Opcjonalnie: ustaw inny banner niż globalny dla tego wpisu.', 'wi'),
-            ),
-            array(
+            ],
+            [
                 'key'   => 'field_blog_sidebar_banner_link_override',
                 'label' => __('Link bannera (nadpisanie)', 'wi'),
                 'name'  => 'blog_sidebar_banner_link_override',
                 'type'  => 'url',
                 'instructions' => __('Link dla bannera nadpisanego w tym wpisie.', 'wi'),
-            ),
-            array(
+            ],
+            [
                 'key'     => 'field_blog_likes',
                 'label'   => __('Polubienia', 'wi'),
                 'name'    => 'blog_likes',
@@ -174,8 +196,8 @@ function wi_register_blog_acf_field_groups()
                 'default_value' => 0,
                 'min'     => 0,
                 'readonly' => 1,
-            ),
-            array(
+            ],
+            [
                 'key'     => 'field_blog_dislikes',
                 'label'   => __('Niepolubienia', 'wi'),
                 'name'    => 'blog_dislikes',
@@ -183,87 +205,74 @@ function wi_register_blog_acf_field_groups()
                 'default_value' => 0,
                 'min'     => 0,
                 'readonly' => 1,
-            ),
-        ),
-        'location' => array(
-            array(
-                array(
+            ],
+        ],
+        'location' => [
+            [
+                [
                     'param'    => 'post_type',
                     'operator' => '==',
                     'value'    => 'blog',
-                ),
-            ),
-        ),
-    ));
+                ],
+            ],
+        ],
+    ]);
 
-    // Blog settings (page ID 2 - global options page)
-    acf_add_local_field_group(array(
-        'key'                   => 'group_blog_settings',
-        'title'                 => __('Ustawienia bloga (strona główna bloga)', 'wi'),
-        'fields'                => array(
-            array(
+    // Blog options (Ustawienia bloga: hero header + sidebar banner)
+    acf_add_local_field_group([
+        'key'                   => 'group_blog_options',
+        'title'                 => __('Ustawienia bloga', 'wi'),
+        'fields'                => [
+            // Hero header (shown only on main blog archive – "Wszystkie wpisy")
+            [
                 'key'   => 'field_blog_hero_title',
-                'label' => __('Blog Hero – tytuł', 'wi'),
+                'label' => __('Hero – tytuł', 'wi'),
                 'name'  => 'blog_hero_title',
                 'type'  => 'text',
-            ),
-            array(
+                'instructions' => __('Wyświetlany na stronie „Wszystkie wpisy”. W widoku kategorii hero jest bez tła i overlay.', 'wi'),
+            ],
+            [
                 'key'   => 'field_blog_hero_subtitle',
-                'label' => __('Blog Hero – podtytul', 'wi'),
+                'label' => __('Hero – podtytuł', 'wi'),
                 'name'  => 'blog_hero_subtitle',
                 'type'  => 'textarea',
                 'rows'  => 3,
-            ),
-            array(
+            ],
+            [
                 'key'   => 'field_blog_hero_image',
-                'label' => __('Blog Hero – obrazek tła', 'wi'),
+                'label' => __('Hero – zdjęcie w tle headera', 'wi'),
                 'name'  => 'blog_hero_image',
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-            ),
-        ),
-        'location' => array(
-            array(
-                array(
-                    'param'    => 'page',
-                    'operator' => '==',
-                    'value'    => '2',
-                ),
-            ),
-        ),
-    ));
-
-    // Blog global options (sidebar banner – editable in Ustawienia bloga)
-    acf_add_local_field_group(array(
-        'key'                   => 'group_blog_options',
-        'title'                 => __('Banner boczny (globalny)', 'wi'),
-        'fields'                => array(
-            array(
+                'instructions' => __('Obrazek w tle nagłówka („Wszystkie wpisy”). Zalecana szerokość ok. 1920 px.', 'wi'),
+            ],
+            // Sidebar banner
+            [
                 'key'   => 'field_blog_sidebar_banner_option',
                 'label' => __('Banner boczny', 'wi'),
                 'name'  => 'blog_sidebar_banner',
                 'type'  => 'image',
                 'return_format' => 'array',
                 'preview_size' => 'medium',
-            ),
-            array(
+            ],
+            [
                 'key'   => 'field_blog_sidebar_banner_link_option',
                 'label' => __('Link bannera', 'wi'),
                 'name'  => 'blog_sidebar_banner_link',
                 'type'  => 'url',
-            ),
-        ),
-        'location' => array(
-            array(
-                array(
+            ],
+        ],
+        'location' => [
+            [
+                [
                     'param'    => 'options_page',
                     'operator' => '==',
                     'value'    => 'ustawienia-bloga',
-                ),
-            ),
-        ),
-    ));
+                ],
+            ],
+        ],
+    ]);
 }
 add_action('acf/init', 'wi_register_blog_acf_field_groups');
 
@@ -272,35 +281,46 @@ function wi_blog_like_dislike_ajax()
 {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
     if (! wp_verify_nonce($nonce, 'blog_like_dislike')) {
-        wp_send_json_error(array('message' => 'Invalid nonce'));
+        wp_send_json_error(['message' => 'Invalid nonce']);
     }
     $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
     $type    = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
     if (! $post_id || get_post_type($post_id) !== 'blog') {
-        wp_send_json_error(array('message' => 'Invalid post'));
+        wp_send_json_error(['message' => 'Invalid post']);
     }
-    if (! in_array($type, array('like', 'dislike'), true)) {
-        wp_send_json_error(array('message' => 'Invalid type'));
+    if (! in_array($type, ['like', 'dislike'], true)) {
+        wp_send_json_error(['message' => 'Invalid type']);
     }
     $field = $type === 'like' ? 'blog_likes' : 'blog_dislikes';
     $current = (int) get_field($field, $post_id);
     $new_value = $current + 1;
     update_field($field, $new_value, $post_id);
-    wp_send_json_success(array(
+    wp_send_json_success([
         'value' => $new_value,
         'type'  => $type,
-    ));
+    ]);
 }
 add_action('wp_ajax_blog_like', 'wi_blog_like_dislike_ajax');
 add_action('wp_ajax_nopriv_blog_like', 'wi_blog_like_dislike_ajax');
 
-// Register query var for category filter on blog archive
+// Register query vars for blog URLs
 function wi_blog_query_vars($vars)
 {
     $vars[] = 'kategoria';
     return $vars;
 }
 add_filter('query_vars', 'wi_blog_query_vars');
+
+// Permalink for blog posts: blog/i/post-slug
+function wi_blog_post_permalink($post_url, $post)
+{
+    if (! $post || $post->post_type !== 'blog' || $post->post_status !== 'publish') {
+        return $post_url;
+    }
+    $home = trailingslashit(home_url());
+    return $home . 'blog/i/' . $post->post_name . '/';
+}
+add_filter('post_type_link', 'wi_blog_post_permalink', 10, 2);
 
 // Filter blog archive by category when ?kategoria=slug
 function wi_blog_archive_tax_query($query)
@@ -316,12 +336,12 @@ function wi_blog_archive_tax_query($query)
     if (! $term || is_wp_error($term)) {
         return;
     }
-    $query->set('tax_query', array(
-        array(
+    $query->set('tax_query', [
+        [
             'taxonomy' => 'blog-category',
             'field'    => 'term_id',
             'terms'    => $term->term_id,
-        ),
-    ));
+        ],
+    ]);
 }
 add_action('pre_get_posts', 'wi_blog_archive_tax_query');

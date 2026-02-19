@@ -1,0 +1,11 @@
+{
+  "name": "apflota",
+  "private": true,
+  "devDependencies": {
+    "sass": "^1.77.0"
+  },
+  "scripts": {
+    "watch": "./watch.sh",
+    "sass:build": "sass wp/wp-content/themes/wi/scss:wp/wp-content/themes/wi --style expanded"
+  }
+}

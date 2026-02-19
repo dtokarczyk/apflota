@@ -35,8 +35,8 @@ function ce_hidden_layout()
         .term-php #wpcontent #edittag {
             max-width: 100%;
         }
-        .acf-fc-popup a { 
-            display: none; 
+        .acf-fc-popup a {
+            display: none;
         }
         .acf-editor-wrap iframe {
             min-height: 150px;
@@ -68,8 +68,8 @@ function ce_hidden_layout()
             }
         }
         <?php
-            $directory = __DIR__  . '/templates/';
-    $array = array_diff(scandir($directory), array('..', '.'));
+            $directory = __DIR__ . '/templates/';
+    $array = array_diff(scandir($directory), ['..', '.']);
 
     foreach ($array as &$item) {
         if (substr($item, 0, 1) != "_" && strpos($item, 'acf') !== false) {
@@ -82,9 +82,9 @@ function ce_hidden_layout()
                     str_replace(
                         ".php",
                         "",
-                        $item
-                    )
-                )
+                        $item,
+                    ),
+                ),
             );
             echo '.acf-fc-popup a[data-layout="' . $item . '"] { display: block; }';
         }

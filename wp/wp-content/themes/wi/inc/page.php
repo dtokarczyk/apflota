@@ -53,9 +53,9 @@
             <div class="row">
                 <div class="odstep-<?php echo $x; ?>"></div>
             </div>
-        <?php } ?> 
-            
-            
+        <?php } ?>
+
+
         <?php // Zdjęcie cała szerokość  //?>
         <?php if (get_row_layout() == 'zdjecie_cala_szerokosc') { ?>
             <div class="containerBig">
@@ -65,8 +65,8 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
+
+
         <?php // Edytor treści //?>
         <?php if (get_row_layout() == 'edytor_tresci') { ?>
             <div class="containerBig">
@@ -75,8 +75,8 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
+
+
         <?php // Edytor treści - pomniejszony //?>
         <?php if (get_row_layout() == 'edytor_tresci_-_pomniejszony') { ?>
             <div class="containerBig editorSmall">
@@ -85,14 +85,14 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
+
+
         <?php // Edytor treści 2 kolumny //?>
         <?php if (get_row_layout() == 'edytor_tresci_2_kolumny') { ?>
             <div class="containerBig">
                 <div class="row">
                     <div class="col-2">
-                        <?php echo get_sub_field('edytor_tresci_1_kolumna'); ?> 
+                        <?php echo get_sub_field('edytor_tresci_1_kolumna'); ?>
                     </div>
                     <div class="col-2">
                         <?php echo get_sub_field('edytor_tresci_2_kolumna'); ?>
@@ -100,14 +100,14 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
+
+
         <?php // Edytor treści 2 kolumny - kontakt //?>
         <?php if (get_row_layout() == 'edytor_tresci_2_kolumny_-_kontakt') { ?>
             <div class="container col2Contact">
                 <div class="row">
                     <div class="col-2">
-                        <?php echo get_sub_field('edytor_tresci_1_kolumna'); ?> 
+                        <?php echo get_sub_field('edytor_tresci_1_kolumna'); ?>
                     </div>
                     <div class="col-2">
                         <?php echo get_sub_field('edytor_tresci_2_kolumna'); ?>
@@ -115,14 +115,14 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
+
+
         <?php // Edytor treści 3 kolumny //?>
         <?php if (get_row_layout() == 'edytor_tresci_3_kolumny') { ?>
             <div class="containerBig">
                 <div class="row">
                     <div class="col-3">
-                        <?php echo get_sub_field('edytor_tresci_1_kolumna'); ?> 
+                        <?php echo get_sub_field('edytor_tresci_1_kolumna'); ?>
                     </div>
                     <div class="col-3">
                         <?php echo get_sub_field('edytor_tresci_2_kolumna'); ?>
@@ -133,11 +133,11 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
-   
-            
-            
+
+
+
+
+
         <?php // Zdjęcie - Treść  //?>
         <?php if (get_row_layout() == 'zdjecie_-_tresc_-_wysrodkowane') { ?>
             <div class="containerBig">
@@ -148,13 +148,13 @@
                     </div>
                     <div class="textFotoContent">
                         <div>
-                            <?php echo get_sub_field('edytor_tresci_2_kolumna'); ?> 
+                            <?php echo get_sub_field('edytor_tresci_2_kolumna'); ?>
                         </div>
                     </div>
                 </div>
             </div>
         <?php } ?>
-            
+
 
         <?php // Treść - Zdjęcie  //?>
         <?php if (get_row_layout() == 'tresc_-_zdjecie_-_wysrodkowane') { ?>
@@ -173,9 +173,9 @@
             </div>
         <?php } ?>
 
-        
-     
-            
+
+
+
         <?php // Galeria //?>
         <?php if (get_row_layout() == 'galeria') { ?>
             <?php if (get_sub_field('galeria') != '') { ?>
@@ -197,12 +197,12 @@
                     </div>
                 <?php } ?>
             <?php wp_reset_query(); ?>
-            <?php } ?>  
+            <?php } ?>
         <?php } ?>
 
-                
-        <?php // Zdjęcie cała szerokość - treść //?>     
-        <?php if (get_row_layout() == 'zdjecie_cala_szerokosc_-_tresc') { ?>         
+
+        <?php // Zdjęcie cała szerokość - treść //?>
+        <?php if (get_row_layout() == 'zdjecie_cala_szerokosc_-_tresc') { ?>
             <div id="topBanner" class="topBannerImg">
                 <div class="lazy" data-src="<?php $zdjecie = get_sub_field('tlo');
             echo $zdjecie["sizes"]["topbanner"]; ?>">
@@ -216,11 +216,11 @@
                 </div>
             </div>
         <?php } ?>
-            
-            
-            
-        <?php // Ikona / treść //?>     
-        <?php if (get_row_layout() == 'ikona__tresc') { ?>  
+
+
+
+        <?php // Ikona / treść //?>
+        <?php if (get_row_layout() == 'ikona__tresc') { ?>
             <div id="sectionOffer">
                 <div class="container">
                     <?php if (have_rows("ikona__tresc")) { ?>
@@ -233,15 +233,15 @@
                                 </div>
                             <?php } ?>
                         </div>
-                    <?php } ?> 
+                    <?php } ?>
                 </div>
             </div>
         <?php } ?>
-            
-            
-            
-        <?php // Lista //?>     
-        <?php if (get_row_layout() == 'lista') { ?>  
+
+
+
+        <?php // Lista //?>
+        <?php if (get_row_layout() == 'lista') { ?>
             <div id="sectionList">
                 <div class="container">
                     <?php if (have_rows("lista")) { ?>
@@ -256,14 +256,14 @@
                                 </div>
                             <?php } ?>
                         </div>
-                    <?php } ?> 
+                    <?php } ?>
                 </div>
             </div>
         <?php } ?>
-            
-            
-        <?php // Jak działa platforma //?>     
-        <?php if (get_row_layout() == 'jak_dziala_platforma') { ?>  
+
+
+        <?php // Jak działa platforma //?>
+        <?php if (get_row_layout() == 'jak_dziala_platforma') { ?>
             <div id="sectionPlatform">
                 <img class="lazy sectionPlatformBG" src="<?php echo get_template_directory_uri(); ?>/images/gradientPlatform.svg">
                 <div class="container">
@@ -283,15 +283,15 @@
                                 </div>
                             <?php } ?>
                         </div>
-                    <?php } ?> 
+                    <?php } ?>
                 </div>
             </div>
         <?php } ?>
-            
-            
-            
-        <?php // Pakiety //?>     
-        <?php if (get_row_layout() == 'pakiety') { ?>  
+
+
+
+        <?php // Pakiety //?>
+        <?php if (get_row_layout() == 'pakiety') { ?>
             <div id="sectionPackages">
                 <div class="container">
                     <div class="displayTable">
@@ -333,18 +333,18 @@
                                             <div class="sectionTabsTableCheck0"></div>
                                         <?php } ?>
                                     </div>
-                                </div> 
+                                </div>
                             <?php } ?>
                         <?php } ?>
                     </div>
                 </div>
             </div>
         <?php } ?>
-            
-            
-            
-        <?php // Subskrybcje //?>     
-        <?php if (get_row_layout() == 'subskrybcje') { ?>  
+
+
+
+        <?php // Subskrybcje //?>
+        <?php if (get_row_layout() == 'subskrybcje') { ?>
             <div id="sectionSubscriptions">
                 <div class="container">
                     <?php if (have_rows("subskrybcje")) { ?>
@@ -376,12 +376,12 @@
                                 </div>
                             <?php } ?>
                         </div>
-                    <?php } ?> 
+                    <?php } ?>
                 </div>
             </div>
         <?php } ?>
-            
-            
+
+
     <?php
         $x++;
         }

@@ -1,9 +1,9 @@
-<?php // Files to download //?> 
-<?php if ($ceLayout == 'files_to_download') { ?>  
+<?php // Files to download //?>
+<?php if ($ceLayout == 'files_to_download') { ?>
     <div class="ceGrayBackground">
         <?php containerStart(get_sub_field('container')); ?>
             <div id="ceID<?php echo $ceIteration; ?>" class="ceFilesDownload ceFilesDownload<?php echo get_sub_field('files_to_download_type'); ?>">
-                <?php if (get_sub_field('heading') != '') { ?>  
+                <?php if (get_sub_field('heading') != '') { ?>
                     <div class="ceFilesDownloadTitle"><?php echo get_sub_field('heading'); ?></div>
                 <?php } ?>
                 <?php if (have_rows("files_to_download")) { ?>
@@ -33,9 +33,9 @@
                                     </span>
                                 </a>
                             </div>
-                        <?php } ?> 
+                        <?php } ?>
                     </div>
-                <?php } ?>  
+                <?php } ?>
             </div>
         <?php containerEnd(get_sub_field('container')); ?>
     </div>

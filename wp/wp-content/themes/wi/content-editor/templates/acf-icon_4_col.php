@@ -1,5 +1,5 @@
-<?php // Icon 4 col //?> 
-<?php if ($ceLayout == 'icon_4_col') { ?>  
+<?php // Icon 4 col //?>
+<?php if ($ceLayout == 'icon_4_col') { ?>
     <?php containerStart(get_sub_field('container')); ?>
         <div id="ceID<?php echo $ceIteration; ?>" class="ceIcon4columns">
             <?php if (have_rows("icon_4_columns")) { ?>
@@ -14,7 +14,7 @@
                         </div>
                     <?php } ?>
                 </div>
-            <?php } ?> 
+            <?php } ?>
         </div>
     <?php containerEnd(get_sub_field('container')); ?>
 <?php } ?>

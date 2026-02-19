@@ -13,8 +13,8 @@ setup_postdata($post);
                 <source src="<?php echo get_field('slider_-_video', wpmlID(2)); ?>" type="video/mp4">
             </video>
         <?php } else { ?>
-            <img src="<?php echo get_field('slider_-_zdjecie', wpmlID(2)); ?>" class="img-responsive"/> 
-        <?php } ?> 
+            <img src="<?php echo get_field('slider_-_zdjecie', wpmlID(2)); ?>" class="img-responsive"/>
+        <?php } ?>
     </div>
     <?php if (get_field('slider_-_naglowek', wpmlID(2)) != "") { ?>
         <div class="sectionSliderTitle">
@@ -22,8 +22,8 @@ setup_postdata($post);
                 <?php echo get_field('slider_-_naglowek', wpmlID(2)); ?>
             </div>
         </div>
-    <?php } ?> 
-    <div class="headerSliderScroll displayFlex flexXcenter flexYcenter"> 
+    <?php } ?>
+    <div class="headerSliderScroll displayFlex flexXcenter flexYcenter">
         <img src="<?php echo get_template_directory_uri(); ?>/images/scroll.svg" class="svg img-responsive" alt="scroll">
     </div>
     <div id="sliderScroll"></div>
@@ -91,7 +91,7 @@ setup_postdata($post);
                                     </span>
                                 </span>
                             </a>
-                        <?php } ?> 
+                        <?php } ?>
                     </div>
                 <?php } ?>
                 <?php if (get_field('oferta_-_odnosnik', wpmlID(2)) != "") { ?>
@@ -124,7 +124,7 @@ setup_postdata($post);
                                 <td class="sectionTableItemCol"><span><?php echo do_shortcode(get_sub_field('kolumna_3')); ?></span></td>
                                 <td class="sectionTableItemCol"><span><?php echo do_shortcode(get_sub_field('kolumna_4')); ?></span></td>
                                 <td class="sectionTableItemCol"><span><?php echo do_shortcode(get_sub_field('kolumna_5')); ?></span></td>
-                            </tr> 
+                            </tr>
                         <?php } ?>
                     <?php } ?>
                 </table>
@@ -167,7 +167,7 @@ setup_postdata($post);
                         <?php if ($odnosnik != "") { ?>
                             <a href="<?php echo $odnosnik; ?>" title="logotypy" target="_blank">
                         <?php } else { ?>
-                            <div>   
+                            <div>
                         <?php } ?>
                                 <span><img src="<?php echo $logotyp; ?>" class="img-responsive"/></span>
                         <?php if ($odnosnik != "") { ?>

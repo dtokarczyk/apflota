@@ -22,7 +22,7 @@
                                     </a>
                                 <?php } ?>
                             </div>
-                        <?php } ?> 
+                        <?php } ?>
                         <a href="<?php echo get_permalink(wpmlID(168)); ?>" class="button displayInlineFlex flexXcenter flexYcenter"><?php echo get_field('cta_-_nazwa_przycisku', wpmlID(2)); ?></a>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 <a class="sectionFooterItemLogo" href="<?php echo home_url(); ?>">
                     <img src="<?php echo get_field('logo', wpmlID(2)); ?>" class="svg img-responsive"/>
                 </a>
-                
+
                 <?php if (have_rows("socialmedia", wpmlID(2))) { ?>
                     <div class="sectionSocialMedia">
                         <?php while (have_rows("socialmedia", wpmlID(2))) {
@@ -53,10 +53,10 @@
                         <?php } ?>
                     </div>
                 <?php } ?>
-                
+
                 <?php echo get_field('footer_-_dane_firmowe', wpmlID(2)); ?>
             </div>
-            
+
             <div class="sectionFooterItem displayFlex flexXstart flexYstart">
                 <div>
                     <?php if (have_rows("footer_-_menu", wpmlID(2))) { ?>

@@ -50,17 +50,17 @@ $images = get_field('galeria'); ?>
                                     <img class="img-full" src="<?php echo $zdjecie['sizes']['produkt-824x464']; ?>" alt="<?php echo __("Galeria", "wi"); ?>" />
                                 </a>
                             </div>
-                        <?php } ?> 
+                        <?php } ?>
                     </div>
                 </div>
-                  
-                <?php if (get_field('opis_pod_galeria') != "") { ?> 
+
+                <?php if (get_field('opis_pod_galeria') != "") { ?>
                     <div class="sectioOfferGalleryDesc">
                         <?php echo get_field('opis_pod_galeria'); ?>
                     </div>
-                <?php } ?> 
-                
-                <?php if (have_rows("informacje_podstawowe")) { ?> 
+                <?php } ?>
+
+                <?php if (have_rows("informacje_podstawowe")) { ?>
                     <div class="sectioOfferInformation">
                         <div class="h6"><?php echo get_field('informacje_podstawowe_-_naglowek'); ?></div>
                         <div class="sectioOfferInformationBox displayFlex flexWrap flexXstart flexYcenter">
@@ -74,8 +74,8 @@ $images = get_field('galeria'); ?>
                         </div>
                     </div>
                 <?php } ?>
-                
-                <?php if (have_rows("faq")) { ?> 
+
+                <?php if (have_rows("faq")) { ?>
                     <div id="contentEditor">
                         <div class="ceFaq">
                             <?php while (have_rows("faq")) {
@@ -86,10 +86,10 @@ $images = get_field('galeria'); ?>
                                             <?php echo get_sub_field('naglowek'); ?>
                                         </div>
                                         <div class="ceFaqQuestionButton">
-                                            <?php if (file_exists(get_template_directory().'/images/arrowFAQ.svg')) { ?>
+                                            <?php if (file_exists(get_template_directory() . '/images/arrowFAQ.svg')) { ?>
                                                 <img src="<?php echo get_template_directory_uri(); ?>/images/arrowFAQ.svg" alt="Icon" />
-                                            <?php } ?> 
-                                        </div>  
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                     <div class="ceFaqAnswer">
                                         <div>
@@ -99,12 +99,12 @@ $images = get_field('galeria'); ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?> 
+                            <?php } ?>
                         </div>
                     </div>
                 <?php } ?>
-                
-                <?php if (have_rows("do_pobrania")) { ?> 
+
+                <?php if (have_rows("do_pobrania")) { ?>
                     <div id="contentEditor">
                         <div class="ceFilesDownload">
                             <div class="h6"><?php echo get_field('do_pobrania_-_naglowek'); ?></div>
@@ -127,12 +127,12 @@ $images = get_field('galeria'); ?>
                                             </span>
                                         </a>
                                     </div>
-                                <?php } ?> 
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
                 <?php } ?>
-                
+
             </div>
             <div class="sectioOfferItem">
                 <?php if (get_field('csv', wpmlID(2)) != "") { ?>
@@ -163,7 +163,7 @@ $images = get_field('galeria'); ?>
                         </div>
                     </div>
                 <?php } ?>
-                <?php if (get_field('w_pakiecie')) { ?> 
+                <?php if (get_field('w_pakiecie')) { ?>
                     <div class="inPackage">
                         <div class="h6"><?php echo get_field('w_pakiecie_-_naglowek'); ?></div>
                         <div class="inPackageBox">
@@ -175,9 +175,9 @@ $images = get_field('galeria'); ?>
                                         <div><?php echo get_field('zlamana_nazwa', 'w-pakiecie_' . $term->term_id); ?></div>
                                     <?php } else { ?>
                                         <div><?php echo $term->name; ?></div>
-                                    <?php } ?> 
+                                    <?php } ?>
                                 </div>
-                            <?php } ?> 
+                            <?php } ?>
                         </div>
                     </div>
                 <?php } ?>
@@ -229,16 +229,16 @@ $images = get_field('galeria'); ?>
                             </span>
                         </span>
                     </a>
-                <?php } ?> 
+                <?php } ?>
             <?php } else { ?>
                 <?php
-                    $args = array(
+                    $args = [
                         'post_type'         => 'post',
                         'posts_per_page'    => 4,
                         'orderby' => 'date',
                         'order'   => 'DESC',
-                        'post__not_in' => array(get_the_ID())
-                    );
+                        'post__not_in' => [get_the_ID()],
+                    ];
                 $wp_query = new WP_Query($args);
                 ?>
                 <?php while (have_posts()) {
@@ -286,7 +286,7 @@ $images = get_field('galeria'); ?>
         </div>
     </div>
     <img src="<?php echo get_template_directory_uri() . '/images/number_bg.jpg'; ?>" class="img-full" alt="numbers_bg">
-</div>  
+</div>
 
 <?php wp_reset_postdata(); ?>
 <?php wp_reset_query(); ?>

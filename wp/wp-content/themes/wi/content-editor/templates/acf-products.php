@@ -15,12 +15,12 @@
                                         <span class="sectionOfferItemsImgButtons displayFlex flexXstart flexYcenter">
                                             <?php if (get_field('new', $product->ID) == 1) { ?>
                                                 <span class="sectionOfferItemsImgButtonsItem New"><?php echo __('Nowość', 'wi'); ?></span>
-                                            <?php } ?> 
+                                            <?php } ?>
                                             <?php if (get_field('premium', $product->ID) == 1) { ?>
                                                 <span class="sectionOfferItemsImgButtonsItem Premium"><?php echo __('Premium', 'wi'); ?></span>
-                                            <?php } ?> 
+                                            <?php } ?>
                                         </span>
-                                    <?php } ?> 
+                                    <?php } ?>
                                     <span class="sectionOfferItemsImgSignet">
                                         <img src="<?php echo get_template_directory_uri(); ?>/images/simaxSignet.svg" alt="simax signet">
                                     </span>

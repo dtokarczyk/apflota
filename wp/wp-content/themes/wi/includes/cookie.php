@@ -10,7 +10,7 @@ function ac_cookie_menu()
         'ac_custom_cookie_page',
         'ac_settings_cookie_page',
         'dashicons-star-half',
-        300
+        300,
     );
     add_action('admin_init', 'register_cookie_settings');
 }
@@ -29,22 +29,22 @@ function ac_settings_cookie_page()
     	<tr valign="top">
         	<th scope="row"></th>
         	<td><h3>Cookie Settings</h3></td>
-        </tr> 
+        </tr>
             <tr valign="top">
             <th scope="row">Select cookie page</th>
             <td>
                 <?php
-                        $args = array(
-                           'depth'                 => -1,
-                           'selected'              => get_option('ac_cookie_id'),
-                           'echo'                  => 1,
-                           'name'                  => 'ac_cookie_id',
-                       );
+                        $args = [
+                            'depth'                 => -1,
+                            'selected'              => get_option('ac_cookie_id'),
+                            'echo'                  => 1,
+                            'name'                  => 'ac_cookie_id',
+                        ];
     wp_dropdown_pages($args);
     ?>
             </td>
-        </tr>         
-     </table> 
+        </tr>
+     </table>
     <?php submit_button(); ?>
 </form>
 
@@ -76,7 +76,7 @@ function ac_show_cookie_bar()
                 <div><?php echo get_field('cookies_-_info', wpmlID(2)); ?></div>
                 <div id="ac_close_cookie_bar" onclick="wi_create_cookie('wi_cookie_info','hide',100);wi_remove_cookie_bar();"><?php echo get_field('cookies_-_close', wpmlID(2)); ?></div>
             </div>
-        </div>         
+        </div>
     </div>
     <script>
         function wi_remove_cookie_bar(){
@@ -90,7 +90,7 @@ function ac_show_cookie_bar()
             }
             else var expires = "";
             document.cookie = name + "=" + value + expires + "; path=/";
-        }   	
+        }
         function wi_read_cookie(name) {
             var nameEQ = name + "=";
             var ca = document.cookie.split(';');
@@ -100,10 +100,10 @@ function ac_show_cookie_bar()
                 if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
             }
             return null;
-        }	
+        }
         if(wi_read_cookie('wi_cookie_info') == 'hide') {
-            document.getElementById("ac_cookie_bar").remove();	
-        }		
+            document.getElementById("ac_cookie_bar").remove();
+        }
     </script>
     <?php
     ob_end_flush();

@@ -1,5 +1,5 @@
-<?php // Steps - Icon 4 columns //?> 
-<?php if ($ceLayout == 'steps_-_icon_4_columns') { ?>  
+<?php // Steps - Icon 4 columns //?>
+<?php if ($ceLayout == 'steps_-_icon_4_columns') { ?>
     <?php containerStart(get_sub_field('container')); ?>
         <div id="ceID<?php echo $ceIteration; ?>" class="ceStepsIcon4columns">
             <?php if (have_rows("steps_-_icon_4_columns")) {
@@ -24,7 +24,7 @@
                         <?php $s++; ?>
                     <?php } ?>
                 </div>
-            <?php } ?> 
+            <?php } ?>
         </div>
     <?php containerEnd(get_sub_field('container')); ?>
 <?php } ?>

@@ -1,5 +1,5 @@
-<?php // Contact - 2 column //?> 
-<?php if ($ceLayout == 'contact_-_2_column') { ?>  
+<?php // Contact - 2 column //?>
+<?php if ($ceLayout == 'contact_-_2_column') { ?>
     <?php containerStart(get_sub_field('container')); ?>
         <div id="ceID<?php echo $ceIteration; ?>" class="ceContact2columns">
             <?php if (have_rows("contact_-_2_column")) { ?>
@@ -13,7 +13,7 @@
                         </div>
                     <?php } ?>
                 </div>
-            <?php } ?> 
+            <?php } ?>
         </div>
     <?php containerEnd(get_sub_field('container')); ?>
 <?php } ?>

@@ -1,5 +1,5 @@
-<?php // Logotypes //?> 
-<?php if ($ceLayout == 'logotypes') { ?>  
+<?php // Logotypes //?>
+<?php if ($ceLayout == 'logotypes') { ?>
     <div id="sectionLogotype">
         <div class="containerBig">
             <div class="sectionLogotypeBox">
@@ -12,7 +12,7 @@
                         <?php if ($odnosnik != "") { ?>
                             <a href="<?php echo $odnosnik; ?>" title="logotypy" target="_blank">
                         <?php } else { ?>
-                            <div>   
+                            <div>
                         <?php } ?>
                                 <span><img src="<?php echo $logotyp; ?>" class="img-responsive"/></span>
                         <?php if ($odnosnik != "") { ?>

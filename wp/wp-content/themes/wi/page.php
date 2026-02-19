@@ -9,5 +9,5 @@ setup_postdata($post);
     <?php the_content(); ?>
     <?php get_template_part('content-editor/editor'); ?>
 <?php } ?>
- 
+
 <?php get_footer(); ?>

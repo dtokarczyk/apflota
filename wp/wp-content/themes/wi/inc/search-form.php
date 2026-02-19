@@ -1,7 +1,7 @@
 <div class="sectionOfferSearch">
     <h2><?php echo __('Oferta', 'wi'); ?></h2>
     <div class="sectionSearch formSearch displayFlex flexWrap flexXstart flexYcenter">
-        <?php $rodzajeNadwozia = get_terms(array('taxonomy' => 'rodzaj-nadwozia', 'hide_empty' => false)); ?>
+        <?php $rodzajeNadwozia = get_terms(['taxonomy' => 'rodzaj-nadwozia', 'hide_empty' => false]); ?>
         <?php if (!empty($rodzajeNadwozia)) { ?>
             <div class="selectBodies">
                 <div class="checkboxBox">
@@ -20,8 +20,8 @@
                 </div>
             </div>
         <?php } ?>
-        
-        <?php $markiAuta = get_terms(array('taxonomy' => 'marka-auta', 'hide_empty' => false)); ?>
+
+        <?php $markiAuta = get_terms(['taxonomy' => 'marka-auta', 'hide_empty' => false]); ?>
         <?php if (!empty($markiAuta)) { ?>
             <div class="selectMark">
                 <div class="checkboxBox">
@@ -41,31 +41,31 @@
             </div>
         <?php } ?>
 
-        <?php $ratyDo = get_terms(array('taxonomy' => 'rata-do', 'hide_empty' => false)); ?>
+        <?php $ratyDo = get_terms(['taxonomy' => 'rata-do', 'hide_empty' => false]); ?>
         <?php if (!empty($ratyDo)) { ?>
             <div class="selectInstallment">
                 <div class="installmentPriceSlider">
                     <div class="installmentPriceSliderTop displayFlex flexXbetween flexYcenter">
-                        <div><?php echo __("Miesięczna rata do:", "wi"); ?></div> 
+                        <div><?php echo __("Miesięczna rata do:", "wi"); ?></div>
                         <?php $installmentMin = get_field('wyszukiwarka_cena_od', wpmlID(2)); ?>
                         <?php $installmentMax = get_field('wyszukiwarka_cena_do', wpmlID(2)); ?>
                         <?php $installmentStep = get_field('wyszukiwarka_wielkosc_kroku', wpmlID(2)); ?>
-                        <?php if ($_GET["installment"] > 0) { ?> 
-                            <?php $installmentCheck = intval($_GET["installment"]); ?> 
-                        <?php } else { ?> 
-                            <?php $installmentCheck = $installmentMax; ?> 
-                        <?php } ?> 
-                        <div class="installmentPriceSliderTopPln"><output class="installmentPriceOutput"><?php echo $installmentCheck; ?></output> zł netto</div> 
-                    </div> 
+                        <?php if ($_GET["installment"] > 0) { ?>
+                            <?php $installmentCheck = intval($_GET["installment"]); ?>
+                        <?php } else { ?>
+                            <?php $installmentCheck = $installmentMax; ?>
+                        <?php } ?>
+                        <div class="installmentPriceSliderTopPln"><output class="installmentPriceOutput"><?php echo $installmentCheck; ?></output> zł netto</div>
+                    </div>
                     <div class="installmentPriceSliderBottom">
                         <input id="inputRange" class="installmentPrice" name="installment" type="range" min="<?php echo $installmentMin; ?>" max="<?php echo $installmentMax; ?>" value="<?php echo $installmentCheck; ?>" step="<?php echo $installmentStep; ?>">
                     </div>
                 </div>
             </div>
-        <?php } ?> 
-        
+        <?php } ?>
 
-        <?php $rodzajePaliwa = get_terms(array('taxonomy' => 'rodzaj-paliwa', 'hide_empty' => false)); ?>
+
+        <?php $rodzajePaliwa = get_terms(['taxonomy' => 'rodzaj-paliwa', 'hide_empty' => false]); ?>
         <?php if (!empty($rodzajePaliwa)) { ?>
             <div class="selectFuels">
                 <div class="checkboxBox">
@@ -87,7 +87,7 @@
             </div>
         <?php } ?>
 
-        <?php $skrzynieBiegowDo = get_terms(array('taxonomy' => 'skrzynia-biegow', 'hide_empty' => false)); ?>
+        <?php $skrzynieBiegowDo = get_terms(['taxonomy' => 'skrzynia-biegow', 'hide_empty' => false]); ?>
         <?php if (!empty($skrzynieBiegowDo)) { ?>
             <div class="selectTransmission">
                 <div class="checkboxBox">
@@ -107,9 +107,9 @@
                     </div>
                 </div>
             </div>
-        <?php } ?> 
-        
-        <?php $segmenty = get_terms(array('taxonomy' => 'segment', 'hide_empty' => false)); ?>
+        <?php } ?>
+
+        <?php $segmenty = get_terms(['taxonomy' => 'segment', 'hide_empty' => false]); ?>
         <?php if (!empty($segmenty)) { ?>
             <div class="selectSegment">
                 <div class="checkboxBox">
@@ -129,6 +129,6 @@
                     </div>
                 </div>
             </div>
-        <?php } ?> 
+        <?php } ?>
     </div>
 </div>

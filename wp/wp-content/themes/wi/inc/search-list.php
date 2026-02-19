@@ -38,17 +38,17 @@
     </div>
     <div class="sectionOfferBox displayFlex flexWrap flexXstart flexYstretch">
     <?php if (!isset($_GET["order"]) || $_GET["order"] == "0") { ?>
-        <?php $args = array('post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'menu_order', 'order' => 'ASC'); ?>
-    <?php } elseif ($_GET["order"] == "az") { ?>  
-        <?php $args = array('post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'name', 'order' => 'ASC'); ?>
-    <?php } elseif ($_GET["order"] == "za") { ?>  
-        <?php $args = array('post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'name', 'order' => 'DESC'); ?>
-    <?php } elseif ($_GET["order"] == "pl") { ?>  
-        <?php $args = array('post_type' => 'post', 'posts_per_page' => '-1', 'meta_key' => 'cena_od', 'orderby' => 'meta_value_num', 'order' => 'ASC'); ?>
-    <?php } elseif ($_GET["order"] == "ph") { ?>  
-        <?php $args = array('post_type' => 'post', 'posts_per_page' => '-1', 'meta_key' => 'cena_od', 'orderby' => 'meta_value_num', 'order' => 'DESC'); ?>
-    <?php } ?> 
-        
+        <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'menu_order', 'order' => 'ASC']; ?>
+    <?php } elseif ($_GET["order"] == "az") { ?>
+        <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'name', 'order' => 'ASC']; ?>
+    <?php } elseif ($_GET["order"] == "za") { ?>
+        <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'name', 'order' => 'DESC']; ?>
+    <?php } elseif ($_GET["order"] == "pl") { ?>
+        <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'meta_key' => 'cena_od', 'orderby' => 'meta_value_num', 'order' => 'ASC']; ?>
+    <?php } elseif ($_GET["order"] == "ph") { ?>
+        <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'meta_key' => 'cena_od', 'orderby' => 'meta_value_num', 'order' => 'DESC']; ?>
+    <?php } ?>
+
     <?php $wp_query = new WP_Query($args); ?>
     <?php if (have_posts()) { ?>
         <?php while (have_posts()) {
@@ -60,7 +60,7 @@
                 <?php $rodzajeNadwoziaClass[] = $rodzajNadwozia->term_id; ?>
             <?php } ?>
             <?php $rodzajeNadwoziaClass = implode(",", $rodzajeNadwoziaClass); ?>
-    
+
             <?php // marka auta?>
             <?php $markiAutaClass = [];
             $markiAuta = get_the_terms(get_the_ID(), 'marka-auta'); ?>
@@ -76,7 +76,7 @@
                 <?php $rodzajePaliwaClass[] = $rodzajPaliwa->term_id; ?>
             <?php } ?>
             <?php $rodzajePaliwaClass = implode(",", $rodzajePaliwaClass); ?>
-    
+
             <?php // skrzynia biegow?>
             <?php $skrzynieBiegowClass = [];
             $skrzynieBiegowDo = get_the_terms(get_the_ID(), 'skrzynia-biegow'); ?>
@@ -84,7 +84,7 @@
                 <?php $skrzynieBiegowClass[] = $skrzyniaBiegowDo->term_id; ?>
             <?php } ?>
             <?php $skrzynieBiegowClass = implode(",", $skrzynieBiegowClass); ?>
-    
+
             <?php // segment?>
             <?php $segmentyClass = [];
             $segmenty = get_the_terms(get_the_ID(), 'segment'); ?>
@@ -93,13 +93,13 @@
             <?php } ?>
             <?php $segmentyClass = implode(",", $segmentyClass); ?>
 
-            <a href="<?php echo get_permalink(); ?>" class="sectionOfferItem" 
-               data-name="<?php echo get_the_title(); ?>" 
-               data-bodies="<?php echo $rodzajeNadwoziaClass; ?>" 
-               data-mark="<?php echo $markiAutaClass; ?>" 
-               data-fuels="<?php echo $rodzajePaliwaClass; ?>" 
-               data-installment="<?php echo get_field('cena_od'); ?>" 
-               data-transmission="<?php echo $skrzynieBiegowClass; ?>" 
+            <a href="<?php echo get_permalink(); ?>" class="sectionOfferItem"
+               data-name="<?php echo get_the_title(); ?>"
+               data-bodies="<?php echo $rodzajeNadwoziaClass; ?>"
+               data-mark="<?php echo $markiAutaClass; ?>"
+               data-fuels="<?php echo $rodzajePaliwaClass; ?>"
+               data-installment="<?php echo get_field('cena_od'); ?>"
+               data-transmission="<?php echo $skrzynieBiegowClass; ?>"
                data-segment="<?php echo $segmentyClass; ?>"
             >
                 <span class="sectionOfferItemInside">
@@ -133,5 +133,5 @@
             </a>
         <?php } ?>
     <?php } ?>
-   <div class="sectionOfferItemNone"><?php echo __("Brak samochodów spełniających kryteria","wi"); ?></div>
+   <div class="sectionOfferItemNone"><?php echo __("Brak samochodów spełniających kryteria", "wi"); ?></div>
 </div>

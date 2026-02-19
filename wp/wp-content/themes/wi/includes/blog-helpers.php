@@ -13,7 +13,7 @@
 function wi_generate_toc($content)
 {
     if (empty($content) || ! class_exists('DOMDocument')) {
-        return array( 'toc_html' => '', 'content' => $content );
+        return [ 'toc_html' => '', 'content' => $content ];
     }
 
     $dom = new DOMDocument();
@@ -23,8 +23,8 @@ function wi_generate_toc($content)
 
     $xpath = new DOMXPath($dom);
     $headings = $xpath->query('//h2 | //h3');
-    $toc_items = array();
-    $used_ids = array();
+    $toc_items = [];
+    $used_ids = [];
 
     foreach ($headings as $heading) {
         $text = trim($heading->textContent);
@@ -41,11 +41,11 @@ function wi_generate_toc($content)
         $used_ids[ $slug ] = true;
         $heading->setAttribute('id', $slug);
         $tag = $heading->nodeName;
-        $toc_items[] = array(
+        $toc_items[] = [
             'id'   => $slug,
             'text' => $text,
             'tag'  => $tag,
-        );
+        ];
     }
 
     $toc_html = '';
@@ -88,10 +88,10 @@ function wi_generate_toc($content)
         $new_content = $m[1];
     }
 
-    return array(
+    return [
         'toc_html' => $toc_html,
         'content'  => $new_content,
-    );
+    ];
 }
 
 /**
@@ -105,24 +105,24 @@ function wi_get_related_blog_posts($post_id, $count = 3)
 {
     $terms = get_the_terms($post_id, 'blog-category');
     if (! $terms || is_wp_error($terms)) {
-        return new WP_Query(array( 'post__in' => array( 0 ) ));
+        return new WP_Query([ 'post__in' => [ 0 ] ]);
     }
     $term_ids = array_map(function ($t) {
         return $t->term_id;
     }, $terms);
-    $args = array(
+    $args = [
         'post_type'      => 'blog',
         'posts_per_page' => $count,
-        'post__not_in'   => array( $post_id ),
+        'post__not_in'   => [ $post_id ],
         'orderby'        => 'date',
         'order'          => 'DESC',
-        'tax_query'      => array(
-            array(
+        'tax_query'      => [
+            [
                 'taxonomy' => 'blog-category',
                 'field'    => 'term_id',
                 'terms'    => $term_ids,
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
     return new WP_Query($args);
 }

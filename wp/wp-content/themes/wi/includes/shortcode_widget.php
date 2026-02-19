@@ -29,7 +29,7 @@ add_shortcode('contact2col', 'wi_contact2col_shortcode');
 function wi_icon_shortcode($atts, $content = null)
 {
     $html = '<div class="iconText displayFlex flexXstart flexYcenter">';
-    $html .= '<img src="'.$atts['img'].'" />';
+    $html .= '<img src="' . $atts['img'] . '" />';
     $html .= '<h3>' . do_shortcode($content) . '</h3>';
     $html .= '</div>';
     return $html;
@@ -80,12 +80,12 @@ add_shortcode('linia', 'wi_line_shortcode');
 function wi_wiecej_shortcode($atts, $content = null)
 {
     $atts = shortcode_atts(
-        array(
+        [
             'wiecej' => '',
             'mniej' => '',
-        ),
+        ],
         $atts,
-        'wiecej'
+        'wiecej',
     );
     $wiecej = $atts['wiecej'];
     $mniej = $atts['mniej'];
@@ -106,13 +106,13 @@ add_shortcode('wiecej', 'wi_wiecej_shortcode');
 function wi_button_shortcode($atts, $content = null)
 {
     $atts = shortcode_atts(
-        array(
+        [
             'link' => '',
             'nazwa' => '',
             'target' => '',
-        ),
+        ],
         $atts,
-        'link'
+        'link',
     );
     $link = $atts['link'];
     $text = $atts['nazwa'];
@@ -120,7 +120,7 @@ function wi_button_shortcode($atts, $content = null)
     if ($target == "") {
         $target = "_self";
     }
-    $html = '<a class="button displayInlineFlex flexXcenter flexYcenter" href="'.$link.'" target="'.$target.'"><span>';
+    $html = '<a class="button displayInlineFlex flexXcenter flexYcenter" href="' . $link . '" target="' . $target . '"><span>';
     $html .= $text;
     $html .= '</span></a>';
     return $html;
@@ -131,13 +131,13 @@ add_shortcode('przycisk', 'wi_button_shortcode');
 function wi_buttontransparent_shortcode($atts, $content = null)
 {
     $atts = shortcode_atts(
-        array(
+        [
             'link' => '',
             'nazwa' => '',
             'target' => '',
-        ),
+        ],
         $atts,
-        'link'
+        'link',
     );
     $link = $atts['link'];
     $text = $atts['nazwa'];
@@ -145,7 +145,7 @@ function wi_buttontransparent_shortcode($atts, $content = null)
     if ($target == "") {
         $target = "_self";
     }
-    $html = '<a class="button buttonTransparent displayInlineFlex flexXcenter flexYcenter" href="'.$link.'" target="'.$target.'"><span>';
+    $html = '<a class="button buttonTransparent displayInlineFlex flexXcenter flexYcenter" href="' . $link . '" target="' . $target . '"><span>';
     $html .= $text;
     $html .= '</span></a>';
     return $html;
@@ -156,13 +156,13 @@ add_shortcode('przyciskTransparenty', 'wi_buttontransparent_shortcode');
 function wi_buttonline_shortcode($atts, $content = null)
 {
     $atts = shortcode_atts(
-        array(
+        [
             'link' => '',
             'nazwa' => '',
             'target' => '',
-        ),
+        ],
         $atts,
-        'link'
+        'link',
     );
     $link = $atts['link'];
     $text = $atts['nazwa'];
@@ -170,7 +170,7 @@ function wi_buttonline_shortcode($atts, $content = null)
     if ($target == "") {
         $target = "_self";
     }
-    $html = '<a class="button buttonSlim" href="'.$link.'" target="'.$target.'">';
+    $html = '<a class="button buttonSlim" href="' . $link . '" target="' . $target . '">';
     $html .= $text;
     $html .= '</a>';
     return $html;
@@ -214,20 +214,20 @@ add_shortcode('emailButton', 'wi_emailButton_shortcode');
 
 function wi_yes_shortcode($atts, $content = null)
 {
-    return '<div class="tableIcon"><img src="'.get_template_directory_uri().'/images/yes.svg" class="img-responsive" /></div>';
+    return '<div class="tableIcon"><img src="' . get_template_directory_uri() . '/images/yes.svg" class="img-responsive" /></div>';
 }
 add_shortcode('yes', 'wi_yes_shortcode');
 
 function wi_no_shortcode($atts, $content = null)
 {
-    return '<div class="tableIcon"><img src="'.get_template_directory_uri().'/images/no.svg" class="img-responsive" /></div>';
+    return '<div class="tableIcon"><img src="' . get_template_directory_uri() . '/images/no.svg" class="img-responsive" /></div>';
 }
 add_shortcode('no', 'wi_no_shortcode');
 
 function wi_ikona_telefon_shortcode($atts, $content = null)
 {
     $html = '<a class="contactIcon displayFlex flexXstart flexYcenter" href="tel:' . str_replace("-", "", str_replace(" ", "", str_replace("-", "", str_replace("(", "", str_replace(")", "", $content))))) . '" target="_blank">';
-    $html .= '<img src="'.get_template_directory_uri().'/images/phoneIcon.svg" class="img-responsive svg"/>';
+    $html .= '<img src="' . get_template_directory_uri() . '/images/phoneIcon.svg" class="img-responsive svg"/>';
     $html .= $content;
     $html .= '</a>';
     return $html;
@@ -237,7 +237,7 @@ add_shortcode('phoneIcon', 'wi_ikona_telefon_shortcode');
 function wi_ikona_telefon2_shortcode($atts, $content = null)
 {
     $html = '<a class="contactIcon displayFlex flexXstart flexYcenter" href="tel:' . str_replace("-", "", str_replace(" ", "", str_replace("-", "", str_replace("(", "", str_replace(")", "", $content))))) . '" target="_blank">';
-    $html .= '<img src="'.get_template_directory_uri().'/images/phoneIcon2.svg" class="img-responsive svg"/>';
+    $html .= '<img src="' . get_template_directory_uri() . '/images/phoneIcon2.svg" class="img-responsive svg"/>';
     $html .= $content;
     $html .= '</a>';
     return $html;
@@ -247,7 +247,7 @@ add_shortcode('phoneIcon2', 'wi_ikona_telefon2_shortcode');
 function wi_ikona_email_shortcode($atts, $content = null)
 {
     $html = '<a class="contactIcon contactIconEmail displayFlex flexXstart flexYcenter" href="mailto:' . $content . '" target="_blank">';
-    $html .= '<img src="'.get_template_directory_uri().'/images/emailIcon.svg" class="img-responsive svg"/>';
+    $html .= '<img src="' . get_template_directory_uri() . '/images/emailIcon.svg" class="img-responsive svg"/>';
     $html .= $content;
     $html .= '</a>';
     return $html;
@@ -298,11 +298,11 @@ add_shortcode('centerMobile', 'wi_centerMobile_shortcode');
 function wi_nadtytulem_shortcode($atts, $content = null)
 {
     $atts = shortcode_atts(
-        array(
+        [
             'color' => '',
-        ),
+        ],
         $atts,
-        'nadTytulem'
+        'nadTytulem',
     );
 
     if ($atts['color'] != "") {
@@ -322,13 +322,13 @@ add_shortcode('nadTytulem', 'wi_nadtytulem_shortcode');
 // wi_lang_widget
 function wi_lang_widget()
 {
-    register_sidebar(array(
+    register_sidebar([
         'name' => __('Language switcher', 'theme-slug'),
         'id' => 'widget_lang_switcher',
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget'  => '</div>',
         'before_title'  => '<h2 class="widgettitle">',
         'after_title'   => '</h2>',
-    ));
+    ]);
 }
 add_action('widgets_init', 'wi_lang_widget');

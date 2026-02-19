@@ -10,6 +10,9 @@ while (have_posts()) : the_post();
     $blog_page_id  = function_exists('wpmlID') ? wpmlID(2) : 2;
     $big_image     = get_field('blog_big_image');
     $reading_time   = get_field('blog_reading_time');
+    if (empty(trim((string) $reading_time))) {
+        $reading_time = '5 min';
+    }
     $summary        = get_field('blog_summary');
     $likes          = (int) get_field('blog_likes');
     $dislikes       = (int) get_field('blog_dislikes');
@@ -74,17 +77,14 @@ while (have_posts()) : the_post();
 		                        $category_term = $terms[0];
 							    $category_link = get_term_link($category_term, 'blog-category');
 							    ?>
-								<?php if ($reading_time) : ?><span class="blog-single-meta-sep" aria-hidden="true"></span><?php endif; ?>
-								<?php if (!is_wp_error($category_link)) : ?>
+								<?php if (! is_wp_error($category_link)) : ?>
 									<a href="<?php echo esc_url($category_link); ?>" class="blog-single-category-link"><?php echo esc_html($category_term->name); ?></a>
 								<?php else : ?>
 									<span class="blog-single-category"><?php echo esc_html($category_name); ?></span>
 								<?php endif; ?>
 							<?php elseif ($category_name) : ?>
-								<?php if ($reading_time) : ?><span class="blog-single-meta-sep" aria-hidden="true"></span><?php endif; ?>
 								<span class="blog-single-category"><?php echo esc_html($category_name); ?></span>
 							<?php endif; ?>
-							<?php if ($terms && ! is_wp_error($terms) || $category_name) : ?><span class="blog-single-meta-sep" aria-hidden="true"></span><?php endif; ?>
 							<span class="blog-single-date"><?php echo get_the_date(); ?></span>
 						</div>
 						<div class="blog-single-share-inline">
@@ -125,29 +125,17 @@ while (have_posts()) : the_post();
     if ($related->have_posts()) : ?>
 						<div class="blog-related">
 							<h2 class="blog-related-title"><?php esc_html_e('Powiązane wpisy', 'wi'); ?></h2>
-							<div class="blog-related-grid displayFlex flexWrap flexXstart flexYstretch">
-								<?php while ($related->have_posts()) : $related->the_post(); ?>
-									<article class="blog-related-card">
-										<a href="<?php the_permalink(); ?>" class="blog-related-card-link displayFlex flexWrap flexXstart flexYstretch">
-											<?php
-                            $small_img = get_field('blog_small_image');
-								    if (! empty($small_img['sizes']['blog-small'])) : ?>
-												<div class="blog-related-card-image">
-													<img src="<?php echo esc_url($small_img['sizes']['blog-small']); ?>" alt="<?php the_title_attribute(); ?>" class="img-full">
-												</div>
-											<?php elseif (has_post_thumbnail()) : ?>
-												<div class="blog-related-card-image"><?php the_post_thumbnail('blog-small', array('class' => 'img-full')); ?></div>
-											<?php endif; ?>
-											<div class="blog-related-card-body">
-												<h3 class="blog-related-card-title"><?php the_title(); ?></h3>
-											</div>
-										</a>
-									</article>
-								<?php endwhile; ?>
+							<div class="blog-grid">
+								<?php
+                set_query_var('blog_card_heading', 'h3');
+        while ($related->have_posts()) : $related->the_post();
+            get_template_part('template-parts/blog', 'card');
+        endwhile;
+        wp_reset_postdata();
+        ?>
 							</div>
 						</div>
-					<?php wp_reset_postdata();
-    endif; ?>
+					<?php endif; ?>
 				</div>
 				<!-- Sticky sidebar -->
 				<aside class="blog-single-sidebar">

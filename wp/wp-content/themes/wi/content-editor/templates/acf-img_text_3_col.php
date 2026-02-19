@@ -1,5 +1,5 @@
-<?php // Images / Text 3 columns //?> 
-<?php if ($ceLayout == 'img_text_3_col') { ?>  
+<?php // Images / Text 3 columns //?>
+<?php if ($ceLayout == 'img_text_3_col') { ?>
     <?php containerStart(get_sub_field('container')); ?>
         <div id="ceID<?php echo $ceIteration; ?>" class="ceImgText3columns">
             <?php if (have_rows("images__text_3_columns")) { ?>
@@ -22,7 +22,7 @@
                         </a>
                     <?php } ?>
                 </div>
-            <?php } ?> 
+            <?php } ?>
         </div>
     <?php containerEnd(get_sub_field('container')); ?>
 <?php } ?>

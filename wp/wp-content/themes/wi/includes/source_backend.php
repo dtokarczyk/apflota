@@ -1,9 +1,9 @@
 <?php
 
 // rejestracja menu
-register_nav_menus(array(
-    'menu' => __('Menu', 'wp-menu')
-));
+register_nav_menus([
+    'menu' => __('Menu', 'wp-menu'),
+]);
 
 function wi_editor_styles()
 {
@@ -54,11 +54,11 @@ function mp6_override_toolbar_margin()
         @media (max-width: 782px) {
             #wpadminbar { position:fixed !important; }
             html { padding-top:0px; }
-            body { margin-top: 0px !important; } 
+            body { margin-top: 0px !important; }
         }
         @media (max-width: 599px){
             html { margin-top: 0px !important; padding-top:0px; }
-            body { margin-top: 0px !important; } 
+            body { margin-top: 0px !important; }
         }
     </style>
     <?php }
@@ -105,7 +105,7 @@ function wi_sanitize_file_name($filename)
     $ext  = empty($info['extension']) ? '' : '.' . $info['extension']; // wyciaga rozszerzenie
     $name = basename($filename, $ext); ///odcina rozszerzenie
     $number = rand(100, 999); //generuje random
-    return sanitize_title($name).'_'.$number.$ext; // zwraca plik
+    return sanitize_title($name) . '_' . $number . $ext; // zwraca plik
 }
 add_filter('sanitize_file_name', 'wi_sanitize_file_name', 10);
 
@@ -136,9 +136,9 @@ add_action('init', 'wi_disable_emojis');
 function disable_emojis_tinymce($plugins)
 {
     if (is_array($plugins)) {
-        return array_diff($plugins, array( 'wpemoji' ));
+        return array_diff($plugins, [ 'wpemoji' ]);
     }
-    return array();
+    return [];
 }
 // Remove emoji CDN hostname from DNS
 function disable_emojis_dns($urls, $relation_type)
@@ -178,7 +178,7 @@ add_filter('pings_open', 'df_disable_comments_status', 20, 2);
 // Hide existing comments
 function df_disable_comments_hide_existing_comments($comments)
 {
-    $comments = array();
+    $comments = [];
     return $comments;
 }
 add_filter('comments_array', 'df_disable_comments_hide_existing_comments', 10, 2);
@@ -248,7 +248,7 @@ add_action('init', function () {
 
 
 // Rodzaj nadwozia
-$labels = array(
+$labels = [
     'name'              => __('Rodzaj nadwozia', 'wi-post'),
     'singular_name'     => __('Rodzaj nadwozia', 'wi-post'),
     'search_items'      => __('Szukaj', 'wi-post'),
@@ -260,20 +260,20 @@ $labels = array(
     'add_new_item'      => __('Dodaj', 'wi-post'),
     'new_item_name'     => __('Nowy', 'wi-post'),
     'menu_name'         => __('Rodzaj nadwozia', 'wi-post'),
-);
-$args = array(
+];
+$args = [
     'labels' => $labels,
     'hierarchical' => true,
     'show_admin_column' => true,
     'show_ui'           => true,
     'query_var'         => true,
-    'rewrite'           => false
-);
+    'rewrite'           => false,
+];
 register_taxonomy('rodzaj-nadwozia', 'post', $args);
 
 
 // Marka auta
-$labels = array(
+$labels = [
     'name'              => __('Marka auta', 'wi-post'),
     'singular_name'     => __('Marka auta', 'wi-post'),
     'search_items'      => __('Szukaj', 'wi-post'),
@@ -285,20 +285,20 @@ $labels = array(
     'add_new_item'      => __('Dodaj', 'wi-post'),
     'new_item_name'     => __('Nowy', 'wi-post'),
     'menu_name'         => __('Marka auta', 'wi-post'),
-);
-$args = array(
+];
+$args = [
     'labels' => $labels,
     'hierarchical' => true,
     'show_admin_column' => true,
     'show_ui'           => true,
     'query_var'         => true,
-    'rewrite'           => false
-);
+    'rewrite'           => false,
+];
 register_taxonomy('marka-auta', 'post', $args);
 
 
 // Rodzaj paliwa
-$labels = array(
+$labels = [
     'name'              => __('Rodzaj paliwa', 'wi-post'),
     'singular_name'     => __('Rodzaj paliwa', 'wi-post'),
     'search_items'      => __('Szukaj', 'wi-post'),
@@ -310,15 +310,15 @@ $labels = array(
     'add_new_item'      => __('Dodaj', 'wi-post'),
     'new_item_name'     => __('Nowy', 'wi-post'),
     'menu_name'         => __('Rodzaj paliwa', 'wi-post'),
-);
-$args = array(
+];
+$args = [
     'labels' => $labels,
     'hierarchical' => true,
     'show_admin_column' => true,
     'show_ui'           => true,
     'query_var'         => true,
-    'rewrite'           => false
-);
+    'rewrite'           => false,
+];
 register_taxonomy('rodzaj-paliwa', 'post', $args);
 
 
@@ -349,7 +349,7 @@ register_taxonomy( 'rata-do', 'post', $args );
 */
 
 // Skrzynia biegów
-$labels = array(
+$labels = [
     'name'              => __('Skrzynia biegów', 'wi-post'),
     'singular_name'     => __('Skrzynia biegów', 'wi-post'),
     'search_items'      => __('Szukaj', 'wi-post'),
@@ -361,20 +361,20 @@ $labels = array(
     'add_new_item'      => __('Dodaj', 'wi-post'),
     'new_item_name'     => __('Nowy', 'wi-post'),
     'menu_name'         => __('Skrzynia biegów', 'wi-post'),
-);
-$args = array(
+];
+$args = [
     'labels' => $labels,
     'hierarchical' => true,
     'show_admin_column' => true,
     'show_ui'           => true,
     'query_var'         => true,
-    'rewrite'           => false
-);
+    'rewrite'           => false,
+];
 register_taxonomy('skrzynia-biegow', 'post', $args);
 
 
 // Segment
-$labels = array(
+$labels = [
     'name'              => __('Segment', 'wi-post'),
     'singular_name'     => __('Segment', 'wi-post'),
     'search_items'      => __('Szukaj', 'wi-post'),
@@ -386,21 +386,21 @@ $labels = array(
     'add_new_item'      => __('Dodaj', 'wi-post'),
     'new_item_name'     => __('Nowy', 'wi-post'),
     'menu_name'         => __('Segment', 'wi-post'),
-);
-$args = array(
+];
+$args = [
     'labels' => $labels,
     'hierarchical' => true,
     'show_admin_column' => true,
     'show_ui'           => true,
     'query_var'         => true,
-    'rewrite'           => false
-);
+    'rewrite'           => false,
+];
 
 register_taxonomy('segment', 'post', $args);
 
 
 // W pakiecie
-$labels = array(
+$labels = [
     'name'              => __('W pakiecie', 'wi-post'),
     'singular_name'     => __('W pakiecie', 'wi-post'),
     'search_items'      => __('Szukaj', 'wi-post'),
@@ -412,15 +412,15 @@ $labels = array(
     'add_new_item'      => __('Dodaj', 'wi-post'),
     'new_item_name'     => __('Nowy', 'wi-post'),
     'menu_name'         => __('W pakiecie', 'wi-post'),
-);
-$args = array(
+];
+$args = [
     'labels' => $labels,
     'hierarchical' => true,
     'show_admin_column' => true,
     'show_ui'           => true,
     'query_var'         => true,
-    'rewrite'           => false
-);
+    'rewrite'           => false,
+];
 
 register_taxonomy('w-pakiecie', 'post', $args);
 
@@ -457,7 +457,7 @@ add_action("manage_{$post_type}_posts_custom_column", function ($column_name, $p
 add_filter('manage_posts_columns', 'column_order');
 function column_order($columns)
 {
-    $n_columns = array();
+    $n_columns = [];
     $move = 'id'; // what to move
     $before = 'title'; // move before this
     foreach ($columns as $key => $value) {
@@ -473,7 +473,7 @@ function column_order($columns)
 add_filter('manage_posts_columns', 'column_order2');
 function column_order2($columns)
 {
-    $n_columns = array();
+    $n_columns = [];
     $move = 'cena_od'; // what to move
     $before = 'title'; // move before this
     foreach ($columns as $key => $value) {
@@ -518,12 +518,12 @@ function lowest_price_update($post_ID)
         $csvFile = str_replace(get_site_url() . "/wp-content/uploads", wp_get_upload_dir()['basedir'], $csvFile);
         $csv = csvToArray($csvFile);
 
-        $my_query = new WP_Query(array('post_type' => 'post', 'posts_per_page' => -1));
+        $my_query = new WP_Query(['post_type' => 'post', 'posts_per_page' => -1]);
 
         if ($my_query->have_posts()) {
             while ($my_query->have_posts()) {
                 $my_query->the_post();
-                $priceArray = array();
+                $priceArray = [];
                 foreach ($csv as $key => $value) {
                     if (get_field('id', get_the_id()) == $value[0]) {
                         $priceArray[intval(str_replace(' ', '', str_replace(' ', '', $value[7])))]['price'] = intval(str_replace(' ', '', str_replace(' ', '', $value[7])));
@@ -565,12 +565,12 @@ function wi_router_load_templates(&$wp)
             $csv = csvToArray($csvFile);
 
             $carID = intval($_GET['id']);
-            $monthArray = array();
-            $feeArray = array();
-            $rateArray = array();
-            $priceArrayLow = array();
-            $priceArrayLowAll = array();
-            $percentArray = array("0", "10", "20");
+            $monthArray = [];
+            $feeArray = [];
+            $rateArray = [];
+            $priceArrayLow = [];
+            $priceArrayLowAll = [];
+            $percentArray = ["0", "10", "20"];
             foreach ($csv as $key => $value) {
                 if ($carID == $value[0]) {
                     if (in_array($value[3], $monthArray)) {
@@ -604,7 +604,7 @@ function wi_router_load_templates(&$wp)
                     }
                 }
             }
-            $monthArrayKM = array();
+            $monthArrayKM = [];
             foreach ($monthArray as $monthArrayValue) {
                 $i = 0;
                 foreach ($csv as $key => $value) {
@@ -627,7 +627,7 @@ function wi_router_load_templates(&$wp)
             }
 
             header('Content-Type: application/json; charset=utf-8');
-            $data = array();
+            $data = [];
             if ($_GET['lowprice'] == 1) {
                 $data = $priceArrayLow;
             } elseif ($_GET['lowpriceall'] == 1) {

@@ -59,13 +59,13 @@
             <div class="sectionHeaderMenu">
                 <div class="sectionHeaderMenuBox sectionHeaderMenuBoxCenter displayFlex flexXend flexYcenter">
                     <ul class="sectionHeaderMenuUl sectionHeaderMenuUl1">
-                        <?php wp_nav_menu(array(
+                        <?php wp_nav_menu([
                             'container' => '',
                             'theme_location' => 'menu',
                             'items_wrap' => '%3$s',
                             'depth' => 2,
-                            'walker' => new BS3_Walker_Nav_Menu()
-                        )); ?>
+                            'walker' => new BS3_Walker_Nav_Menu(),
+                        ]); ?>
                     </ul>
                     <ul class="sectionHeaderMenuUl sectionHeaderMenuUl2">
                         <?php if (get_field('telefon', wpmlID(2)) != "") { ?>

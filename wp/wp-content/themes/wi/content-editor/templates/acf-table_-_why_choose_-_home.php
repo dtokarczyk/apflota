@@ -14,7 +14,7 @@
                                 <td class="sectionTableItemCol"><span><?php echo do_shortcode(get_sub_field('kolumna_3')); ?></span></td>
                                 <td class="sectionTableItemCol"><span><?php echo do_shortcode(get_sub_field('kolumna_4')); ?></span></td>
                                 <td class="sectionTableItemCol"><span><?php echo do_shortcode(get_sub_field('kolumna_5')); ?></span></td>
-                            </tr> 
+                            </tr>
                         <?php } ?>
                     <?php } ?>
                 </table>

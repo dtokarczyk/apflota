@@ -1,7 +1,7 @@
 <?php get_header();
 setup_postdata($post); ?>
 
-<section id="sectionBlog" class="col-lg-16 col-md-16 col-sm-16 col-xs-16 globalPaddingDefaultPage"> 
+<section id="sectionBlog" class="col-lg-16 col-md-16 col-sm-16 col-xs-16 globalPaddingDefaultPage">
     <div class="container">
         <section class="col-lg-16 col-md-16 col-sm-16 col-xs-16">
             <div class="sectionBlog">
@@ -32,7 +32,7 @@ setup_postdata($post); ?>
                     }
 ?>
             </div>
-        </section>			
+        </section>
         <?php wp_reset_query(); ?>
     </div>
 </section>

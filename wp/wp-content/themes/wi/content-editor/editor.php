@@ -1,4 +1,4 @@
-<div id="contentEditor"> 
+<div id="contentEditor">
     <?php
         if (have_rows('content_editor', get_the_ID())) {
 
@@ -10,7 +10,7 @@
                 $ceLayout = get_row_layout();
 
                 $directory = __DIR__ . '/templates/';
-                $array = array_diff(scandir($directory), array('..', '.'));
+                $array = array_diff(scandir($directory), ['..', '.']);
 
                 foreach ($array as &$item) {
                     if (substr($item, 0, 1) != "_" && strpos($item, 'acf') !== false) {
