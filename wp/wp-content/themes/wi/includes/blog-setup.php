@@ -39,7 +39,7 @@ function wi_register_blog_cpt()
     $args = array(
         'label'               => __('Wpis', 'wi'),
         'labels'              => $labels,
-        'supports'            => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+        'supports'            => array('title', 'editor', 'thumbnail', 'excerpt'),
         'hierarchical'        => false,
         'public'              => true,
         'show_ui'             => true,
@@ -52,7 +52,7 @@ function wi_register_blog_cpt()
         'has_archive'         => true,
         'exclude_from_search' => false,
         'publicly_queryable'  => true,
-        'rewrite'             => array( 'slug' => 'blog', 'with_front' => false ),
+        'rewrite'             => array('slug' => 'blog', 'with_front' => false),
         'capability_type'     => 'post',
         'show_in_rest'        => true,
     );
@@ -85,11 +85,28 @@ function wi_register_blog_category_taxonomy()
         'show_in_nav_menus' => true,
         'show_tagcloud'     => true,
         'query_var'         => true,
-        'rewrite'           => array( 'slug' => 'blog/kategoria', 'with_front' => false ),
+        'rewrite'           => array('slug' => 'blog/kategoria', 'with_front' => false),
     );
-    register_taxonomy('blog-category', array( 'blog' ), $args);
+    register_taxonomy('blog-category', array('blog'), $args);
 }
 add_action('init', 'wi_register_blog_category_taxonomy', 0);
+
+// ACF Options page for global blog settings (sidebar banner)
+function wi_register_blog_options_page()
+{
+    if (! function_exists('acf_add_options_page')) {
+        return;
+    }
+    acf_add_options_page(array(
+        'page_title' => __('Ustawienia bloga', 'wi'),
+        'menu_title' => __('Ustawienia bloga', 'wi'),
+        'menu_slug'  => 'ustawienia-bloga',
+        'capability' => 'edit_posts',
+        'redirect'   => false,
+        'parent_slug' => 'edit.php?post_type=blog',
+    ));
+}
+add_action('acf/init', 'wi_register_blog_options_page');
 
 // ACF field groups (as code)
 function wi_register_blog_acf_field_groups()
@@ -132,6 +149,22 @@ function wi_register_blog_acf_field_groups()
                 'name'  => 'blog_summary',
                 'type'  => 'textarea',
                 'rows'  => 4,
+            ),
+            array(
+                'key'   => 'field_blog_sidebar_banner_override',
+                'label' => __('Banner boczny (nadpisanie)', 'wi'),
+                'name'  => 'blog_sidebar_banner_override',
+                'type'  => 'image',
+                'return_format' => 'array',
+                'preview_size' => 'medium',
+                'instructions' => __('Opcjonalnie: ustaw inny banner niż globalny dla tego wpisu.', 'wi'),
+            ),
+            array(
+                'key'   => 'field_blog_sidebar_banner_link_override',
+                'label' => __('Link bannera (nadpisanie)', 'wi'),
+                'name'  => 'blog_sidebar_banner_link_override',
+                'type'  => 'url',
+                'instructions' => __('Link dla bannera nadpisanego w tym wpisie.', 'wi'),
             ),
             array(
                 'key'     => 'field_blog_likes',
@@ -189,20 +222,6 @@ function wi_register_blog_acf_field_groups()
                 'return_format' => 'array',
                 'preview_size' => 'medium',
             ),
-            array(
-                'key'   => 'field_blog_sidebar_banner',
-                'label' => __('Blog Sidebar – banner', 'wi'),
-                'name'  => 'blog_sidebar_banner',
-                'type'  => 'image',
-                'return_format' => 'array',
-                'preview_size' => 'medium',
-            ),
-            array(
-                'key'   => 'field_blog_sidebar_banner_link',
-                'label' => __('Blog Sidebar – link bannera', 'wi'),
-                'name'  => 'blog_sidebar_banner_link',
-                'type'  => 'url',
-            ),
         ),
         'location' => array(
             array(
@@ -210,6 +229,37 @@ function wi_register_blog_acf_field_groups()
                     'param'    => 'page',
                     'operator' => '==',
                     'value'    => '2',
+                ),
+            ),
+        ),
+    ));
+
+    // Blog global options (sidebar banner – editable in Ustawienia bloga)
+    acf_add_local_field_group(array(
+        'key'                   => 'group_blog_options',
+        'title'                 => __('Banner boczny (globalny)', 'wi'),
+        'fields'                => array(
+            array(
+                'key'   => 'field_blog_sidebar_banner_option',
+                'label' => __('Banner boczny', 'wi'),
+                'name'  => 'blog_sidebar_banner',
+                'type'  => 'image',
+                'return_format' => 'array',
+                'preview_size' => 'medium',
+            ),
+            array(
+                'key'   => 'field_blog_sidebar_banner_link_option',
+                'label' => __('Link bannera', 'wi'),
+                'name'  => 'blog_sidebar_banner_link',
+                'type'  => 'url',
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param'    => 'options_page',
+                    'operator' => '==',
+                    'value'    => 'ustawienia-bloga',
                 ),
             ),
         ),
@@ -222,15 +272,15 @@ function wi_blog_like_dislike_ajax()
 {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
     if (! wp_verify_nonce($nonce, 'blog_like_dislike')) {
-        wp_send_json_error(array( 'message' => 'Invalid nonce' ));
+        wp_send_json_error(array('message' => 'Invalid nonce'));
     }
     $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
     $type    = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
     if (! $post_id || get_post_type($post_id) !== 'blog') {
-        wp_send_json_error(array( 'message' => 'Invalid post' ));
+        wp_send_json_error(array('message' => 'Invalid post'));
     }
-    if (! in_array($type, array( 'like', 'dislike' ), true)) {
-        wp_send_json_error(array( 'message' => 'Invalid type' ));
+    if (! in_array($type, array('like', 'dislike'), true)) {
+        wp_send_json_error(array('message' => 'Invalid type'));
     }
     $field = $type === 'like' ? 'blog_likes' : 'blog_dislikes';
     $current = (int) get_field($field, $post_id);

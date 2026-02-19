@@ -49,5 +49,20 @@ services:
     profiles:
       - tools
 
+  # WP-CLI (profile: tools). Examples:
+  #   docker compose --profile tools run --rm wpcli post list
+  #   ./scripts/seed-blog-posts.sh --docker
+  wpcli:
+    image: wordpress:cli-php8.2
+    working_dir: /var/www/html
+    volumes:
+      - .:/app
+      - ./wp:/var/www/html
+    depends_on:
+      mysql8:
+        condition: service_healthy
+    profiles:
+      - tools
+
 volumes:
   mysql_data:
