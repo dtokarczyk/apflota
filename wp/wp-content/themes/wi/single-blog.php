@@ -26,8 +26,8 @@ while (have_posts()) : the_post();
     $content_with_ids = $toc_data['content'];
     $toc_html = $toc_data['toc_html'];
 
-    $terms = get_the_terms($post_id, 'blog-category');
-    $category_name = ($terms && ! is_wp_error($terms)) ? $terms[0]->name : '';
+    $primary_term = wi_blog_get_primary_category_term($post_id);
+    $category_name = $primary_term ? $primary_term->name : '';
     $share_url = urlencode(get_permalink());
     $share_title = urlencode(get_the_title());
     $share_text = urlencode(wp_trim_words($summary ?: get_the_excerpt(), 20));
@@ -72,13 +72,10 @@ while (have_posts()) : the_post();
 							<?php if ($reading_time) : ?>
 								<span class="blog-single-reading-time"><?php echo esc_html($reading_time); ?> <?php esc_html_e('do czytania', 'wi'); ?></span>
 							<?php endif; ?>
-							<?php if ($terms && ! is_wp_error($terms)) : ?>
-								<?php
-		                        $category_term = $terms[0];
-							    $category_link = get_term_link($category_term, 'blog-category');
-							    ?>
+							<?php if ($primary_term) : ?>
+								<?php $category_link = get_term_link($primary_term, 'blog-category'); ?>
 								<?php if (! is_wp_error($category_link)) : ?>
-									<a href="<?php echo esc_url($category_link); ?>" class="blog-single-category-link"><?php echo esc_html($category_term->name); ?></a>
+									<a href="<?php echo esc_url($category_link); ?>" class="blog-single-category-link"><?php echo esc_html($primary_term->name); ?></a>
 								<?php else : ?>
 									<span class="blog-single-category"><?php echo esc_html($category_name); ?></span>
 								<?php endif; ?>

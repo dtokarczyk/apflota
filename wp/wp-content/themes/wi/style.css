@@ -12400,6 +12400,10 @@ ol.breadcrumb .bread-current {
   gap: 0 0.75rem;
 }
 
+.blog-single-reading-time {
+  display: inline;
+}
+
 .blog-single-category-link {
   font-weight: 700;
   text-transform: uppercase;
@@ -12561,7 +12565,46 @@ ol.breadcrumb .bread-current {
 .blog-single-content h2, .blog-single-content h3 {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  scroll-margin-top: 2rem;
+}
+.blog-single-content h2, .blog-single-content h3, .blog-single-content h4 {
+  scroll-margin-top: 7rem;
+}
+.blog-single-content h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.blog-single-content ul,
+.blog-single-content ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+.blog-single-content ul {
+  list-style-type: disc;
+}
+.blog-single-content ul ul {
+  list-style-type: circle;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+.blog-single-content ul ul ul {
+  list-style-type: square;
+}
+.blog-single-content ol {
+  list-style-type: decimal;
+}
+.blog-single-content ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+.blog-single-content ol ol ol {
+  list-style-type: lower-roman;
+}
+.blog-single-content li {
+  margin-bottom: 0.4rem;
+}
+.blog-single-content li:last-child {
+  margin-bottom: 0;
 }
 .blog-single-content blockquote {
   position: relative;

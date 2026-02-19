@@ -12,8 +12,7 @@ $card_heading = in_array($card_heading, [ 'h2', 'h3', 'h4' ], true) ? $card_head
 ?>
 <article class="blog-card">
 	<?php
-    $terms = get_the_terms(get_the_ID(), 'blog-category');
-$category_term = ($terms && ! is_wp_error($terms)) ? $terms[0] : null;
+    $category_term = wi_blog_get_primary_category_term(get_the_ID());
 $category_url = $category_term ? get_term_link($category_term, 'blog-category') : '';
 if ($category_term && is_wp_error($category_url)) {
     $category_url = add_query_arg('kategoria', $category_term->slug, get_post_type_archive_link('blog'));

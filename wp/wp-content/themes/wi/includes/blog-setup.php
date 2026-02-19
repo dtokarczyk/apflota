@@ -143,19 +143,6 @@ function wi_register_blog_acf_field_groups()
         'title'                 => __('Ustawienia postu blogowego', 'wi'),
         'fields'                => [
             [
-                'key'           => 'field_blog_main_category',
-                'label'         => __('Główna kategoria', 'wi'),
-                'name'          => 'blog_main_category',
-                'type'          => 'taxonomy',
-                'taxonomy'      => 'blog-category',
-                'field_type'    => 'select',
-                'return_format' => 'object',
-                'allow_null'    => 1,
-                'multiple'      => 0,
-                'add_term'      => 0,
-                'instructions'  => __('Używana w adresie wpisu: /blog/[slug-kategorii]/[slug-wpisu]/', 'wi'),
-            ],
-            [
                 'key'   => 'field_blog_small_image',
                 'label' => __('Mały obrazek (karta listy)', 'wi'),
                 'name'  => 'blog_small_image',
@@ -324,15 +311,58 @@ function wi_blog_query_vars($vars)
 }
 add_filter('query_vars', 'wi_blog_query_vars');
 
-// Permalink for blog posts: blog/{main-category-slug}/{post-slug}/ or blog/i/{post-slug}/ fallback
+/**
+ * Get primary blog-category term for post (Yoast "Podstawowy" or first assigned term).
+ *
+ * @param int $post_id Post ID.
+ * @return WP_Term|null Term object or null.
+ */
+function wi_blog_get_primary_category_term($post_id)
+{
+    $taxonomy = 'blog-category';
+    $term = null;
+
+    // Yoast primary term (metabox "Ustaw jako główną")
+    if (class_exists('WPSEO_Primary_Term')) {
+        $primary = new WPSEO_Primary_Term($taxonomy, $post_id);
+        $term_id = $primary->get_primary_term();
+        if ($term_id) {
+            $term = get_term($term_id, $taxonomy);
+        }
+    }
+    if (! $term && function_exists('yoast_get_primary_term_id')) {
+        $term_id = yoast_get_primary_term_id($taxonomy, $post_id);
+        if ($term_id) {
+            $term = get_term($term_id, $taxonomy);
+        }
+    }
+    if (! $term) {
+        $primary_id = get_post_meta($post_id, '_yoast_wpseo_primary_' . $taxonomy, true);
+        if ($primary_id) {
+            $term = get_term((int) $primary_id, $taxonomy);
+        }
+    }
+
+    // Fallback: first assigned term
+    if (! $term || is_wp_error($term)) {
+        $terms = get_the_terms($post_id, $taxonomy);
+        if ($terms && ! is_wp_error($terms) && ! empty($terms)) {
+            $term = $terms[0];
+        }
+    }
+
+    return ($term && ! is_wp_error($term)) ? $term : null;
+}
+
+// Permalink for blog posts: blog/{primary-category-slug}/{post-slug}/ or blog/i/{post-slug}/ fallback
 function wi_blog_post_permalink($post_url, $post)
 {
     if (! $post || $post->post_type !== 'blog' || $post->post_status !== 'publish') {
         return $post_url;
     }
     $segment = 'i';
-    $term = get_field('blog_main_category', $post->ID);
-    if ($term && is_object($term) && ! empty($term->slug)) {
+    $term = wi_blog_get_primary_category_term($post->ID);
+    if ($term && ! empty($term->slug)) {
         $segment = $term->slug;
     }
     $home = trailingslashit(home_url());
