@@ -38,31 +38,70 @@ add_action('wp_head', 'mp6_override_toolbar_margin', 11);
 function mp6_override_toolbar_margin()
 {
     if (is_admin_bar_showing()) { ?>
-    <style type="text/css" media="screen">
-        html { margin-top: 0px !important; }
-        * html body { margin-top: 0px !important; }
-        @media (min-width: 960px) {
-            body { margin-top: 0px !important; }
-            html { padding-top: 0px; }
-            #wpadminbar { position: fixed !important; }
-        }
-        @media (max-width: 960px) {
-            body { margin-top: 0px !important; }
-            html { padding-top: 0px; }
-            #wpadminbar{ position: fixed !important; }
-        }
-        @media (max-width: 782px) {
-            #wpadminbar { position:fixed !important; }
-            html { padding-top:0px; }
-            body { margin-top: 0px !important; }
-        }
-        @media (max-width: 599px){
-            html { margin-top: 0px !important; padding-top:0px; }
-            body { margin-top: 0px !important; }
-        }
-    </style>
-    <?php }
-    }
+        <style type="text/css" media="screen">
+            html {
+                margin-top: 0px !important;
+            }
+
+            * html body {
+                margin-top: 0px !important;
+            }
+
+            @media (min-width: 960px) {
+                body {
+                    margin-top: 0px !important;
+                }
+
+                html {
+                    padding-top: 0px;
+                }
+
+                #wpadminbar {
+                    position: fixed !important;
+                }
+            }
+
+            @media (max-width: 960px) {
+                body {
+                    margin-top: 0px !important;
+                }
+
+                html {
+                    padding-top: 0px;
+                }
+
+                #wpadminbar {
+                    position: fixed !important;
+                }
+            }
+
+            @media (max-width: 782px) {
+                #wpadminbar {
+                    position: fixed !important;
+                }
+
+                html {
+                    padding-top: 0px;
+                }
+
+                body {
+                    margin-top: 0px !important;
+                }
+            }
+
+            @media (max-width: 599px) {
+                html {
+                    margin-top: 0px !important;
+                    padding-top: 0px;
+                }
+
+                body {
+                    margin-top: 0px !important;
+                }
+            }
+        </style>
+<?php }
+}
 
 
 add_action('admin_head', 'wi_custom_css');
@@ -136,7 +175,7 @@ add_action('init', 'wi_disable_emojis');
 function disable_emojis_tinymce($plugins)
 {
     if (is_array($plugins)) {
-        return array_diff($plugins, [ 'wpemoji' ]);
+        return array_diff($plugins, ['wpemoji']);
     }
     return [];
 }
@@ -243,7 +282,6 @@ add_action('init', 'cp_change_post_object');
 // Usuwanie tagow w poscie
 add_action('init', function () {
     register_taxonomy('post_tag', []);
-
 });
 
 
@@ -646,3 +684,5 @@ function wi_router_load_templates(&$wp)
         }
     }
 }
+
+add_filter('wp_is_application_passwords_available', '__return_true');
