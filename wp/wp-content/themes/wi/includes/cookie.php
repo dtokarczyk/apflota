@@ -1,7 +1,7 @@
 <?php
 
 add_action('admin_menu', 'ac_cookie_menu');
-function ac_cookie_menu()
+function ac_cookie_menu(): void
 {
     add_menu_page(
         __('Cookie Settings Page', 'textdomain'),
@@ -14,11 +14,11 @@ function ac_cookie_menu()
     );
     add_action('admin_init', 'register_cookie_settings');
 }
-function register_cookie_settings()
+function register_cookie_settings(): void
 {
     register_setting('ac-settings-group', 'ac_cookie_id');
 }
-function ac_settings_cookie_page()
+function ac_settings_cookie_page(): void
 {
     ?>
 <div class="wrap">
@@ -59,7 +59,7 @@ function return_cookie_url()
     }
     return $url;
 }
-function ac_show_cookie_bar()
+function ac_show_cookie_bar(): void
 {
     ob_start();
     ?>
@@ -109,7 +109,7 @@ function ac_show_cookie_bar()
     ob_end_flush();
 }
 
-function ac_cookie_add_footer_styles()
+function ac_cookie_add_footer_styles(): void
 {
     ob_start();
     ?>

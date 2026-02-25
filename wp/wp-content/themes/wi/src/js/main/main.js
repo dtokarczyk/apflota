@@ -1089,7 +1089,7 @@ $(window).on('load', function() {
     }
     
     
-    // Kalkulator
+    // Kalkulator (single request: all=1)
     if($(".sectioOfferCalc > div").hasClass("sectioOfferCalcTitle")) {
         var lowpriceData;
         var priceData;
@@ -1097,43 +1097,16 @@ $(window).on('load', function() {
         var feeData;
         var rateData;
         
-        // lowpriceData
-        $.getJSON($("body").attr("path") + "/carapi?lowprice=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-            lowpriceData = data;
-        }).done(function() { 
-            /////////////////////////////////////////////////////////////////
-            // priceData ////////////////////////////////////////////////////
-            $.getJSON($("body").attr("path") + "/carapi?price=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                priceData = data;
-            }).done(function() { 
-                /////////////////////////////////////////////////////////////////
-                // monthkmData //////////////////////////////////////////////////
-                $.getJSON($("body").attr("path") + "/carapi?monthkm=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                    monthkmData = data;
-                }).done(function() { 
-                    /////////////////////////////////////////////////////////////////
-                    // feeData /////////////////////////////////////////////////////
-                    $.getJSON($("body").attr("path") + "/carapi?fee=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                        feeData = data;
-                    }).done(function() { 
-                        /////////////////////////////////////////////////////////////////
-                        // rateData /////////////////////////////////////////////////////
-                        $.getJSON($("body").attr("path") + "/carapi?rate=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                            rateData = data;
-                        }).done(function() { 
-                            /////////////////////////////////////////////////////////////////
-                            // najnizsza rata dla samochodu /////////////////////////////////
-                            $(".sectioOfferCalc").addClass("relode");
-                            $.getJSON($("body").attr("path") + "/carapi?lowpriceall=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                                $(".sectioOfferCalcPrice span").text(data);
-                            }).done(function() { 
-                                var low_price_val = $(".sectioOfferCalcPrice span").text();
-                                mon_km_per(low_price_val);
-                            })
-                        })
-                    })
-                })
-            })
+        $.getJSON($("body").attr("path") + "/carapi?all=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
+            lowpriceData = data.lowprice || {};
+            priceData = data.price || {};
+            monthkmData = data.monthkm || {};
+            feeData = data.fee || {};
+            rateData = data.rate || {};
+            $(".sectioOfferCalc").addClass("relode");
+            $(".sectioOfferCalcPrice span").text(data.lowpriceall || "----");
+            var low_price_val = $(".sectioOfferCalcPrice span").text();
+            mon_km_per(low_price_val);
         })
         
         // najnizsza rata dla miesiecy

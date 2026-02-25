@@ -13,7 +13,7 @@
                 $array = array_diff(scandir($directory), ['..', '.']);
 
                 foreach ($array as &$item) {
-                    if (substr($item, 0, 1) != "_" && strpos($item, 'acf') !== false) {
+                    if (substr($item, 0, 1) != "_" && str_contains($item, 'acf')) {
                         @include __DIR__ . '/templates/' . $item;
                     }
                 }

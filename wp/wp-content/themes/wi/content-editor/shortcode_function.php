@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Shortcode ///////////////////////////////////////////////////////////////////
 
 function wi_spacesmall_shortcode($atts, $content = null)
@@ -26,7 +28,7 @@ add_shortcode('spaceBig', 'wi_spacebig_shortcode');
 
 // Function ////////////////////////////////////////////////////////////////////
 
-function containerStart($container)
+function containerStart($container): void
 {
     if ($container == 0) {
         echo '<div class="containerEditor">';
@@ -39,7 +41,7 @@ function containerStart($container)
     }
 }
 
-function containerEnd($container)
+function containerEnd($container): void
 {
     if ($container < 4) {
         echo '</div>';

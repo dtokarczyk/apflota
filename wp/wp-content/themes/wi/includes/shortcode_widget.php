@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SHORTCODE -------------------------------------------------------------------
 
 function wi_kotwica_shortcode($atts, $content = null)
@@ -320,7 +322,7 @@ add_shortcode('nadTytulem', 'wi_nadtytulem_shortcode');
 
 
 // wi_lang_widget
-function wi_lang_widget()
+function wi_lang_widget(): void
 {
     register_sidebar([
         'name' => __('Language switcher', 'theme-slug'),

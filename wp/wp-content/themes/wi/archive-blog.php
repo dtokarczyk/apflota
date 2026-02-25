@@ -12,8 +12,8 @@ $current_slug  = get_query_var('kategoria');
 $is_blog_main  = empty($current_slug); // "Wszystkie artykuły" – show hero with overlay
 
 $categories = get_terms([
-	'taxonomy'   => 'blog-category',
-	'hide_empty' => true,
+    'taxonomy'   => 'blog-category',
+    'hide_empty' => true,
 ]);
 ?>
 
@@ -47,9 +47,9 @@ $categories = get_terms([
 	<div class="blog-archive-container">
 		<?php if (! $is_blog_main && $current_slug) : ?>
 			<?php
-			$current_term = get_term_by('slug', $current_slug, 'blog-category');
-			if ($current_term && ! is_wp_error($current_term)) :
-			?>
+            $current_term = get_term_by('slug', $current_slug, 'blog-category');
+		    if ($current_term && ! is_wp_error($current_term)) :
+		        ?>
 				<ol id="breadcrumbs" class="breadcrumb displaFlex flexWrap flexXstart flexYcenter" itemscope itemtype="http://schema.org/BreadcrumbList">
 					<li class="item-home" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-link bread-home" href="<?php echo esc_url(get_home_url()); ?>" aria-label="<?php esc_attr_e('Strona główna', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Strona główna', 'wi'); ?></span></a>
 						<meta itemprop="position" content="1" />
@@ -69,11 +69,11 @@ $categories = get_terms([
 			<?php if ($categories && ! is_wp_error($categories)) : ?>
 				<?php foreach ($categories as $term) : ?>
 					<?php
-					$term_link = get_term_link($term, 'blog-category');
-					if (is_wp_error($term_link)) {
-						$term_link = add_query_arg('kategoria', $term->slug, get_post_type_archive_link('blog'));
-					}
-					?>
+		                $term_link = get_term_link($term, 'blog-category');
+				    if (is_wp_error($term_link)) {
+				        $term_link = add_query_arg('kategoria', $term->slug, get_post_type_archive_link('blog'));
+				    }
+				    ?>
 					<a href="<?php echo esc_url($term_link); ?>" class="blog-category-link <?php echo $current_slug === $term->slug ? 'blog-category-link-active' : ''; ?>"><?php echo esc_html($term->name); ?></a>
 				<?php endforeach; ?>
 			<?php endif; ?>

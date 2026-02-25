@@ -6,39 +6,39 @@
 get_header();
 
 while (have_posts()) : the_post();
-	$post_id       = get_the_ID();
-	$blog_page_id  = function_exists('wpmlID') ? wpmlID(2) : 2;
-	$big_image     = get_field('blog_big_image');
-	$reading_time   = get_field('blog_reading_time');
-	if (empty(trim((string) $reading_time))) {
-		$reading_time = '5 min';
-	}
-	$summary        = get_field('blog_summary');
-	$likes          = (int) get_field('blog_likes');
-	$dislikes       = (int) get_field('blog_dislikes');
-	$banner_override = get_field('blog_sidebar_banner_override');
-	$sidebar_banner  = (is_array($banner_override) && ! empty($banner_override['url'])) ? $banner_override : get_field('blog_sidebar_banner', 'option');
-	$link_override   = get_field('blog_sidebar_banner_link_override');
-	$sidebar_link    = (is_string($link_override) && $link_override !== '') ? $link_override : get_field('blog_sidebar_banner_link', 'option');
+    $post_id       = get_the_ID();
+    $blog_page_id  = function_exists('wpmlID') ? wpmlID(2) : 2;
+    $big_image     = get_field('blog_big_image');
+    $reading_time   = get_field('blog_reading_time');
+    if (empty(trim((string) $reading_time))) {
+        $reading_time = '5 min';
+    }
+    $summary        = get_field('blog_summary');
+    $likes          = (int) get_field('blog_likes');
+    $dislikes       = (int) get_field('blog_dislikes');
+    $banner_override = get_field('blog_sidebar_banner_override');
+    $sidebar_banner  = (is_array($banner_override) && ! empty($banner_override['url'])) ? $banner_override : get_field('blog_sidebar_banner', 'option');
+    $link_override   = get_field('blog_sidebar_banner_link_override');
+    $sidebar_link    = (is_string($link_override) && $link_override !== '') ? $link_override : get_field('blog_sidebar_banner_link', 'option');
 
-	$content = apply_filters('the_content', get_the_content());
-	$toc_data = wi_generate_toc($content);
-	$content_with_ids = $toc_data['content'];
-	$toc_html = $toc_data['toc_html'];
+    $content = apply_filters('the_content', get_the_content());
+    $toc_data = wi_generate_toc($content);
+    $content_with_ids = $toc_data['content'];
+    $toc_html = $toc_data['toc_html'];
 
-	$primary_term = wi_blog_get_primary_category_term($post_id);
-	$category_name = $primary_term ? $primary_term->name : '';
-	$share_url = urlencode(get_permalink());
-	$share_title = urlencode(get_the_title());
-	$share_text = urlencode(wp_trim_words($summary ?: get_the_excerpt(), 20));
-	$fb_share = 'https://www.facebook.com/sharer/sharer.php?u=' . $share_url;
-	$linkedin_share = 'https://www.linkedin.com/sharing/share-offsite/?url=' . $share_url;
-?>
+    $primary_term = wi_blog_get_primary_category_term($post_id);
+    $category_name = $primary_term ? $primary_term->name : '';
+    $share_url = urlencode(get_permalink());
+    $share_title = urlencode(get_the_title());
+    $share_text = urlencode(wp_trim_words($summary ?: get_the_excerpt(), 20));
+    $fb_share = 'https://www.facebook.com/sharer/sharer.php?u=' . $share_url;
+    $linkedin_share = 'https://www.linkedin.com/sharing/share-offsite/?url=' . $share_url;
+    ?>
 
 	<section id="blogSingle" class="blog-single">
 		<div class="blog-single-container">
 			<?php if (function_exists('qt_custom_breadcrumbs')) {
-				qt_custom_breadcrumbs();
+			    qt_custom_breadcrumbs();
 			} ?>
 		</div>
 		<!-- Hero: full-width image, title in container -->
@@ -122,18 +122,18 @@ while (have_posts()) : the_post();
 						</button>
 					</div>
 					<?php
-					$related = wi_get_related_blog_posts($post_id, 3);
-					if ($related->have_posts()) : ?>
+			        $related = wi_get_related_blog_posts($post_id, 3);
+    if ($related->have_posts()) : ?>
 						<div class="blog-related">
 							<h2 class="blog-related-title"><?php esc_html_e('Powiązane artykuły', 'wi'); ?></h2>
 							<div class="blog-grid">
 								<?php
-								set_query_var('blog_card_heading', 'h3');
-								while ($related->have_posts()) : $related->the_post();
-									get_template_part('template-parts/blog', 'card');
-								endwhile;
-								wp_reset_postdata();
-								?>
+                set_query_var('blog_card_heading', 'h3');
+        while ($related->have_posts()) : $related->the_post();
+            get_template_part('template-parts/blog', 'card');
+        endwhile;
+        wp_reset_postdata();
+        ?>
 							</div>
 						</div>
 					<?php endif; ?>

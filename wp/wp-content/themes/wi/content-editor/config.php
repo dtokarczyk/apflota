@@ -1,7 +1,7 @@
 <?php
 
 // Register image
-function ce_register_image()
+function ce_register_image(): void
 {
     //add_image_size('ce_img-640x480', 640, 480, true);
     //add_image_size('ce_img-960xX', 960, 2000, false);
@@ -28,7 +28,7 @@ function ce_json_load_layouts($paths)
 
 // Hidden layout
 
-function ce_hidden_layout()
+function ce_hidden_layout(): void
 { ?>
     <style>
         /* Global */
@@ -72,7 +72,7 @@ function ce_hidden_layout()
     $array = array_diff(scandir($directory), ['..', '.']);
 
     foreach ($array as &$item) {
-        if (substr($item, 0, 1) != "_" && strpos($item, 'acf') !== false) {
+        if (substr($item, 0, 1) != "_" && str_contains($item, 'acf')) {
             $item = str_replace(
                 "acf-",
                 "",

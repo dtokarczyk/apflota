@@ -1,6 +1,6 @@
 <?php
 
-function tox_popup_custom_frontand()
+function tox_popup_custom_frontand(): void
 {
     if (get_field('popup_-_wlacz__wylacz', wpmlID(2)) != "" && get_field('popup_-_wlacz__wylacz', wpmlID(2)) == 1 && wpmlID(2) == get_the_ID()) {
         ?>

@@ -8,9 +8,9 @@ get_header();
 
 $current_term = get_queried_object();
 if (! $current_term || ! isset($current_term->slug)) {
-	// Fallback: redirect to blog archive
-	wp_safe_redirect(get_post_type_archive_link('blog'), 302);
-	exit;
+    // Fallback: redirect to blog archive
+    wp_safe_redirect(get_post_type_archive_link('blog'), 302);
+    exit;
 }
 
 $hero_title   = get_field('blog_hero_title', 'option');
@@ -20,8 +20,8 @@ $current_slug  = $current_term->slug;
 $is_blog_main  = false; // Category view – no hero
 
 $categories = get_terms([
-	'taxonomy'   => 'blog-category',
-	'hide_empty' => true,
+    'taxonomy'   => 'blog-category',
+    'hide_empty' => true,
 ]);
 ?>
 
@@ -45,11 +45,11 @@ $categories = get_terms([
 			<?php if ($categories && ! is_wp_error($categories)) : ?>
 				<?php foreach ($categories as $term) : ?>
 					<?php
-					$term_link = get_term_link($term, 'blog-category');
-					if (is_wp_error($term_link)) {
-						$term_link = get_post_type_archive_link('blog');
-					}
-					?>
+                    $term_link = get_term_link($term, 'blog-category');
+				    if (is_wp_error($term_link)) {
+				        $term_link = get_post_type_archive_link('blog');
+				    }
+				    ?>
 					<a href="<?php echo esc_url($term_link); ?>" class="blog-category-link <?php echo $current_slug === $term->slug ? 'blog-category-link-active' : ''; ?>"><?php echo esc_html($term->name); ?></a>
 				<?php endforeach; ?>
 			<?php endif; ?>

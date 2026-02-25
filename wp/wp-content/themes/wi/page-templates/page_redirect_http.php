@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 Template Name: Przekierowanie do strony www
 */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 /*******************
 JS + CSS + FONTS include luk mod
@@ -19,7 +21,7 @@ function ac_main_config()
 }
 
 add_action('init', 'ac_modify_jquery');
-function ac_modify_jquery()
+function ac_modify_jquery(): void
 {
     if (!is_admin()) {
         wp_deregister_script('jquery');
@@ -28,7 +30,7 @@ function ac_modify_jquery()
     }
 }
 
-function wi_wp_enqueue_scripts()
+function wi_wp_enqueue_scripts(): void
 {
 
     //wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=Albert+Sans:wght@100..900&display=swap');

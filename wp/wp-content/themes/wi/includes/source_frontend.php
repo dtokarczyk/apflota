@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 // Add dropdawn to menu
 add_filter('nav_menu_link_attributes', 'nav_link_att', 10, 3);
@@ -37,7 +39,7 @@ class BS3_Walker_Nav_Menu extends Walker_Nav_Menu
 
         return parent::display_element($element, $children_elements, $max_depth, $depth, $args, $output);
     }
-    public function start_el(&$output, $item, $depth = 0, $args = [], $id = 0)
+    public function start_el(&$output, $item, $depth = 0, $args = [], $id = 0): void
     {
         if (is_object($args) && !empty($args->has_children)) {
             $link_after = $args->link_after;
@@ -50,7 +52,7 @@ class BS3_Walker_Nav_Menu extends Walker_Nav_Menu
             $args->link_after = $link_after;
         }
     }
-    public function start_lvl(&$output, $depth = 0, $args = [])
+    public function start_lvl(&$output, $depth = 0, $args = []): void
     {
         $indent = '';
         $output .= "$indent<span class=\"caret_arrow\"><b class=\"caret\"></span></b><ul class=\"dropdown-menu list-unstyled\">";
@@ -59,7 +61,7 @@ class BS3_Walker_Nav_Menu extends Walker_Nav_Menu
 
 
 // Paginacja strony kategorii
-function wpbeginner_numeric_posts_nav()
+function wpbeginner_numeric_posts_nav(): void
 {
 
     if (is_singular()) {
@@ -496,7 +498,7 @@ function phoneUrl($value)
 }
 
 
-function set_posts_per_page_for_custom($query)
+function set_posts_per_page_for_custom($query): void
 {
     // Blog archive and blog category (e.g. /blog/kierowca/) – 9 posts per page
     if (!is_admin() && $query->is_main_query() && (is_post_type_archive('blog') || is_tax('blog-category'))) {
@@ -511,7 +513,7 @@ add_action('pre_get_posts', 'set_posts_per_page_for_custom');
 
 // Deregister Contact Form 7
 add_action('wp_print_scripts', 'deregister_cf7_javascript', 100);
-function deregister_cf7_javascript()
+function deregister_cf7_javascript(): void
 {
     if (get_the_ID() == wpmlID(2)) {
         wp_deregister_script('contact-form-7');
@@ -519,7 +521,7 @@ function deregister_cf7_javascript()
     }
 }
 add_action('wp_print_styles', 'deregister_cf7_styles', 100);
-function deregister_cf7_styles()
+function deregister_cf7_styles(): void
 {
     if (get_the_ID() == wpmlID(2)) {
         wp_deregister_style('contact-form-7');
@@ -527,7 +529,7 @@ function deregister_cf7_styles()
 }
 
 // luk mod - alt img
-function altIMG($item)
+function altIMG($item): void
 {
     $itemALT = $item['name'];
     if ($item['alt'] != "") {

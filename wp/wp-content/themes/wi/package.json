@@ -1,0 +1,19 @@
+{
+  "name": "wi-theme",
+  "private": true,
+  "devDependencies": {
+    "@wordpress/scripts": "^30.0",
+    "sass": "^1.77.0"
+  },
+  "dependencies": {
+    "@silevis/reactgrid": "^4.0",
+    "react": "^18.0",
+    "react-dom": "^18.0"
+  },
+  "scripts": {
+    "build:admin": "wp-scripts build components/calc/index.js --output-path=js/admin-calc",
+    "start:admin": "wp-scripts start components/calc/index.js --output-path=js/admin-calc",
+    "sass:build": "sass scss:. --style expanded",
+    "sass:watch": "sass --watch scss:. --style compressed --no-source-map"
+  }
+}

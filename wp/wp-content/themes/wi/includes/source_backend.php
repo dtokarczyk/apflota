@@ -5,7 +5,7 @@ register_nav_menus([
     'menu' => __('Menu', 'wp-menu'),
 ]);
 
-function wi_editor_styles()
+function wi_editor_styles(): void
 {
     add_editor_style('editor-style.css');
 }
@@ -13,7 +13,7 @@ add_action('init', 'wi_editor_styles');
 
 
 // rejestracja custom size images - luk mod
-function custom_image_sizes()
+function custom_image_sizes(): void
 {
     remove_image_size('small');
     remove_image_size('large');
@@ -35,7 +35,7 @@ add_action('after_setup_theme', 'custom_image_sizes');
 
 // adminbar - icon
 add_action('wp_head', 'mp6_override_toolbar_margin', 11);
-function mp6_override_toolbar_margin()
+function mp6_override_toolbar_margin(): void
 {
     if (is_admin_bar_showing()) { ?>
         <style type="text/css" media="screen">
@@ -101,11 +101,11 @@ function mp6_override_toolbar_margin()
             }
         </style>
 <?php }
-}
+    }
 
 
 add_action('admin_head', 'wi_custom_css');
-function wi_custom_css()
+function wi_custom_css(): void
 {
     echo '<style>
         .post-type-post #icl_translations {
@@ -143,7 +143,7 @@ function wi_sanitize_file_name($filename)
     $info = pathinfo($filename); // info o sciezce
     $ext  = empty($info['extension']) ? '' : '.' . $info['extension']; // wyciaga rozszerzenie
     $name = basename($filename, $ext); ///odcina rozszerzenie
-    $number = rand(100, 999); //generuje random
+    $number = random_int(100, 999); //generuje random
     return sanitize_title($name) . '_' . $number . $ext; // zwraca plik
 }
 add_filter('sanitize_file_name', 'wi_sanitize_file_name', 10);
@@ -152,12 +152,10 @@ add_filter('sanitize_file_name', 'wi_sanitize_file_name', 10);
 // Remove br in content
 remove_filter('the_content', 'wpautop');
 $br = false;
-add_filter('the_content', function ($content) use ($br) {
-    return wpautop($content, $br);
-}, 10);
+add_filter('the_content', fn($content) => wpautop($content, $br), 10);
 
 // Disable the emoji's
-function wi_disable_emojis()
+function wi_disable_emojis(): void
 {
     remove_action('wp_head', 'print_emoji_detection_script', 7);
     remove_action('admin_print_scripts', 'print_emoji_detection_script');
@@ -185,7 +183,7 @@ function disable_emojis_dns($urls, $relation_type)
     if ('dns-prefetch' == $relation_type) {
         $emoji_svg_url_bit = 'https://s.w.org/images/core/emoji/';
         foreach ($urls as $key => $url) {
-            if (strpos($url, $emoji_svg_url_bit) !== false) {
+            if (str_contains($url, $emoji_svg_url_bit)) {
                 unset($urls[$key]);
             }
         }
@@ -194,7 +192,7 @@ function disable_emojis_dns($urls, $relation_type)
 }
 
 // Disable support for comments and trackbacks in post types
-function df_disable_comments_post_types_support()
+function df_disable_comments_post_types_support(): void
 {
     $post_types = get_post_types();
     foreach ($post_types as $post_type) {
@@ -223,14 +221,14 @@ function df_disable_comments_hide_existing_comments($comments)
 add_filter('comments_array', 'df_disable_comments_hide_existing_comments', 10, 2);
 
 // Remove comments page in menu
-function df_disable_comments_admin_menu()
+function df_disable_comments_admin_menu(): void
 {
     remove_menu_page('edit-comments.php');
 }
 add_action('admin_menu', 'df_disable_comments_admin_menu');
 
 // Redirect any user trying to access comments page
-function df_disable_comments_admin_menu_redirect()
+function df_disable_comments_admin_menu_redirect(): void
 {
     global $pagenow;
     if ($pagenow === 'edit-comments.php') {
@@ -241,7 +239,7 @@ function df_disable_comments_admin_menu_redirect()
 add_action('admin_init', 'df_disable_comments_admin_menu_redirect');
 
 // Remove comments metabox from dashboard
-function df_disable_comments_dashboard()
+function df_disable_comments_dashboard(): void
 {
     remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
 }
@@ -249,7 +247,7 @@ function df_disable_comments_dashboard()
 add_action('admin_init', 'df_disable_comments_dashboard');
 
 // Remove comments links from admin bar
-function df_disable_comments_admin_bar()
+function df_disable_comments_admin_bar(): void
 {
     if (is_admin_bar_showing()) {
         remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
@@ -267,7 +265,7 @@ add_filter('wp_terms_checklist_args', 'taxonomyChecklistArgs', 1, 2);
 
 
 // Zmiana nazwy postow w panelu admina
-function cp_change_post_object()
+function cp_change_post_object(): void
 {
     $get_post_type = get_post_type_object('post');
     $labels = $get_post_type->labels;
@@ -280,7 +278,7 @@ function cp_change_post_object()
 add_action('init', 'cp_change_post_object');
 
 // Usuwanie tagow w poscie
-add_action('init', function () {
+add_action('init', function (): void {
     register_taxonomy('post_tag', []);
 });
 
@@ -474,7 +472,7 @@ add_filter("manage_{$post_type}_posts_columns", function ($defaults) {
     return $defaults;
 });
 
-add_action("manage_{$post_type}_posts_custom_column", function ($column_name, $post_id) {
+add_action("manage_{$post_type}_posts_custom_column", function ($column_name, $post_id): void {
     if ($column_name == 'id') {
         echo '<span style="font-weight:bold">' . get_field('id', $post_id) . '</span>';
     }
@@ -529,7 +527,7 @@ function my_manage_columns($columns)
     unset($columns['taxonomy-w-pakiecie']);
     return $columns;
 }
-function my_column_init()
+function my_column_init(): void
 {
     add_filter('manage_posts_columns', 'my_manage_columns');
 }
@@ -549,39 +547,52 @@ function csvToArray($csvFile)
 
 // lowest price update
 add_action('save_post', 'lowest_price_update');
-function lowest_price_update($post_ID)
+function lowest_price_update($post_ID): void
 {
-    if ($post_ID == wpmlID(2)) {
-        $csvFile = get_field('csv', wpmlID(2));
-        $csvFile = str_replace(get_site_url() . "/wp-content/uploads", wp_get_upload_dir()['basedir'], $csvFile);
-        $csv = csvToArray($csvFile);
-
-        $my_query = new WP_Query(['post_type' => 'post', 'posts_per_page' => -1]);
-
-        if ($my_query->have_posts()) {
-            while ($my_query->have_posts()) {
-                $my_query->the_post();
-                $priceArray = [];
-                foreach ($csv as $key => $value) {
-                    if (get_field('id', get_the_id()) == $value[0]) {
-                        $priceArray[intval(str_replace(' ', '', str_replace(' ', '', $value[7])))]['price'] = intval(str_replace(' ', '', str_replace(' ', '', $value[7])));
-                    }
-                }
-                $priceLow = 0;
-                foreach ($priceArray as $key => $value) {
-                    if ($priceLow > $key || $priceLow == 0) {
-                        $priceLow = $key;
-                    }
-                }
-                update_field('cena_od', strip_tags($priceLow), get_the_id());
+    if ($post_ID != wpmlID(2)) {
+        return;
+    }
+    if (function_exists('wi_calc_update_cena_od_for_all_cars')) {
+        wi_calc_update_cena_od_for_all_cars();
+        return;
+    }
+    $csvFile = get_field('csv', wpmlID(2));
+    if (! $csvFile) {
+        return;
+    }
+    $csvFile = str_replace(get_site_url() . '/wp-content/uploads', wp_get_upload_dir()['basedir'], $csvFile);
+    if (! is_file($csvFile)) {
+        return;
+    }
+    $csv = csvToArray($csvFile);
+    $my_query = new WP_Query(['post_type' => 'post', 'posts_per_page' => -1]);
+    if (! $my_query->have_posts()) {
+        return;
+    }
+    while ($my_query->have_posts()) {
+        $my_query->the_post();
+        $priceArray = [];
+        foreach ($csv as $value) {
+            if (get_field('id', get_the_id()) == ($value[0] ?? null)) {
+                $rate = (int) preg_replace('/[^\d]/u', '', $value[7] ?? '0');
+                $priceArray[$rate] = ['price' => $rate];
             }
+        }
+        $priceLow = 0;
+        foreach ($priceArray as $key => $value) {
+            if ($priceLow > $key || $priceLow == 0) {
+                $priceLow = $key;
+            }
+        }
+        if ($priceLow > 0) {
+            update_field('cena_od', $priceLow, get_the_id());
         }
     }
 }
 
 // car csv api
 add_action('init', 'wi_panel_router');
-function wi_panel_router()
+function wi_panel_router(): void
 {
     add_rewrite_rule('^carapi', 'index.php?wi_carapi=1', 'top');
 }
@@ -594,95 +605,190 @@ function add_router_slug($query_vars)
 }
 // template loader user panel
 add_action('parse_request', 'wi_router_load_templates');
-function wi_router_load_templates(&$wp)
+function wi_router_load_templates(&$wp): void
 {
-    if (array_key_exists('wi_carapi', $wp->query_vars)) {
-        if (intval($_GET['id']) > 0) {
-            $csvFile = get_field('csv', wpmlID(2));
-            $csvFile = str_replace(get_site_url() . "/wp-content/uploads", wp_get_upload_dir()['basedir'], $csvFile);
-            $csv = csvToArray($csvFile);
+    if (! array_key_exists('wi_carapi', $wp->query_vars) || (int) $_GET['id'] <= 0) {
+        return;
+    }
 
-            $carID = intval($_GET['id']);
-            $monthArray = [];
-            $feeArray = [];
-            $rateArray = [];
-            $priceArrayLow = [];
-            $priceArrayLowAll = [];
-            $percentArray = ["0", "10", "20"];
-            foreach ($csv as $key => $value) {
-                if ($carID == $value[0]) {
-                    if (in_array($value[3], $monthArray)) {
-                    } else {
-                        array_push($monthArray, $value[3]);
-                    }
-                    foreach ($percentArray as $percentArrayValue) {
-                        if ($percentArrayValue == $value[5]) {
-                            $val2 = $value[1];
-                            $val3 = intval(str_replace(' ', '', str_replace(' ', '', $value[3])));
-                            $val4 = intval(str_replace(' ', '', str_replace(' ', '', $value[4])));
-                            $val5 = intval(str_replace(' ', '', str_replace(' ', '', $value[5])));
-                            $val6 = intval(str_replace(' ', '', str_replace(' ', '', $value[6])));
-                            $val7 = intval(str_replace(' ', '', str_replace(' ', '', $value[7])));
-                            $feeArray[$val3][$val4][$val5]['fee'] = $val6;
-                            $rateArray[$val3][$val4][$val5]['rate'] = $val7;
-                            $rateArray[$val7] = [$val3][$val4][$val5]['rate'];
-                        }
-                    }
-                    $priceArray[$val7 . "mon" . $val3]['idv'] = $val2;
-                    $priceArray[$val7 . "mon" . $val3]['month'] = $val3;
-                    $priceArray[$val7 . "mon" . $val3]['km'] = $val4;
-                    $priceArray[$val7 . "mon" . $val3]['percent'] = $val5;
-                    $priceArray[$val7 . "mon" . $val3]['fee'] = $val6;
+    $carID = (string) $_GET['id'];
 
-                    if (!isset($priceArrayLow[$val3]['price']) || $priceArrayLow[$val3]['price'] > $val7) {
-                        $priceArrayLow[$val3]['price'] = $val7;
-                    }
-                    if (!isset($priceArrayLowAll) || $priceArrayLowAll > $val7) {
-                        $priceArrayLowAll = $val7;
-                    }
-                }
-            }
-            $monthArrayKM = [];
-            foreach ($monthArray as $monthArrayValue) {
-                $i = 0;
-                foreach ($csv as $key => $value) {
-                    if ($carID == $value[0]) {
-                        if ($value[3] == $monthArrayValue) {
-                            $value4 = substr(str_replace(" ", "", $value[4]), 0, -3);
-                            if ($monthArrayKM[$monthArrayValue] != "") {
-                                if (in_array($value4, $monthArrayKM[$monthArrayValue])) {
-                                } else {
-                                    $monthArrayKM[$monthArrayValue][$i] = $value4;
-                                    $i++;
-                                }
-                            } else {
-                                $monthArrayKM[$monthArrayValue][$i] = $value4;
-                                $i++;
-                            }
-                        }
-                    }
-                }
-            }
+    if (class_exists('CalcRate')) {
+        $structures = wi_calc_build_api_structures_from_db($carID);
+    } else {
+        $structures = wi_calc_build_api_structures_from_csv($carID);
+    }
 
-            header('Content-Type: application/json; charset=utf-8');
-            $data = [];
-            if ($_GET['lowprice'] == 1) {
-                $data = $priceArrayLow;
-            } elseif ($_GET['lowpriceall'] == 1) {
-                $data = $priceArrayLowAll;
-            } elseif ($_GET['price'] == 1) {
-                $data = $priceArray;
-            } elseif ($_GET['monthkm'] == 1) {
-                $data = $monthArrayKM;
-            } elseif ($_GET['fee'] == 1) {
-                $data = $feeArray;
-            } elseif ($_GET['rate'] == 1) {
-                $data = $rateArray;
-            }
-            wp_send_json($data);
-            exit;
+    if ($structures === null) {
+        return;
+    }
+
+    header('Content-Type: application/json; charset=utf-8');
+    if (! empty($_GET['all'])) {
+        wp_send_json($structures);
+    } else {
+        if (isset($_GET['lowprice']) && $_GET['lowprice'] == 1) {
+            wp_send_json($structures['lowprice']);
+        } elseif (isset($_GET['lowpriceall']) && $_GET['lowpriceall'] == 1) {
+            wp_send_json($structures['lowpriceall']);
+        } elseif (isset($_GET['price']) && $_GET['price'] == 1) {
+            wp_send_json($structures['price']);
+        } elseif (isset($_GET['monthkm']) && $_GET['monthkm'] == 1) {
+            wp_send_json($structures['monthkm']);
+        } elseif (isset($_GET['fee']) && $_GET['fee'] == 1) {
+            wp_send_json($structures['fee']);
+        } elseif (isset($_GET['rate']) && $_GET['rate'] == 1) {
+            wp_send_json($structures['rate']);
+        } else {
+            wp_send_json([]);
         }
     }
+    exit;
+}
+
+function wi_calc_build_api_structures_from_db(string $carID): ?array
+{
+    $rates = CalcRate::where('car_id', $carID)->get();
+    if ($rates->isEmpty()) {
+        return [
+            'lowprice'    => [],
+            'lowpriceall' => 0,
+            'price'       => [],
+            'monthkm'     => [],
+            'fee'         => [],
+            'rate'        => [],
+        ];
+    }
+
+    $feeArray      = [];
+    $rateArray     = [];
+    $priceArray    = [];
+    $priceArrayLow = [];
+    $priceArrayLowAll = null;
+    $months        = [];
+
+    foreach ($rates as $r) {
+        $month   = (int) $r->month;
+        $km      = (int) $r->km;
+        $percent = (int) $r->percent;
+        $rate    = (int) $r->rate;
+        $months[$month] = true;
+        $feeArray[$month][$km][$percent] = ['fee' => (int) $r->fee];
+        $rateArray[$month][$km][$percent] = ['rate' => $rate];
+        $key = $rate . 'mon' . $month;
+        $priceArray[$key] = [
+            'idv'     => $r->idv,
+            'month'   => $month,
+            'km'      => $km,
+            'percent' => $percent,
+            'fee'     => (int) $r->fee,
+        ];
+        if (! isset($priceArrayLow[$month]['price']) || $priceArrayLow[$month]['price'] > $rate) {
+            $priceArrayLow[$month] = ['price' => $rate];
+        }
+        if ($priceArrayLowAll === null || $priceArrayLowAll > $rate) {
+            $priceArrayLowAll = $rate;
+        }
+    }
+
+    $monthArrayKM = [];
+    foreach (array_keys($months) as $month) {
+        $kmDisplays = [];
+        foreach ($rates as $r) {
+            if ((int) $r->month === $month) {
+                $display = (string) floor((int) $r->km / 1000);
+                if (! in_array($display, $kmDisplays, true)) {
+                    $kmDisplays[] = $display;
+                }
+            }
+        }
+        $monthArrayKM[$month] = array_values($kmDisplays);
+    }
+
+    return [
+        'lowprice'    => $priceArrayLow,
+        'lowpriceall' => $priceArrayLowAll,
+        'price'       => $priceArray,
+        'monthkm'     => $monthArrayKM,
+        'fee'         => $feeArray,
+        'rate'        => $rateArray,
+    ];
+}
+
+function wi_calc_build_api_structures_from_csv(string $carID): ?array
+{
+    $csvFile = get_field('csv', wpmlID(2));
+    if (! $csvFile) {
+        return null;
+    }
+    $csvFile = str_replace(get_site_url() . '/wp-content/uploads', wp_get_upload_dir()['basedir'], $csvFile);
+    if (! is_file($csvFile)) {
+        return null;
+    }
+    $csv   = csvToArray($csvFile);
+    $monthArray = [];
+    $feeArray = [];
+    $rateArray = [];
+    $priceArray = [];
+    $priceArrayLow = [];
+    $priceArrayLowAll = null;
+    $percentArray = ['0', '10', '20'];
+    foreach ($csv as $value) {
+        if (! isset($value[0]) || (string) $value[0] !== $carID) {
+            continue;
+        }
+        if (! in_array($value[3], $monthArray, true)) {
+            $monthArray[] = $value[3];
+        }
+        $val3 = (int) preg_replace('/\s/u', '', $value[3] ?? '0');
+        $val4 = (int) preg_replace('/\s/u', '', $value[4] ?? '0');
+        $val5 = (string) ($value[5] ?? '');
+        $val6 = (int) preg_replace('/[^\d]/u', '', $value[6] ?? '0');
+        $val7 = (int) preg_replace('/[^\d]/u', '', $value[7] ?? '0');
+        if (! in_array($val5, $percentArray, true)) {
+            continue;
+        }
+        $val5int = (int) $val5;
+        $feeArray[$val3][$val4][$val5int] = ['fee' => $val6];
+        $rateArray[$val3][$val4][$val5int] = ['rate' => $val7];
+        $key = $val7 . 'mon' . $val3;
+        $priceArray[$key] = [
+            'idv'     => $value[1] ?? '',
+            'month'   => $val3,
+            'km'      => $val4,
+            'percent' => $val5int,
+            'fee'     => $val6,
+        ];
+        if (! isset($priceArrayLow[$val3]['price']) || $priceArrayLow[$val3]['price'] > $val7) {
+            $priceArrayLow[$val3] = ['price' => $val7];
+        }
+        if ($priceArrayLowAll === null || $priceArrayLowAll > $val7) {
+            $priceArrayLowAll = $val7;
+        }
+    }
+    $monthArrayKM = [];
+    foreach ($monthArray as $monthArrayValue) {
+        $seen = [];
+        foreach ($csv as $value) {
+            if (! isset($value[0]) || (string) $value[0] !== $carID || ($value[3] ?? '') != $monthArrayValue) {
+                continue;
+            }
+            $raw = preg_replace('/\s/u', '', $value[4] ?? '');
+            $value4 = $raw !== '' ? substr($raw, 0, -3) : '';
+            if ($value4 !== '' && ! in_array($value4, $seen, true)) {
+                $seen[] = $value4;
+            }
+        }
+        $monthArrayKM[$monthArrayValue] = array_values($seen);
+    }
+    return [
+        'lowprice'    => $priceArrayLow,
+        'lowpriceall' => $priceArrayLowAll,
+        'price'       => $priceArray,
+        'monthkm'     => $monthArrayKM,
+        'fee'         => $feeArray,
+        'rate'        => $rateArray,
+    ];
 }
 
 add_filter('wp_is_application_passwords_available', '__return_true');

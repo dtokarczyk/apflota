@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Blog helpers: TOC generator and related posts.
  */
@@ -144,9 +146,7 @@ function wi_get_related_blog_posts($post_id, $count = 3)
     if (! $terms || is_wp_error($terms)) {
         return new WP_Query(['post__in' => [0]]);
     }
-    $term_ids = array_map(function ($t) {
-        return $t->term_id;
-    }, $terms);
+    $term_ids = array_map(fn($t) => $t->term_id, $terms);
     $args = [
         'post_type'      => 'blog',
         'posts_per_page' => $count,

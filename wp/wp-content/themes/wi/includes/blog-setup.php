@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Blog CPT, taxonomy, ACF fields (as code), and AJAX like/dislike.
  */
 
 // Register Custom Post Type: blog
-function wi_register_blog_cpt()
+function wi_register_blog_cpt(): void
 {
     $labels = [
         'name'                  => _x('Artykuły', 'Post Type General Name', 'wi'),
@@ -61,7 +63,7 @@ function wi_register_blog_cpt()
 add_action('init', 'wi_register_blog_cpt', 0);
 
 // Register Taxonomy: blog-category
-function wi_register_blog_category_taxonomy()
+function wi_register_blog_category_taxonomy(): void
 {
     $labels = [
         'name'              => _x('Kategorie bloga', 'taxonomy general name', 'wi'),
@@ -92,7 +94,7 @@ function wi_register_blog_category_taxonomy()
 add_action('init', 'wi_register_blog_category_taxonomy', 0);
 
 // Custom rewrite rules: single post blog/{category-slug}/{post-slug}/, category archive blog/slug/
-function wi_blog_add_rewrite_rules()
+function wi_blog_add_rewrite_rules(): void
 {
     // Single post: blog/{category-slug}/{post-slug}/ (two segments; must be before one-segment rule)
     add_rewrite_rule('^blog/([^/]+)/([^/]+)/?$', 'index.php?post_type=blog&name=$matches[2]', 'top');
@@ -102,7 +104,7 @@ function wi_blog_add_rewrite_rules()
 add_action('init', 'wi_blog_add_rewrite_rules', 1);
 
 // Flush rewrite rules once when version changes
-function wi_blog_maybe_flush_rewrite_rules()
+function wi_blog_maybe_flush_rewrite_rules(): void
 {
     $version = 4;
     if ((int) get_option('wi_blog_rewrite_flushed') === $version) {
@@ -114,7 +116,7 @@ function wi_blog_maybe_flush_rewrite_rules()
 add_action('init', 'wi_blog_maybe_flush_rewrite_rules', 99);
 
 // ACF Options page for global blog settings (sidebar banner)
-function wi_register_blog_options_page()
+function wi_register_blog_options_page(): void
 {
     if (! function_exists('acf_add_options_page')) {
         return;
@@ -131,7 +133,7 @@ function wi_register_blog_options_page()
 add_action('acf/init', 'wi_register_blog_options_page');
 
 // ACF field groups (as code)
-function wi_register_blog_acf_field_groups()
+function wi_register_blog_acf_field_groups(): void
 {
     if (! function_exists('acf_add_local_field_group')) {
         return;
@@ -277,7 +279,7 @@ function wi_register_blog_acf_field_groups()
 add_action('acf/init', 'wi_register_blog_acf_field_groups');
 
 // AJAX: blog like/dislike
-function wi_blog_like_dislike_ajax()
+function wi_blog_like_dislike_ajax(): void
 {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
     if (! wp_verify_nonce($nonce, 'blog_like_dislike')) {
@@ -371,7 +373,7 @@ function wi_blog_post_permalink($post_url, $post)
 add_filter('post_type_link', 'wi_blog_post_permalink', 10, 2);
 
 // Filter blog archive by category when ?kategoria=slug
-function wi_blog_archive_tax_query($query)
+function wi_blog_archive_tax_query($query): void
 {
     if (is_admin() || ! $query->is_main_query() || ! is_post_type_archive('blog')) {
         return;
