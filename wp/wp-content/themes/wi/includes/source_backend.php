@@ -616,6 +616,7 @@ function wi_router_load_templates(&$wp): void
     if (class_exists('CalcRate')) {
         $structures = wi_calc_build_api_structures_from_db($carID);
     } else {
+        // TODO Remove in future – CSV fallback; prefer DB (CalcRate) when available.
         $structures = wi_calc_build_api_structures_from_csv($carID);
     }
 
