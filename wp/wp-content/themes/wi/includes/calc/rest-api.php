@@ -27,10 +27,15 @@ function wi_calc_register_rest_routes(): void
         'callback'            => 'wi_calc_rest_get_rates',
         'permission_callback' => $check,
         'args'                => [
-            'car_id'  => ['type' => 'string', 'required' => false],
-            'month'   => ['type' => 'integer', 'required' => false],
-            'page'    => ['type' => 'integer', 'default' => 1],
-            'per_page' => ['type' => 'integer', 'default' => 100],
+            'car_id'   => ['type' => 'string', 'required' => false],
+            'month'    => ['type' => 'integer', 'required' => false],
+            'page'     => ['type' => 'integer', 'default' => 1],
+            'per_page' => [
+                'type'    => 'integer',
+                'default' => 100,
+                'minimum' => 1,
+                'maximum' => 10000,
+            ],
         ],
     ]);
 
@@ -88,6 +93,13 @@ function wi_calc_register_rest_routes(): void
         'methods'             => 'GET',
         'callback'            => 'wi_calc_rest_get_uploads',
         'permission_callback' => $check,
+    ]);
+
+    register_rest_route('wi-calc/v1', '/uploads/(?P<id>\d+)/download', [
+        'methods'             => 'GET',
+        'callback'            => 'wi_calc_rest_download_upload',
+        'permission_callback' => $check,
+        'args'                => ['id' => ['type' => 'integer', 'required' => true]],
     ]);
 
     register_rest_route('wi-calc/v1', '/migrations', [
@@ -244,6 +256,25 @@ function wi_calc_rest_import(WP_REST_Request $request): WP_REST_Response
     $userId = get_current_user_id();
     $result = wi_calc_import_csv($validRows, $mode, $userId, $originalName);
 
+    // When import is from JSON (no file uploaded), save generated CSV for download
+    if (! empty($result['success']) && ! empty($result['upload_id']) && ! empty($validRows)) {
+        $upload = CalcUpload::find((int) $result['upload_id']);
+        if ($upload && empty($upload->file_path)) {
+            $uploadDir = wp_upload_dir();
+            $baseDir   = $uploadDir['basedir'];
+            $subDir    = 'calc-imports';
+            $dir       = $baseDir . '/' . $subDir;
+            if (wp_mkdir_p($dir)) {
+                $path = $dir . '/' . $upload->id . '.csv';
+                $csv  = wi_calc_build_csv_from_rows($validRows);
+                if (file_put_contents($path, $csv) !== false) {
+                    $upload->file_path = $subDir . '/' . $upload->id . '.csv';
+                    $upload->save();
+                }
+            }
+        }
+    }
+
     return new WP_REST_Response($result);
 }
 
@@ -264,7 +295,13 @@ function wi_calc_rest_import_from_upload(WP_REST_Request $request): WP_REST_Resp
     if ($mode !== 'append') {
         $mode = 'replace';
     }
-    $importResult = wi_calc_import_csv($result['valid_rows'], $mode, get_current_user_id(), $file['name']);
+    $importResult = wi_calc_import_csv(
+        $result['valid_rows'],
+        $mode,
+        get_current_user_id(),
+        $file['name'],
+        $path
+    );
     return new WP_REST_Response($importResult);
 }
 
@@ -272,6 +309,33 @@ function wi_calc_rest_get_uploads(WP_REST_Request $request): WP_REST_Response
 {
     $items = CalcUpload::query()->orderByDesc('created_at')->limit(100)->get();
     return new WP_REST_Response(['items' => $items->toArray()]);
+}
+
+function wi_calc_rest_download_upload(WP_REST_Request $request)
+{
+    $id     = (int) $request->get_param('id');
+    $upload = CalcUpload::find($id);
+    if (! $upload || empty($upload->file_path)) {
+        return new WP_REST_Response(['message' => 'Not found or file not stored'], 404);
+    }
+
+    $uploadDir = wp_upload_dir();
+    $path      = $uploadDir['basedir'] . '/' . $upload->file_path;
+    if (! is_readable($path)) {
+        return new WP_REST_Response(['message' => 'File not found on disk'], 404);
+    }
+
+    $filename = ! empty($upload->original_name) ? $upload->original_name : $upload->filename;
+    $filename = basename($filename);
+    if (! preg_match('/\.csv$/i', $filename)) {
+        $filename .= '.csv';
+    }
+
+    $content  = file_get_contents($path);
+    $response = new WP_REST_Response($content, 200);
+    $response->header('Content-Type', 'text/csv; charset=UTF-8');
+    $response->header('Content-Disposition', 'attachment; filename="' . str_replace('"', '\\"', $filename) . '"');
+    return $response;
 }
 
 function wi_calc_rest_get_migrations(WP_REST_Request $request): WP_REST_Response

@@ -62,18 +62,15 @@ for var in SERVER_HOST USER PASS DB_NAME DB_USER DB_PASSWORD SITE_URL; do
   fi
 done
 
-echo "=== 1/5 Build ==="
+echo "=== 1/5 Pre-deploy: format, composer install, frontend build ==="
 cd "$REPO_ROOT"
-if [ -f "docker-compose.yml" ]; then
-  echo "Running Composer install..."
-  docker compose --profile tools run --rm composer install --no-interaction
-fi
+BUILD_DIR="${REPO_ROOT}/scripts/build"
+"${BUILD_DIR}/format.sh"
+"${BUILD_DIR}/composer-install.sh"
+"${BUILD_DIR}/fe-build.sh"
+echo "Pre-deploy build done."
+
 THEME_DIR="${WP_DIR}/wp-content/themes/wi"
-if [ -d "$THEME_DIR" ] && [ -f "$THEME_DIR/package.json" ]; then
-  echo "Building theme (admin-calc + Sass)..."
-  (cd "$THEME_DIR" && npm run build:admin && npm run sass:build)
-fi
-echo "Build done."
 
 echo "=== 2/5 Patch wp-config.php (DB_* from .env) ==="
 WP_CONFIG="${WP_DIR}/wp-config.php"

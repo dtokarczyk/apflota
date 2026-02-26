@@ -62,12 +62,18 @@ export default function DataGrid() {
     fetchCars()
       .then((data) => {
         const map = {};
-        (data.items || []).forEach((item) => {
+        const items = data.items || [];
+        items.forEach((item) => {
           map[String(item.car_id)] = item.title || '';
         });
         setCarTitles(map);
+        const ids = items.map((i) => i.car_id).sort((a, b) => Number(a) - Number(b));
+        setCarIds(ids);
       })
-      .catch(() => setCarTitles({}));
+      .catch(() => {
+        setCarTitles({});
+        setCarIds([]);
+      });
   }, []);
 
   const loadRates = useCallback(async () => {
@@ -75,15 +81,11 @@ export default function DataGrid() {
     try {
       const params = {};
       if (carIdFilter) params.car_id = carIdFilter;
-      params.per_page = 500;
+      params.per_page = 10000;
       const data = await fetchRates(params);
       const header = buildHeaderRow();
       const dataRows = data.items.map(rateToRow);
       setRows([header, ...dataRows]);
-      if (!carIdFilter && data.items.length > 0) {
-        const ids = [...new Set(data.items.map((r) => r.car_id))].sort((a, b) => Number(a) - Number(b));
-        setCarIds(ids);
-      }
     } catch (e) {
       setRows([buildHeaderRow()]);
     } finally {

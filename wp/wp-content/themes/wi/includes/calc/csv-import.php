@@ -171,9 +171,10 @@ function wi_calc_validate_csv(array $rows, int $previewRows = 10): array
  * @param string $mode 'replace' or 'append'
  * @param int $uploadedBy WordPress user ID
  * @param string $originalName Original filename for history
+ * @param string|null $sourceFilePath If set, copy this CSV file to uploads for later download
  * @return array{success: bool, rows_imported: int, cars_affected: int, status: string, error_message: string|null}
  */
-function wi_calc_import_csv(array $validRows, string $mode, int $uploadedBy, string $originalName = ''): array
+function wi_calc_import_csv(array $validRows, string $mode, int $uploadedBy, string $originalName = '', ?string $sourceFilePath = null): array
 {
     if (! class_exists('CalcRate') || ! class_exists('CalcUpload')) {
         return [
@@ -206,7 +207,7 @@ function wi_calc_import_csv(array $validRows, string $mode, int $uploadedBy, str
         }
         $carsAffected = count($carIds);
 
-        CalcUpload::create([
+        $upload = CalcUpload::create([
             'filename'       => basename($originalName) ?: 'import.csv',
             'original_name'  => $originalName,
             'rows_imported'  => $rowsImported,
@@ -215,6 +216,20 @@ function wi_calc_import_csv(array $validRows, string $mode, int $uploadedBy, str
             'error_message'  => $errorMessage,
             'uploaded_by'    => $uploadedBy,
         ]);
+
+        if ($sourceFilePath !== null && $sourceFilePath !== '' && is_readable($sourceFilePath)) {
+            $uploadDir = wp_upload_dir();
+            $baseDir   = $uploadDir['basedir'];
+            $subDir    = 'calc-imports';
+            $dir       = $baseDir . '/' . $subDir;
+            if (wp_mkdir_p($dir)) {
+                $dest = $dir . '/' . $upload->id . '.csv';
+                if (copy($sourceFilePath, $dest)) {
+                    $upload->file_path = $subDir . '/' . $upload->id . '.csv';
+                    $upload->save();
+                }
+            }
+        }
     } catch (Throwable $e) {
         $status       = 'error';
         $errorMessage = $e->getMessage();
@@ -240,11 +255,37 @@ function wi_calc_import_csv(array $validRows, string $mode, int $uploadedBy, str
 
     return [
         'success'        => true,
+        'upload_id'      => $upload->id,
         'rows_imported'  => $rowsImported,
         'cars_affected'  => $carsAffected,
         'status'        => $status,
         'error_message' => $errorMessage,
     ];
+}
+
+/**
+ * Build CSV content (semicolon-separated) from validated rows for download.
+ *
+ * @param array<int, array<string, mixed>> $validRows
+ * @return string
+ */
+function wi_calc_build_csv_from_rows(array $validRows): string
+{
+    $header = "car_id;idv;;month;km;percent;fee;rate\n";
+    $lines  = [];
+    foreach ($validRows as $row) {
+        $lines[] = sprintf(
+            '%s;%s;;%d;%d;%d;%d;%d',
+            $row['car_id'],
+            $row['idv'],
+            (int) $row['month'],
+            (int) $row['km'],
+            (int) $row['percent'],
+            (int) $row['fee'],
+            (int) $row['rate']
+        );
+    }
+    return $header . implode("\n", $lines);
 }
 
 /**

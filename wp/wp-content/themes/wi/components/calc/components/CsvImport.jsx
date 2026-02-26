@@ -59,6 +59,12 @@ export default function CsvImport({ onImported }) {
           </select>
         </label>
       </div>
+      <p style={{ marginTop: '4px', marginBottom: '16px', color: '#646970', fontSize: '13px' }}>
+        <strong>Nadpisz</strong> - przed importem usuwa wszystkie stawki; w bazie zostaną tylko dane z tego pliku. 
+      </p>
+      <p style={{ marginTop: '4px', marginBottom: '16px', color: '#646970', fontSize: '13px' }}>
+        <strong>Dodaj do istniejących</strong> - dopisuje wiersze do obecnych stawek bez usuwania ich (może powstać duplikat tego samego wariantu).
+      </p>
 
       {loading && <p>Walidacja…</p>}
 

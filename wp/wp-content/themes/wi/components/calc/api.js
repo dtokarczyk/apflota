@@ -100,6 +100,27 @@ export async function fetchUploads() {
   return res.json();
 }
 
+/**
+ * Download historical import CSV by upload id. Opens save dialog.
+ * @param {number} id Upload record id
+ * @param {string} [filename] Suggested filename
+ */
+export async function downloadUpload(id, filename = 'import.csv') {
+  const { baseUrl, nonce } = getConfig();
+  const res = await fetch(`${baseUrl}/uploads/${id}/download`, { headers: headers() });
+  if (!res.ok) throw new Error(await res.text());
+  const blob = await res.blob();
+  const disposition = res.headers.get('Content-Disposition');
+  const match = disposition && disposition.match(/filename="([^"]+)"/);
+  const name = match ? decodeURIComponent(match[1]) : filename;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export async function fetchMigrations() {
   const { baseUrl } = getConfig();
   const res = await fetch(`${baseUrl}/migrations`, { headers: headers() });

@@ -16,6 +16,7 @@ class CalcUpload extends Model
     protected $fillable = [
         'filename',
         'original_name',
+        'file_path',
         'rows_imported',
         'cars_affected',
         'status',
