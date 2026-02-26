@@ -1089,58 +1089,74 @@ $(window).on('load', function() {
     }
     
     
-    // Kalkulator
+    // Kalkulator (single API call: full config)
     if($(".sectioOfferCalc > div").hasClass("sectioOfferCalcTitle")) {
         var lowpriceData;
         var priceData;
         var monthkmData;
         var feeData;
         var rateData;
-        
-        // lowpriceData
-        $.getJSON($("body").attr("path") + "/carapi?lowprice=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-            lowpriceData = data;
-        }).done(function() { 
-            /////////////////////////////////////////////////////////////////
-            // priceData ////////////////////////////////////////////////////
-            $.getJSON($("body").attr("path") + "/carapi?price=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                priceData = data;
-            }).done(function() { 
-                /////////////////////////////////////////////////////////////////
-                // monthkmData //////////////////////////////////////////////////
-                $.getJSON($("body").attr("path") + "/carapi?monthkm=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                    monthkmData = data;
-                }).done(function() { 
-                    /////////////////////////////////////////////////////////////////
-                    // feeData /////////////////////////////////////////////////////
-                    $.getJSON($("body").attr("path") + "/carapi?fee=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                        feeData = data;
-                    }).done(function() { 
-                        /////////////////////////////////////////////////////////////////
-                        // rateData /////////////////////////////////////////////////////
-                        $.getJSON($("body").attr("path") + "/carapi?rate=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                            rateData = data;
-                        }).done(function() { 
-                            /////////////////////////////////////////////////////////////////
-                            // najnizsza rata dla samochodu /////////////////////////////////
-                            $(".sectioOfferCalc").addClass("relode");
-                            $.getJSON($("body").attr("path") + "/carapi?lowpriceall=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
-                                $(".sectioOfferCalcPrice span").text(data);
-                            }).done(function() { 
-                                var low_price_val = $(".sectioOfferCalcPrice span").text();
-                                mon_km_per(low_price_val);
-                            })
-                        })
-                    })
-                })
-            })
-        })
+        var calcPriceAnimFrame = null;
+        var lastCalcPriceTarget = null;
+
+        function formatPrice(num) {
+            return String(Math.round(num)).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+        }
+        function animateCalcPrice(target) {
+            var $span = $(".sectioOfferCalcPrice span");
+            if (calcPriceAnimFrame !== null) {
+                cancelAnimationFrame(calcPriceAnimFrame);
+            }
+            var targetNum = typeof target === "number" ? target : parseInt(String(target).replace(/\s/g, ""), 10);
+            if (isNaN(targetNum)) {
+                lastCalcPriceTarget = null;
+                $span.text(target === undefined || target === null ? "----" : target);
+                return;
+            }
+            var currentStr = $span.text().replace(/\s/g, "");
+            var start = parseInt(currentStr, 10) || 0;
+            if (start === targetNum) {
+                lastCalcPriceTarget = targetNum;
+                $span.text(formatPrice(targetNum));
+                return;
+            }
+            var duration = 320;
+            var startTime = null;
+            function tick(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var elapsed = timestamp - startTime;
+                var progress = Math.min(elapsed / duration, 1);
+                progress = 1 - (1 - progress) * (1 - progress);
+                var value = start + (targetNum - start) * progress;
+                $span.text(formatPrice(value));
+                if (progress < 1) {
+                    calcPriceAnimFrame = requestAnimationFrame(tick);
+                } else {
+                    calcPriceAnimFrame = null;
+                }
+            }
+            lastCalcPriceTarget = targetNum;
+            calcPriceAnimFrame = requestAnimationFrame(tick);
+        }
+
+        $.getJSON($("body").attr("path") + "/carapi?all=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
+            lowpriceData = data.lowprice || {};
+            priceData = data.price || {};
+            monthkmData = data.monthkm || {};
+            feeData = data.fee || {};
+            rateData = data.rate || {};
+            $(".sectioOfferCalc").addClass("relode");
+            animateCalcPrice(data.lowpriceall);
+            var low_price_val = data.lowpriceall != null ? String(data.lowpriceall) : $(".sectioOfferCalcPrice span").text();
+            lastCalcPriceTarget = data.lowpriceall;
+            mon_km_per(low_price_val);
+        });
         
         // najnizsza rata dla miesiecy
         function low_price(mon) {
             $.each(lowpriceData, function (key_top, val_top) {
                 if(mon == key_top) {
-                    $(".sectioOfferCalcPrice span").text(val_top.price);
+                    animateCalcPrice(val_top.price);
                 }
             });
         } 
@@ -1149,7 +1165,7 @@ $(window).on('load', function() {
             var monValue = $(".sectioOfferCalcMonths .buttonCalcActive .val").attr("value");
             var kilValue = $(".sectioOfferCalcKilometers .buttonCalcActive .val").attr("value");
             var perValue = $(".sectioOfferCalcPercent .buttonCalcActive .val").attr("value");
-            $(".sectioOfferCalcPrice span").text(rateData[monValue][kilValue.toString() + "000"][perValue].rate);
+            animateCalcPrice(rateData[monValue][kilValue.toString() + "000"][perValue].rate);
         } 
         // mesiace, km, procent dla danej kwoty _ zaznaczenie
         function mon_km_per(price) {
@@ -1225,9 +1241,9 @@ $(window).on('load', function() {
             low_price($(".val",$(this)).attr("value"));
 
             setTimeout(function() {
-                var low_price_val = $(".sectioOfferCalcPrice span").text();
+                var low_price_val = lastCalcPriceTarget != null ? String(lastCalcPriceTarget) : $(".sectioOfferCalcPrice span").text();
                 mon_km_per(low_price_val);
-            }, 200);
+            }, 350);
         });
         
         // klikniecie w przebieg km
@@ -1238,9 +1254,9 @@ $(window).on('load', function() {
             low_price_checked();
 
             setTimeout(function() {
-                var low_price_val = $(".sectioOfferCalcPrice span").text();
+                var low_price_val = lastCalcPriceTarget != null ? String(lastCalcPriceTarget) : $(".sectioOfferCalcPrice span").text();
                 percent(low_price_val);
-            }, 200);
+            }, 350);
         });
         
         // klikniecie w % wkladu
@@ -1251,9 +1267,9 @@ $(window).on('load', function() {
             low_price_checked();
 
             setTimeout(function() {
-                var low_price_val = $(".sectioOfferCalcPrice span").text();
+                var low_price_val = lastCalcPriceTarget != null ? String(lastCalcPriceTarget) : $(".sectioOfferCalcPrice span").text();
                 percent(low_price_val);
-            }, 200);
+            }, 350);
         });
     }
     

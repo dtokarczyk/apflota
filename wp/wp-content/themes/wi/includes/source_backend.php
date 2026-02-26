@@ -625,25 +625,7 @@ function wi_router_load_templates(&$wp): void
     }
 
     header('Content-Type: application/json; charset=utf-8');
-    if (! empty($_GET['all'])) {
-        wp_send_json($structures);
-    } else {
-        if (isset($_GET['lowprice']) && $_GET['lowprice'] == 1) {
-            wp_send_json($structures['lowprice']);
-        } elseif (isset($_GET['lowpriceall']) && $_GET['lowpriceall'] == 1) {
-            wp_send_json($structures['lowpriceall']);
-        } elseif (isset($_GET['price']) && $_GET['price'] == 1) {
-            wp_send_json($structures['price']);
-        } elseif (isset($_GET['monthkm']) && $_GET['monthkm'] == 1) {
-            wp_send_json($structures['monthkm']);
-        } elseif (isset($_GET['fee']) && $_GET['fee'] == 1) {
-            wp_send_json($structures['fee']);
-        } elseif (isset($_GET['rate']) && $_GET['rate'] == 1) {
-            wp_send_json($structures['rate']);
-        } else {
-            wp_send_json([]);
-        }
-    }
+    wp_send_json($structures);
     exit;
 }
 

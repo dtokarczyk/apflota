@@ -4777,9 +4777,9 @@ footer {
     }
     &.relode {
         pointer-events: none;
+        /* Price stays visible – only the number updates (counting animation in JS), no fade */
         .sectioOfferCalcPrice {
-            opacity: 0;
-            @include transitionDuration(0s,all);
+            opacity: 1;
         }
         .sectioOfferCalcFee {
             opacity: 0;
