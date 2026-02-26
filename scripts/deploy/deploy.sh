@@ -1,11 +1,13 @@
 #!/usr/bin/env sh
 #
 # Deploy wp/ to target: load env from envs/<env>, build, patch wp-config (DB_*),
-# upload to FTP, then trigger migrations endpoint.
+# upload via rsync over SSH (password via sshpass), then trigger migrations endpoint.
 #
 # Required in env file (e.g. envs/.env.stg):
 #   SERVER_HOST (or SERWER_HOST), USER, PASS
-#   REMOTE_PATH or FTP_PATH (path on server where wp/ is uploaded)
+#   REMOTE_PATH or FTP_PATH (path on server where theme is uploaded)
+#   Optional: SFTP_PORT (default 22; use 22222 if your host uses custom SSH port)
+# Requires: rsync, sshpass (brew install hudochenkov/sshpass/sshpass)
 #   DB_NAME, DB_USER, DB_PASSWORD (for wp-config.php on server)
 #   SITE_URL (base URL of target site, for migration endpoint)
 # Optional: MIGRATION_AUTH="admin_user:application_password" for Basic auth on migrations.
@@ -33,6 +35,10 @@ set -a
 # shellcheck source=/dev/null
 . "$ENV_FILE"
 set +a
+
+# Trim USER and PASS (strip CR and leading/trailing spaces – .env from Windows or copy-paste)
+USER="$(printf '%s' "$USER" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+PASS="$(printf '%s' "$PASS" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 
 # SERVER_HOST: allow SERWER_HOST (Polish) or SERVER_HOST
 if [ -z "${SERVER_HOST}" ] && [ -n "${SERWER_HOST+x}" ]; then
@@ -90,31 +96,29 @@ for def in "DB_NAME:${DB_NAME}" "DB_USER:${DB_USER}" "DB_PASSWORD:${DB_PASSWORD}
   fi
 done
 
-echo "=== 3/5 Upload wp-content/themes/wi to FTP ==="
+echo "=== 3/5 Upload wp-content/themes/wi via rsync (SSH + password) ==="
 if [ ! -d "$THEME_DIR" ]; then
   echo "Error: Theme dir $THEME_DIR not found."
   exit 1
 fi
-if ! command -v lftp >/dev/null 2>&1; then
-  echo "Error: lftp is required. Install with: brew install lftp"
+if ! command -v rsync >/dev/null 2>&1; then
+  echo "Error: rsync is required (usually preinstalled on macOS)."
+  exit 1
+fi
+if ! command -v sshpass >/dev/null 2>&1; then
+  echo "Error: sshpass is required to pass SSH password. Install with: brew install hudochenkov/sshpass/sshpass"
   exit 1
 fi
 REMOTE_PATH="${REMOTE_PATH%/}"
 REMOTE_THEME_DIR="${REMOTE_PATH}/wp-content/themes/wi"
-# Use -u so password is not in -e string; credentials from env
-LFTP_SCRIPT="
-set ftp:ssl-allow no
-set ssl:verify-certificate no
-open $SERVER_HOST
-cd $REMOTE_PATH || mkdir -p $REMOTE_PATH
-mkdir -p $REMOTE_THEME_DIR
-cd $REMOTE_THEME_DIR
-lcd $THEME_DIR
-mirror --reverse --verbose --delete . .
-bye
-"
-lftp -u "$USER","$PASS" -e "$LFTP_SCRIPT"
-echo "FTP upload done."
+SSH_PORT="${SFTP_PORT:-22222}"
+SSH_OPTS="-o StrictHostKeyChecking=accept-new -o ConnectTimeout=10"
+# On shared hosting use REMOTE_PATH relative to home (e.g. public_html/testy), not /public_html/...
+echo "Creating remote dir (if needed)..."
+sshpass -p "$PASS" ssh -p "$SSH_PORT" $SSH_OPTS "$USER@$SERVER_HOST" "mkdir -p $REMOTE_THEME_DIR"
+echo "Syncing theme..."
+rsync -avz --delete --exclude='node_modules' -e "sshpass -p \"$PASS\" ssh -p $SSH_PORT $SSH_OPTS" "$THEME_DIR/" "$USER@$SERVER_HOST:$REMOTE_THEME_DIR/"
+echo "Upload done."
 
 echo "=== 4/5 Restore wp-config.php ==="
 mv "$WP_CONFIG_BAK" "$WP_CONFIG"
