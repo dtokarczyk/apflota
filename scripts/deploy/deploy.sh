@@ -81,11 +81,12 @@ if [ ! -f "$WP_CONFIG" ]; then
 fi
 cp "$WP_CONFIG" "$WP_CONFIG_BAK"
 # Replace define('DB_NAME', '...'); and same for DB_USER, DB_PASSWORD (single-quoted values)
-# Use # as sed delimiter so values containing / are safe. macOS sed: -i ''; GNU: -i.
+# Use # as sed delimiter so values containing / are safe. Escape # so it doesn't end the replacement.
+# macOS sed: -i ''; GNU: -i.
 for def in "DB_NAME:${DB_NAME}" "DB_USER:${DB_USER}" "DB_PASSWORD:${DB_PASSWORD}"; do
   key="${def%%:*}"
   val="${def#*:}"
-  val_escaped="$(echo "$val" | sed "s/'/'\\\\''/g")"
+  val_escaped="$(echo "$val" | sed "s/'/'\\\\''/g" | sed 's/#/\\#/g')"
   if sed --version >/dev/null 2>&1; then
     sed -i "s#define('$key', *'[^']*');#define('$key', '$val_escaped');#" "$WP_CONFIG"
   else
