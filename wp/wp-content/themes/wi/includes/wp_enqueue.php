@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 /*******************
 JS + CSS + FONTS include luk mod
-********************/
+ ********************/
 function ac_main_config()
 {
     $domain = $_SERVER['SERVER_NAME'];
@@ -30,23 +30,32 @@ function ac_modify_jquery(): void
     }
 }
 
+/**
+ * Cache-bust version from file mtime (bumps automatically on deployment when files are updated).
+ */
+function wi_asset_version(string $file_relative_path): string
+{
+    $path = get_template_directory() . '/' . ltrim($file_relative_path, '/');
+    $mtime = file_exists($path) ? (string) filemtime($path) : (string) time();
+    return $mtime;
+}
+
 function wi_wp_enqueue_scripts(): void
 {
 
     //wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css2?family=Albert+Sans:wght@100..900&display=swap');
     //wp_enqueue_style( 'google-fonts-2', 'https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-    $ext = '.js?v=7';
-    if (ac_main_config()['debug'] === true) {
-        $ext = '-debug.js?v=' . time();
-        wp_enqueue_style('styles', get_template_directory_uri() . '/style.css?v=' . time());
-    } else {
-        wp_enqueue_style('styles', get_template_directory_uri() . '/style.css?v=7');
-    }
+    $is_debug = ac_main_config()['debug'];
+    $js_ver   = $is_debug ? (string) time() : wi_asset_version('js/main.js');
+    $css_ver  = $is_debug ? (string) time() : wi_asset_version('style.css');
+
+    $ext = ($is_debug ? '-debug.js' : '.js') . '?v=' . $js_ver;
+    wp_enqueue_style('styles', get_template_directory_uri() . '/style.css?v=' . $css_ver);
     wp_register_script('vendor', get_stylesheet_directory_uri() . '/js/vendor.js', ['jquery']);
     //wp_register_script( 'isotope', get_stylesheet_directory_uri() . '/js/isotope.pkgd.min.js', array('jquery'));
     wp_register_script('lazyload', get_stylesheet_directory_uri() . '/js/jquery.lazy.min.js', ['jquery']);
-    wp_register_script('lazyload-plugins', get_stylesheet_directory_uri() . '/js/jquery.lazy.plugins.min.js', ['jquery','lazyload']);
+    wp_register_script('lazyload-plugins', get_stylesheet_directory_uri() . '/js/jquery.lazy.plugins.min.js', ['jquery', 'lazyload']);
     wp_register_script('addIndicators', get_template_directory_uri() . '/js/debug.addIndicators.min.js', ['jquery']);
     wp_register_script('TweenMax', get_template_directory_uri() . '/js/TweenMax.min.js', ['jquery']);
     wp_register_script('ScrollMagic', get_template_directory_uri() . '/js/ScrollMagic.min.js', ['jquery']);
@@ -73,7 +82,7 @@ function wi_wp_enqueue_scripts(): void
         wp_enqueue_script(
             'blog-js',
             get_template_directory_uri() . '/js/blog.js',
-            [ 'jquery' ],
+            ['jquery'],
             '1.0',
             true,
         );

@@ -36,6 +36,9 @@
 
 .blog-hero {
   position: relative;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
   min-height: 320px;
   display: flex;
   align-items: center;
@@ -315,6 +318,9 @@ ol.breadcrumb {
 }
 
 .blog-single-hero {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 2rem;
   overflow: hidden;
   max-height: 600px;
@@ -345,7 +351,7 @@ ol.breadcrumb {
   pointer-events: none;
 }
 
-// Title in container (same width as content), image stays full width
+// Title in container – same max-width and padding as .blog-single-container / .blog-single-layout for alignment
 .blog-single-hero-title-wrap {
   position: absolute;
   bottom: 0;
@@ -353,12 +359,12 @@ ol.breadcrumb {
   right: 0;
   max-width: 1200px;
   margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
   box-sizing: border-box;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
   @media (min-width: 1240px) {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 
@@ -548,6 +554,13 @@ ol.breadcrumb {
   padding-right: 1.5rem;
   font-size: $FontSize;
   line-height: $line-height;
+  // Headings at half size (proportional to theme variables)
+  h1 { font-size: $FontSizeH1 * 0.5; }
+  h2 { font-size: $FontSizeH2 * 0.5; }
+  h3 { font-size: $FontSizeH3 * 0.5; }
+  h4 { font-size: $FontSizeH4 * 0.5; }
+  h5 { font-size: $FontSizeH5 * 0.5; }
+  h6 { font-size: $FontSizeH6 * 0.5; }
   h2, h3 {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
@@ -619,6 +632,29 @@ ol.breadcrumb {
     p:last-child {
       margin-bottom: 0;
     }
+  }
+
+  // Tables – readable layout with borders
+  table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.95em;
+  }
+  th,
+  td {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    color: $colorGrayDark;
+  }
+  tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.02);
   }
 }
 

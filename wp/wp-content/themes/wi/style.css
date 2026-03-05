@@ -11960,6 +11960,9 @@ footer .sectionSocialMedia a {
 
 .blog-hero {
   position: relative;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
   min-height: 320px;
   display: flex;
   align-items: center;
@@ -12294,6 +12297,9 @@ ol.breadcrumb .bread-current {
 }
 
 .blog-single-hero {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 2rem;
   overflow: hidden;
   max-height: 600px;
@@ -12331,14 +12337,14 @@ ol.breadcrumb .bread-current {
   right: 0;
   max-width: 1200px;
   margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
   box-sizing: border-box;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
 }
 @media (min-width: 1240px) {
   .blog-single-hero-title-wrap {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 
@@ -12555,6 +12561,24 @@ ol.breadcrumb .bread-current {
   font-size: 1.6rem;
   line-height: 1.6;
 }
+.blog-single-content h1 {
+  font-size: 32px;
+}
+.blog-single-content h2 {
+  font-size: 32px;
+}
+.blog-single-content h3 {
+  font-size: 24px;
+}
+.blog-single-content h4 {
+  font-size: 18px;
+}
+.blog-single-content h5 {
+  font-size: 13px;
+}
+.blog-single-content h6 {
+  font-size: 10px;
+}
 .blog-single-content h2, .blog-single-content h3 {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
@@ -12621,6 +12645,27 @@ ol.breadcrumb .bread-current {
 }
 .blog-single-content blockquote p:last-child {
   margin-bottom: 0;
+}
+.blog-single-content table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+.blog-single-content th,
+.blog-single-content td {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+.blog-single-content th {
+  background: rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+  color: #000000;
+}
+.blog-single-content tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .blog-single-feedback {

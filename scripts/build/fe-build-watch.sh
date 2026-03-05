@@ -3,7 +3,9 @@
 # Usage: ./watch.sh  (requires: cd wp/wp-content/themes/wi && npm install)
 # Ctrl+C stops both processes.
 set -e
-cd "$(dirname "$0")"
+# Go to project root (two levels up from scripts/build)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/../.."
 THEME="wp/wp-content/themes/wi"
 SASS_PID=""
 cleanup() {

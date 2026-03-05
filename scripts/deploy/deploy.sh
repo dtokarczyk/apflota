@@ -62,12 +62,12 @@ for var in SERVER_HOST USER PASS DB_NAME DB_USER DB_PASSWORD SITE_URL; do
   fi
 done
 
-echo "=== 1/5 Pre-deploy: format, composer install, frontend build ==="
+echo "=== 1/5 Pre-deploy: format, composer install, frontend build (prod, minified) ==="
 cd "$REPO_ROOT"
 BUILD_DIR="${REPO_ROOT}/scripts/build"
 "${BUILD_DIR}/format.sh"
 "${BUILD_DIR}/composer-install.sh"
-"${BUILD_DIR}/fe-build.sh"
+"${BUILD_DIR}/fe-build.sh" prod
 echo "Pre-deploy build done."
 
 THEME_DIR="${WP_DIR}/wp-content/themes/wi"
