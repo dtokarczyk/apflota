@@ -62,7 +62,10 @@ for var in SERVER_HOST USER PASS DB_NAME DB_USER DB_PASSWORD SITE_URL; do
   fi
 done
 
-echo "=== 1/5 Pre-deploy: format, composer install, frontend build (prod, minified) ==="
+echo "=== 0/6 Prepare backup: full remote dir via rsync + optional dump -> temp (zip) ==="
+"${SCRIPT_DIR}/prepare-backup.sh" "$ENV_NAME" || echo "Warning: prepare-backup failed, continuing deploy."
+
+echo "=== 1/6 Pre-deploy: format, composer install, frontend build (prod, minified) ==="
 cd "$REPO_ROOT"
 BUILD_DIR="${REPO_ROOT}/scripts/build"
 "${BUILD_DIR}/format.sh"
@@ -72,7 +75,7 @@ echo "Pre-deploy build done."
 
 THEME_DIR="${WP_DIR}/wp-content/themes/wi"
 
-echo "=== 2/5 Patch wp-config.php (DB_* from .env) ==="
+echo "=== 2/6 Patch wp-config.php (DB_* from .env) ==="
 WP_CONFIG="${WP_DIR}/wp-config.php"
 WP_CONFIG_BAK="${WP_DIR}/wp-config.php.bak.deploy"
 if [ ! -f "$WP_CONFIG" ]; then
@@ -94,7 +97,7 @@ for def in "DB_NAME:${DB_NAME}" "DB_USER:${DB_USER}" "DB_PASSWORD:${DB_PASSWORD}
   fi
 done
 
-echo "=== 3/5 Upload wp-content/themes/wi via rsync (SSH + password) ==="
+echo "=== 3/6 Upload wp-content/themes/wi via rsync (SSH + password) ==="
 if [ ! -d "$THEME_DIR" ]; then
   echo "Error: Theme dir $THEME_DIR not found."
   exit 1
@@ -118,11 +121,11 @@ echo "Syncing theme..."
 rsync -avz --delete --exclude='node_modules' -e "sshpass -p \"$PASS\" ssh -p $SSH_PORT $SSH_OPTS" "$THEME_DIR/" "$USER@$SERVER_HOST:$REMOTE_THEME_DIR/"
 echo "Upload done."
 
-echo "=== 4/5 Restore wp-config.php ==="
+echo "=== 4/6 Restore wp-config.php ==="
 mv "$WP_CONFIG_BAK" "$WP_CONFIG"
 echo "Restored local wp-config.php."
 
-echo "=== 5/5 Run migrations endpoint ==="
+echo "=== 5/6 Run migrations endpoint ==="
 MIGRATION_URL="${SITE_URL%/}/wp-json/wi-calc/v1/migrations/run"
 if [ -n "${MIGRATION_AUTH+x}" ] && [ -n "$MIGRATION_AUTH" ]; then
   if curl -sf -X POST -u "$MIGRATION_AUTH" "$MIGRATION_URL" -H "Content-Type: application/json" -d "{}"; then

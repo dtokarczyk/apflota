@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * REST API for calculator: rates CRUD, import, uploads history, migrations.
+ * REST API for calculator: rates CRUD, import, uploads history, migrations, backup (dump).
  */
 
 if (! defined('ABSPATH')) {
@@ -111,6 +111,12 @@ function wi_calc_register_rest_routes(): void
     register_rest_route('wi-calc/v1', '/migrations/run', [
         'methods'             => 'POST',
         'callback'            => 'wi_calc_rest_run_migrations',
+        'permission_callback' => $check,
+    ]);
+
+    register_rest_route('wi-calc/v1', '/backup/dump', [
+        'methods'             => 'GET',
+        'callback'            => 'wi_calc_rest_backup_dump',
         'permission_callback' => $check,
     ]);
 }
@@ -361,4 +367,60 @@ function wi_calc_rest_run_migrations(WP_REST_Request $request): WP_REST_Response
     $runner = new MigrationRunner();
     $result = $runner->runPending();
     return new WP_REST_Response($result);
+}
+
+/**
+ * Generate and return SQL dump of the WordPress database (for backup).
+ */
+function wi_calc_rest_backup_dump(WP_REST_Request $request)
+{
+    global $wpdb;
+    $prefix = $wpdb->get_blog_prefix();
+    $tables = $wpdb->get_col("SHOW TABLES LIKE '{$prefix}%'");
+    if (empty($tables)) {
+        return new WP_REST_Response(['message' => 'No tables found'], 404);
+    }
+
+    $sql = "-- WordPress DB dump\n-- Generated " . gmdate('Y-m-d H:i:s') . " UTC\n\n";
+    $sql .= "SET NAMES utf8mb4;\nSET FOREIGN_KEY_CHECKS = 0;\n\n";
+
+    foreach ($tables as $table) {
+        $create = $wpdb->get_row("SHOW CREATE TABLE `{$table}`", ARRAY_N);
+        if ($create) {
+            $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
+            $sql .= $create[1] . ";\n\n";
+        }
+
+        $count = (int) $wpdb->get_var("SELECT COUNT(*) FROM `{$table}`");
+        if ($count === 0) {
+            continue;
+        }
+
+        $columns = $wpdb->get_col("SHOW COLUMNS FROM `{$table}`");
+        $colList = '`' . implode('`, `', $columns) . '`';
+        $chunkSize = 500;
+        $offset = 0;
+        while ($offset < $count) {
+            $rows = $wpdb->get_results("SELECT * FROM `{$table}` LIMIT {$chunkSize} OFFSET {$offset}", ARRAY_A);
+            foreach ($rows as $row) {
+                $values = array_map(function ($v) use ($wpdb) {
+                    if ($v === null) {
+                        return 'NULL';
+                    }
+                    return $wpdb->prepare('%s', (string) $v);
+                }, array_values($row));
+                $sql .= "INSERT INTO `{$table}` ({$colList}) VALUES (" . implode(',', $values) . ");\n";
+            }
+            $offset += $chunkSize;
+        }
+        $sql .= "\n";
+    }
+
+    $sql .= "SET FOREIGN_KEY_CHECKS = 1;\n";
+    $filename = 'dump-' . gmdate('Y-m-d-His') . '.sql';
+
+    $response = new WP_REST_Response($sql, 200);
+    $response->header('Content-Type', 'application/sql; charset=UTF-8');
+    $response->header('Content-Disposition', 'attachment; filename="' . str_replace('"', '\\"', $filename) . '"');
+    return $response;
 }

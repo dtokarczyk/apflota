@@ -4,3 +4,4 @@ wp/wp-content/themes/wi/vendor/
 node_modules
 .env.prod
 .env.stg
+temp/
