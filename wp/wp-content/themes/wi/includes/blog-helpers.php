@@ -30,7 +30,7 @@ function wi_generate_toc($content)
     libxml_clear_errors();
 
     $xpath = new DOMXPath($dom);
-    $headings = $xpath->query('//h2 | //h3 | //h4');
+    $headings = $xpath->query('//h2');
     $toc_items = [];
     $used_ids = [];
 
