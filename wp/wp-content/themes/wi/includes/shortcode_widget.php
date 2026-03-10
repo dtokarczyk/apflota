@@ -321,6 +321,73 @@ function wi_nadtytulem_shortcode($atts, $content = null)
 add_shortcode('nadTytulem', 'wi_nadtytulem_shortcode');
 
 
+function wi_faq_list_shortcode($atts, $content = null)
+{
+    $atts = shortcode_atts(
+        [
+            'heading' => '',
+        ],
+        $atts,
+        'faq_list',
+    );
+
+    $heading = $atts['heading'];
+
+    $html = '<div class="ceFaq">';
+
+    if ($heading !== '') {
+        $html .= '<h2">' . wp_kses_post($heading) . '</h2>';
+    }
+
+    $html .= do_shortcode($content);
+    $html .= '</div>';
+
+    return $html;
+}
+add_shortcode('faq_list', 'wi_faq_list_shortcode');
+
+
+function wi_faq_item_shortcode($atts, $content = null)
+{
+    $atts = shortcode_atts(
+        [
+            'question' => '',
+        ],
+        $atts,
+        'faq_item',
+    );
+
+    $question = $atts['question'];
+
+    if ($question === '') {
+        return '';
+    }
+
+    $html = '<div class="ceFaqBox">';
+    $html .= '<div class="ceFaqQuestion">';
+    $html .= '<div class="ceFaqQuestionTitle">' . wp_kses_post($question) . '</div>';
+    $html .= '<div class="ceFaqQuestionButton">';
+
+    if (file_exists(get_template_directory() . '/images/arrowFAQ.svg')) {
+        $html .= '<img src="' . esc_url(get_template_directory_uri() . '/images/arrowFAQ.svg') . '" alt="Icon" />';
+    }
+
+    $html .= '</div>';
+    $html .= '</div>';
+    $html .= '<div class="ceFaqAnswer">';
+    $html .= '<div>';
+    $html .= '<div class="ceFaqAnswerPaddingTop"></div>';
+    $html .= do_shortcode(wp_kses_post($content));
+    $html .= '<div class="ceFaqAnswerPaddingBottom"></div>';
+    $html .= '</div>';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    return $html;
+}
+add_shortcode('faq_item', 'wi_faq_item_shortcode');
+
+
 // wi_lang_widget
 function wi_lang_widget(): void
 {

@@ -191,6 +191,48 @@ function disable_emojis_dns($urls, $relation_type)
     return $urls;
 }
 
+// TinyMCE button for FAQ shortcode snippet
+function wi_register_faq_mce_button(): void
+{
+    if (!current_user_can('edit_posts') && !current_user_can('edit_pages')) {
+        return;
+    }
+
+    if (get_user_option('rich_editing') !== 'true') {
+        return;
+    }
+
+    add_filter('mce_buttons', 'wi_add_faq_mce_button');
+    add_filter('mce_external_plugins', 'wi_add_faq_mce_plugin');
+}
+add_action('admin_init', 'wi_register_faq_mce_button');
+
+/**
+ * Add FAQ button to TinyMCE toolbar.
+ *
+ * @param array<int, string> $buttons
+ * @return array<int, string>
+ */
+function wi_add_faq_mce_button(array $buttons): array
+{
+    $buttons[] = 'wi_faq_snippet';
+
+    return $buttons;
+}
+
+/**
+ * Register TinyMCE plugin script for FAQ button.
+ *
+ * @param array<string, string> $plugins
+ * @return array<string, string>
+ */
+function wi_add_faq_mce_plugin(array $plugins): array
+{
+    $plugins['wi_faq_snippet'] = get_template_directory_uri() . '/js/admin-faq-button.js';
+
+    return $plugins;
+}
+
 // Disable support for comments and trackbacks in post types
 function df_disable_comments_post_types_support(): void
 {

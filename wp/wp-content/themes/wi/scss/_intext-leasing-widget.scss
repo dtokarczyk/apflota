@@ -1,0 +1,101 @@
+/* --- STYLE DLA WIDGETU ŚRÓDTEKSTOWEGO --- */
+
+.intext-leasing-widget {
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 700px;
+  margin: 40px auto;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.widget-image-wrapper {
+  flex: 0 0 45%;
+  border-right: 1px solid #e0e0e0;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+.widget-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.widget-details {
+  flex: 1;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.widget-title {
+  margin: 0 0 5px 0;
+  font-size: 1.25rem;
+  color: #000000;
+  font-weight: 700;
+}
+
+.widget-subtitle {
+  margin: 0 0 20px 0;
+  font-size: 0.9rem;
+  color: #666666;
+}
+
+.widget-price-section {
+  margin-bottom: 25px;
+}
+
+.widget-price-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #555555;
+  margin-bottom: 5px;
+}
+
+.widget-price-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+/* Wymuszenie koloru czerwonego (nadpisanie globalnych stylów motywu) */
+.widget-cta-btn {
+  background-color: #b32a12 !important; 
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.widget-cta-btn:hover {
+  background-color: #92220e !important;
+}
+
+/* Responsywność dla urządzeń mobilnych */
+@media (max-width: 550px) {
+  .intext-leasing-widget {
+      flex-direction: column;
+  }
+  
+  .widget-image-wrapper {
+      border-right: none;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 30px 20px;
+  }
+}
