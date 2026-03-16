@@ -12,13 +12,30 @@
 #   SITE_URL (base URL of target site, for migration endpoint)
 # Optional: MIGRATION_AUTH="admin_user:application_password" for Basic auth on migrations.
 #
-# Usage: ./deploy .env.stg   (from repo root; env file is envs/.env.stg)
+# Usage: ./deploy .env.stg [--skip-backup]   (from repo root; env file is envs/.env.stg)
 #
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-ENV_NAME="${1:?Usage: deploy.sh <env> (e.g. .env.stg)}"
+ENV_NAME="${1:?Usage: deploy.sh <env> (e.g. .env.stg) [--skip-backup]}"
+shift
+
+SKIP_BACKUP=0
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --skip-backup)
+      SKIP_BACKUP=1
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: deploy.sh <env> (e.g. .env.stg) [--skip-backup]"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
 ENV_FILE="${REPO_ROOT}/envs/${ENV_NAME}"
 WP_DIR="${REPO_ROOT}/wp"
 
@@ -62,8 +79,12 @@ for var in SERVER_HOST USER PASS DB_NAME DB_USER DB_PASSWORD SITE_URL; do
   fi
 done
 
-echo "=== 0/6 Prepare backup: full remote dir via rsync + optional dump -> temp (zip) ==="
-"${SCRIPT_DIR}/prepare-backup.sh" "$ENV_NAME" || echo "Warning: prepare-backup failed, continuing deploy."
+if [ "$SKIP_BACKUP" -eq 1 ]; then
+  echo "=== 0/6 Skip backup (requested via --skip-backup) ==="
+else
+  echo "=== 0/6 Prepare backup: full remote dir via rsync + optional dump -> temp (zip) ==="
+  "${SCRIPT_DIR}/prepare-backup.sh" "$ENV_NAME" || echo "Warning: prepare-backup failed, continuing deploy."
+fi
 
 echo "=== 1/6 Pre-deploy: format, composer install, frontend build (prod, minified) ==="
 cd "$REPO_ROOT"
