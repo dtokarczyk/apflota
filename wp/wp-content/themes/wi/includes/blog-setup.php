@@ -41,7 +41,7 @@ function wi_register_blog_cpt(): void
     $args = [
         'label'               => __('Artykuł', 'wi'),
         'labels'              => $labels,
-        'supports'            => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'supports'            => ['title', 'editor', 'thumbnail', 'excerpt', 'author'],
         'hierarchical'        => false,
         'public'              => true,
         'show_ui'             => true,

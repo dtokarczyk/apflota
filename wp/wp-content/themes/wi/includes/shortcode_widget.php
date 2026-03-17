@@ -323,24 +323,33 @@ add_shortcode('nadTytulem', 'wi_nadtytulem_shortcode');
 
 function wi_faq_list_shortcode($atts, $content = null)
 {
-    $atts = shortcode_atts(
-        [
-            'heading' => '',
-        ],
-        $atts,
-        'faq_list',
-    );
-
-    $heading = $atts['heading'];
+    global $wi_faq_schema_items;
+    $wi_faq_schema_items = [];
 
     $html = '<div class="ceFaq">';
-
-    if ($heading !== '') {
-        $html .= '<h2">' . wp_kses_post($heading) . '</h2>';
-    }
-
     $html .= do_shortcode($content);
     $html .= '</div>';
+
+    if (!empty($wi_faq_schema_items)) {
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => [],
+        ];
+        foreach ($wi_faq_schema_items as $item) {
+            $schema['mainEntity'][] = [
+                '@type' => 'Question',
+                'name' => $item['question'],
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => $item['answer'],
+                ],
+            ];
+        }
+        $html .= '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+    }
+
+    $wi_faq_schema_items = [];
 
     return $html;
 }
@@ -349,6 +358,8 @@ add_shortcode('faq_list', 'wi_faq_list_shortcode');
 
 function wi_faq_item_shortcode($atts, $content = null)
 {
+    global $wi_faq_schema_items;
+
     $atts = shortcode_atts(
         [
             'question' => '',
@@ -361,6 +372,15 @@ function wi_faq_item_shortcode($atts, $content = null)
 
     if ($question === '') {
         return '';
+    }
+
+    $answer_html = do_shortcode(wp_kses_post($content));
+
+    if (is_array($wi_faq_schema_items)) {
+        $wi_faq_schema_items[] = [
+            'question' => wp_strip_all_tags($question),
+            'answer' => wp_strip_all_tags($answer_html),
+        ];
     }
 
     $html = '<div class="ceFaqBox">';
@@ -377,7 +397,7 @@ function wi_faq_item_shortcode($atts, $content = null)
     $html .= '<div class="ceFaqAnswer">';
     $html .= '<div>';
     $html .= '<div class="ceFaqAnswerPaddingTop"></div>';
-    $html .= do_shortcode(wp_kses_post($content));
+    $html .= $answer_html;
     $html .= '<div class="ceFaqAnswerPaddingBottom"></div>';
     $html .= '</div>';
     $html .= '</div>';
