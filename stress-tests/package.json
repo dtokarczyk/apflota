@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "test": "k6 run src/test.ts",
-    "test:dry": "k6 run --iterations 10 --vus 2 src/test.ts"
+    "test:dry": "k6 run --iterations 10 --vus 2 src/test.ts",
+    "test:quiz": "k6 run src/quiz-test.ts",
+    "test:quiz:dry": "k6 run --iterations 2 --vus 1 src/quiz-test.ts"
   },
   "devDependencies": {
     "@types/k6": "^1.0.0",
