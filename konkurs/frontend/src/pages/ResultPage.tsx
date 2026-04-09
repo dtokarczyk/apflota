@@ -38,6 +38,10 @@ export default function ResultPage({ result }: Props) {
         <p className="text-sm text-gray-500 mt-2">
           Czas: {result.clientTimeSeconds.toFixed(2)}s
         </p>
+        <p className="text-sm text-gray-600 mt-4 leading-relaxed">
+          Jeśli Twój wynik będzie najlepszy spośród wszystkich uczestników konkursu
+          - skontaktujemy się z Tobą. Udanego wydarzenia!
+        </p>
       </animated.div>
 
       <div className="flex flex-col gap-3 pb-8">
@@ -47,11 +51,10 @@ export default function ResultPage({ result }: Props) {
             <animated.div
               key={detail.id}
               style={style}
-              className={`p-4 rounded-xl border-2 ${
-                detail.isCorrect
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-red-400 bg-red-50'
-              }`}
+              className={`p-4 rounded-xl border-2 ${detail.isCorrect
+                ? 'border-green-500 bg-green-50'
+                : 'border-red-400 bg-red-50'
+                }`}
             >
               <p className="text-sm font-bold mb-1">
                 {i + 1}. {detail.question}

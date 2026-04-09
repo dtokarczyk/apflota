@@ -10,6 +10,7 @@ import AlreadyPlayedPage from './pages/AlreadyPlayedPage';
 import ContestCountdownPage from './pages/ContestCountdownPage';
 import ContestEndedPage from './pages/ContestEndedPage';
 import ApflotaLogo from './components/ApflotaLogo';
+import { CookieConsentProvider, CookieBanner } from './components/CookieConsent';
 
 type Screen =
   | 'loading'
@@ -76,68 +77,71 @@ export default function App() {
   ];
 
   return (
-    <div className="max-w-[430px] mx-auto min-h-dvh flex flex-col relative">
-      {barLogoScreens.includes(screen) && (
-        <header className="pt-5 pb-1 px-6 shrink-0">
-          <ApflotaLogo variant="header" />
-        </header>
-      )}
-
-      <div className="flex-1 flex flex-col min-h-0 relative">
-        {screen === 'quiz' && (
-          <div
-            className="absolute top-4 left-0 right-0 z-10 flex justify-center pointer-events-none px-6"
-            aria-hidden
-          >
-            <ApflotaLogo variant="subtle" />
-          </div>
-        )}
-
-        {screen === 'loading' && (
-          <div className="flex-1 flex items-center justify-center">
+    <CookieConsentProvider>
+      <div className="max-w-[430px] mx-auto min-h-dvh flex flex-col relative">
+        {barLogoScreens.includes(screen) && (
+          <header className="pt-5 pb-1 px-6 shrink-0">
             <ApflotaLogo variant="header" />
-          </div>
+          </header>
         )}
 
-        {screen === 'contest-countdown' && startsAt && (
-          <ContestCountdownPage startsAt={startsAt} onActive={goToActiveFlow} />
-        )}
+        <div className="flex-1 flex flex-col min-h-0 relative">
+          {screen === 'quiz' && (
+            <div
+              className="absolute top-4 left-0 right-0 z-10 flex justify-center pointer-events-none px-6"
+              aria-hidden
+            >
+              <ApflotaLogo variant="subtle" />
+            </div>
+          )}
 
-        {screen === 'contest-ended' && <ContestEndedPage />}
+          {screen === 'loading' && (
+            <div className="flex-1 flex items-center justify-center">
+              <ApflotaLogo variant="header" />
+            </div>
+          )}
 
-        {screen === 'welcome' && (
-          <WelcomePage onStart={() => setScreen('register')} />
-        )}
+          {screen === 'contest-countdown' && startsAt && (
+            <ContestCountdownPage startsAt={startsAt} onActive={goToActiveFlow} />
+          )}
 
-        {screen === 'register' && (
-          <RegisterPage
-            onQuizReady={(s) => {
-              setSession(s);
-              setScreen('countdown');
-            }}
-          />
-        )}
+          {screen === 'contest-ended' && <ContestEndedPage />}
 
-        {screen === 'countdown' && (
-          <CountdownPage onFinish={() => setScreen('quiz')} />
-        )}
+          {screen === 'welcome' && (
+            <WelcomePage onStart={() => setScreen('register')} />
+          )}
 
-        {screen === 'quiz' && session && (
-          <QuizPage
-            session={session}
-            onComplete={(r) => {
-              setResult(r);
-              setScreen('result');
-            }}
-          />
-        )}
+          {screen === 'register' && (
+            <RegisterPage
+              onQuizReady={(s) => {
+                setSession(s);
+                setScreen('countdown');
+              }}
+            />
+          )}
 
-        {screen === 'result' && result && (
-          <ResultPage result={result} />
-        )}
+          {screen === 'countdown' && (
+            <CountdownPage onFinish={() => setScreen('quiz')} />
+          )}
 
-        {screen === 'already-played' && <AlreadyPlayedPage />}
+          {screen === 'quiz' && session && (
+            <QuizPage
+              session={session}
+              onComplete={(r) => {
+                setResult(r);
+                setScreen('result');
+              }}
+            />
+          )}
+
+          {screen === 'result' && result && (
+            <ResultPage result={result} />
+          )}
+
+          {screen === 'already-played' && <AlreadyPlayedPage />}
+        </div>
       </div>
-    </div>
+      <CookieBanner />
+    </CookieConsentProvider>
   );
 }
