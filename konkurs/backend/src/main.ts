@@ -15,7 +15,9 @@ async function bootstrap() {
   );
   app.enableCors();
 
-  const port = process.env.PORT || 3000;
+  // Must match nginx upstream (nginx.conf). Railway sets PORT for the public listener (nginx on 80),
+  // so binding Nest to PORT would leave nothing on 3000 and /api/* would 502.
+  const port = parseInt(process.env.NEST_LISTEN_PORT ?? '3000', 10);
   await app.listen(port, '0.0.0.0');
   console.log(`Server running on port ${port}`);
 }
