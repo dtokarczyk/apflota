@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: apflota-konkurs-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-konkurs}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-konkurs}
+      POSTGRES_DB: ${DATABASE_NAME:-konkurs}
+    volumes:
+      - konkurs_pg_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PUBLISH_PORT:-5432}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DATABASE_USER:-konkurs} -d ${DATABASE_NAME:-konkurs}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  konkurs:
+    build: .
+    container_name: apflota-konkurs
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST:-postgres}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_USER: ${DATABASE_USER:-konkurs}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-konkurs}
+      DATABASE_NAME: ${DATABASE_NAME:-konkurs}
+      NODE_ENV: production
+
+volumes:
+  konkurs_pg_data:

@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "question": "Co oznacza skrót ABS w motoryzacji?",
+    "options": [
+      "Automatyczny Bilans Spalania",
+      "Adaptacyjny System Bezpieczeństwa",
+      "Układ zapobiegający blokowaniu kół przy hamowaniu",
+      "Automatyczna Blokada Skrzyni"
+    ],
+    "correctAnswer": "Układ zapobiegający blokowaniu kół przy hamowaniu"
+  },
+  {
+    "id": 2,
+    "question": "Który z tych producentów samochodów pochodzi z Niemiec?",
+    "options": [
+      "Fiat",
+      "Toyota",
+      "BMW",
+      "Volvo"
+    ],
+    "correctAnswer": "BMW"
+  },
+  {
+    "id": 3,
+    "question": "Co oznacza kontrolka z symbolem silnika na desce rozdzielczej?",
+    "options": [
+      "Niski poziom paliwa",
+      "Usterka w układzie elektroniki silnika",
+      "Przegrzanie silnika",
+      "Konieczność wymiany oleju"
+    ],
+    "correctAnswer": "Usterka w układzie elektroniki silnika"
+  },
+  {
+    "id": 4,
+    "question": "Jaki typ paliwa oznaczany jest symbolem 'Pb' na stacjach benzynowych?",
+    "options": [
+      "Diesel",
+      "LPG",
+      "Benzyna bezołowiowa",
+      "Biodiesel"
+    ],
+    "correctAnswer": "Benzyna bezołowiowa"
+  },
+  {
+    "id": 5,
+    "question": "Co to jest ESP w samochodzie?",
+    "options": [
+      "Elektroniczny system kontroli trakcji",
+      "Elektroniczny program stabilizacji toru jazdy",
+      "Automatyczny system parkowania",
+      "Ekonomiczny system paliwowy"
+    ],
+    "correctAnswer": "Elektroniczny program stabilizacji toru jazdy"
+  },
+  {
+    "id": 6,
+    "question": "Jak często zaleca się wymianę oleju silnikowego w nowoczesnych samochodach?",
+    "options": [
+      "Co 5 000 km",
+      "Co 10 000 - 15 000 km lub raz do roku",
+      "Co 30 000 km",
+      "Tylko przy przeglądzie co 2 lata"
+    ],
+    "correctAnswer": "Co 10 000 - 15 000 km lub raz do roku"
+  },
+  {
+    "id": 7,
+    "question": "Co oznacza termin 'full service leasing' w kontekście floty samochodowej?",
+    "options": [
+      "Leasing z pełnym ubezpieczeniem AC",
+      "Wynajem długoterminowy z kompleksową obsługą serwisową i administracyjną",
+      "Kredyt na samochód z darmowym przeglądem",
+      "Leasing z opcją wykupu po zakończeniu umowy"
+    ],
+    "correctAnswer": "Wynajem długoterminowy z kompleksową obsługą serwisową i administracyjną"
+  },
+  {
+    "id": 8,
+    "question": "Ile kół napędowych ma samochód z napędem 4x4?",
+    "options": [
+      "Dwa przednie",
+      "Dwa tylne",
+      "Cztery",
+      "Zależy od trybu jazdy"
+    ],
+    "correctAnswer": "Cztery"
+  },
+  {
+    "id": 9,
+    "question": "Co to jest car sharing?",
+    "options": [
+      "Wspólne finansowanie zakupu samochodu",
+      "Usługa współdzielenia samochodów na minuty lub godziny",
+      "Program lojalnościowy stacji benzynowych",
+      "Rodzaj ubezpieczenia grupowego na pojazdy"
+    ],
+    "correctAnswer": "Usługa współdzielenia samochodów na minuty lub godziny"
+  },
+  {
+    "id": 10,
+    "question": "Jaka jest minimalna głębokość bieżnika opon letnich wymagana przez prawo w Polsce?",
+    "options": [
+      "1,0 mm",
+      "1,6 mm",
+      "2,0 mm",
+      "3,0 mm"
+    ],
+    "correctAnswer": "1,6 mm"
+  }
+]

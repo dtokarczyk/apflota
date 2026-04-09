@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-# Run deploy for given env. Usage: ./deploy .env.stg
-exec "$(dirname "$0")/scripts/deploy/deploy.sh" "$@"
