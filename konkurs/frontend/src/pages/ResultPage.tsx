@@ -1,5 +1,6 @@
 import { useSpring, useTrail, animated, config } from '@react-spring/web';
 import type { SubmitResponse } from '../api';
+import ApflotaLogo from '../components/ApflotaLogo';
 
 interface Props {
   result: SubmitResponse;
@@ -44,7 +45,7 @@ export default function ResultPage({ result }: Props) {
         </p>
       </animated.div>
 
-      <div className="flex flex-col gap-3 pb-8">
+      <div className="flex flex-col gap-3">
         {trail.map((style, i) => {
           const detail = result.details[i];
           return (
@@ -71,6 +72,30 @@ export default function ResultPage({ result }: Props) {
           );
         })}
       </div>
+
+      <footer className="mt-10 pt-8 border-t border-neutral-200 flex flex-col items-stretch text-center gap-3 pb-8">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">O nas</p>
+        <h3 className="text-lg font-bold text-neutral-900">Poznaj nas bliżej</h3>
+        <p className="text-xl font-bold text-neutral-900 tracking-tight">AP FLOTA</p>
+        <p className="text-sm text-gray-600 leading-relaxed text-left">
+          Jesteśmy wieloletnim ekspertem w zakresie wynajmu długo i średnioterminowego oraz w
+          zarządzaniu flotą pojazdów. Oferujemy Państwu kompleksową obsługę flot samochodowych oraz
+          wsparcie na każdym etapie współpracy. Wieloletnie doświadczenie oraz znajomość rynku
+          motoryzacyjnego pozwalają na przygotowanie atrakcyjnych ofert, w zależności od potrzeb
+          naszych klientów.
+        </p>
+        <a
+          href="https://www.apflota.pl?utm_source=konkurs&utm_medium=quiz_result"
+          className="w-full py-4 bg-primary text-white text-lg font-bold rounded-2xl active:scale-95 transition-transform text-center mt-2"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Zobacz ofertę
+        </a>
+        <div className="flex justify-center mt-6">
+          <ApflotaLogo variant="hero" />
+        </div>
+      </footer>
     </div>
   );
 }
