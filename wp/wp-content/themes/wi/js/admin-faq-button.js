@@ -9,7 +9,7 @@
                 icon: false,
                 onclick: function () {
                     var snippet = '' +
-                        '[faq_list heading="FAQ (opcjonalny tytuł)"]\n' +
+                        '[faq_list]\n' +
                         '\t[faq_item question="Pytanie 1"]Odpowiedź 1[/faq_item]\n' +
                         '\t[faq_item question="Pytanie 2"]Odpowiedź 2[/faq_item]\n' +
                         '[/faq_list]\n';

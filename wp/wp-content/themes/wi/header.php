@@ -57,8 +57,8 @@
 </head>
 
 <body <?php body_class(); ?> lang="<?php if (function_exists('icl_object_id')) {
-                                        echo ICL_LANGUAGE_CODE;
-                                    } ?>" path="<?php echo home_url(); ?>">
+    echo ICL_LANGUAGE_CODE;
+} ?>" path="<?php echo home_url(); ?>">
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MNW9RQCM"

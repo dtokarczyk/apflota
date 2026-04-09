@@ -1,0 +1,13 @@
+{
+  "name": "apflota-stress-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "k6 run src/test.ts",
+    "test:dry": "k6 run --iterations 10 --vus 2 src/test.ts"
+  },
+  "devDependencies": {
+    "@types/k6": "^1.0.0",
+    "typescript": "^5.8.0"
+  }
+}
