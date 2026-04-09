@@ -29,15 +29,17 @@ const FORCE_CODE = 'kodiwoapflota'; // bypass contest time window
 export const options: Options = {
   scenarios: {
     quiz_users: {
-      executor: 'ramping-vus',
-      startVUs: 0,
+      executor: 'ramping-arrival-rate',
+      startRate: 0,
+      timeUnit: '1m',
+      preAllocatedVUs: 700,
+      maxVUs: 800,
       stages: [
-        { duration: '1m', target: 20 },   // ramp up to 20 concurrent users
-        { duration: '8m', target: 20 },   // hold 20 concurrent users
-        { duration: '1m', target: 0 },    // ramp down
+        { duration: '1m', target: 220 },   // ramp up to ~220 new quizzes/min
+        { duration: '8m', target: 220 },   // sustain ~220/min (≈2000 total over 10 min)
+        { duration: '1m', target: 0 },     // ramp down
       ],
-      gracefulRampDown: '3m',              // let in-progress quizzes finish
-      gracefulStop: '4m',
+      gracefulStop: '5m',                  // let in-progress quizzes finish
     },
   },
   thresholds: {
