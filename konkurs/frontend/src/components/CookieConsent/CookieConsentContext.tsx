@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import { getCookie, setCookie } from '../../api';
-import { applyCookieConsent } from './cookieScripts';
+import { applyCookieConsent, initGoogleAnalytics } from './cookieScripts';
 
 export interface CookiePreferences {
   necessary: true;
@@ -61,6 +61,9 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
+    // GA ładowane zawsze z Consent Mode v2 (domyślnie denied)
+    initGoogleAnalytics();
+
     const stored = readStoredPreferences();
     if (stored) {
       setPreferences(stored);

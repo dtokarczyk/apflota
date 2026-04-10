@@ -40,7 +40,7 @@ export default function RegisterPage({ onQuizReady }: Props) {
       return;
     }
     if (!consentReg) {
-      setError('Akceptacja regulaminu jest wymagana');
+      setError('Zaznaczenie pierwszej zgody jest wymagane');
       return;
     }
 
@@ -86,11 +86,9 @@ export default function RegisterPage({ onQuizReady }: Props) {
             className="mt-1 w-5 h-5 accent-primary shrink-0"
           />
           <span className="text-sm leading-snug">
-            Akceptuję{' '}
-            <a href="#" className="text-primary underline">
-              regulamin konkursu
-            </a>{' '}
-            *
+            Wyrażam zgodę na przetwarzanie moich danych osobowych w celach
+            marketingowych przez Auto Podlasie CorpoCars Management Sp. z o.o., w tym
+            na otrzymywanie newslettera.
           </span>
         </animated.label>
 
@@ -102,9 +100,33 @@ export default function RegisterPage({ onQuizReady }: Props) {
             className="mt-1 w-5 h-5 accent-primary shrink-0"
           />
           <span className="text-sm leading-snug">
-            Wyrażam zgodę na komunikację marketingową
+            Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną
+            na podany adres e-mail.
           </span>
         </animated.label>
+
+        <p className="text-sm leading-snug text-center text-gray-600">
+          Administratorem danych jest Auto Podlasie CorpoCars Management Sp. z o.o.
+          Szczegóły dotyczące przetwarzania danych znajdują się w{' '}
+          <a
+            href="https://apflota.pl/polityka_prywatnosci/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline"
+          >
+            Polityce prywatności
+          </a>{' '}
+          i{' '}
+          <a
+            href="https://apflota.pl/regulaminprojekt/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline"
+          >
+            Regulaminie
+          </a>
+          .
+        </p>
 
         {error && (
           <p className="text-red-600 text-sm text-center">{error}</p>
