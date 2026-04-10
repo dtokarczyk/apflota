@@ -41,6 +41,14 @@ function gtag(...args: unknown[]) {
 
 let gaLoaded = false;
 
+function trackGooglePageView() {
+  gtag('event', 'page_view', {
+    page_title: document.title,
+    page_location: window.location.href,
+    page_path: `${window.location.pathname}${window.location.search}`,
+  });
+}
+
 export function initGoogleAnalytics() {
   if (gaLoaded) return;
   gaLoaded = true;
@@ -67,6 +75,7 @@ export function initGoogleAnalytics() {
 
   gtag('js', new Date());
   gtag('config', GOOGLE_ANALYTICS_ID);
+  trackGooglePageView();
 }
 
 // ---------------------------------------------------------------------------
