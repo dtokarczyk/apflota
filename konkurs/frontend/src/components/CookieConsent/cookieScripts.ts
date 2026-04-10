@@ -23,9 +23,34 @@ declare global {
   }
 }
 
-// ---------------------------------------------------------------------------
-// gtag helper
-// ---------------------------------------------------------------------------
+/**
+ * Injects external script once. Handles React Strict Mode / HMR when the tag already exists.
+ */
+function loadScriptOnce(id: string, src: string, onLoaded: () => void): void {
+  const existing = document.getElementById(id) as HTMLScriptElement | null;
+
+  if (existing?.dataset.loaded === 'true') {
+    onLoaded();
+    return;
+  }
+
+  const markLoaded = (el: HTMLScriptElement) => {
+    el.dataset.loaded = 'true';
+    onLoaded();
+  };
+
+  if (existing) {
+    existing.addEventListener('load', () => markLoaded(existing), { once: true });
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.id = id;
+  script.async = true;
+  script.src = src;
+  script.addEventListener('load', () => markLoaded(script), { once: true });
+  document.head.appendChild(script);
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function gtag(..._args: unknown[]) {
@@ -35,10 +60,9 @@ function gtag(..._args: unknown[]) {
 }
 
 // ---------------------------------------------------------------------------
-// Google Analytics z Consent Mode v2
-// Ładowane ZAWSZE (poza mechanizmem cookie-consent).
-// Domyślnie consent = denied — dane zbierane bez cookies.
-// Po decyzji użytkownika wysyłamy `consent update`.
+// Google Analytics + Consent Mode v2
+// gtag.js loads early, but consent defaults to denied (no analytics cookies until granted).
+// Official snippet skips that — it would set cookies before the user chooses.
 // ---------------------------------------------------------------------------
 
 let gaLoaded = false;
@@ -65,11 +89,9 @@ export function initGoogleAnalytics() {
   if (gaLoaded) return;
   gaLoaded = true;
 
-  // Expose gtag globally for consent update calls
   window.dataLayer = window.dataLayer || [];
   window.gtag = gtag;
 
-  // Consent Mode v2 — default denied for all
   gtag('consent', 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
@@ -78,46 +100,12 @@ export function initGoogleAnalytics() {
     wait_for_update: 500,
   });
 
-  // Load gtag.js script
-  const existingScript = document.getElementById(
+  loadScriptOnce(
     GOOGLE_ANALYTICS_SCRIPT_ID,
-  ) as HTMLScriptElement | null;
-
-  if (existingScript?.dataset.loaded === 'true') {
-    configureGoogleAnalytics();
-    return;
-  }
-
-  const handleLoad = () => {
-    if (existingScript) {
-      existingScript.dataset.loaded = 'true';
-    }
-    configureGoogleAnalytics();
-  };
-
-  if (existingScript) {
-    existingScript.addEventListener('load', handleLoad, { once: true });
-    return;
-  }
-
-  const script = document.createElement('script');
-  script.id = GOOGLE_ANALYTICS_SCRIPT_ID;
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`;
-  script.addEventListener(
-    'load',
-    () => {
-      script.dataset.loaded = 'true';
-      configureGoogleAnalytics();
-    },
-    { once: true },
+    `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`,
+    configureGoogleAnalytics,
   );
-  document.head.appendChild(script);
 }
-
-// ---------------------------------------------------------------------------
-// Consent update — wywoływane po akceptacji / odrzuceniu cookies
-// ---------------------------------------------------------------------------
 
 function updateGoogleConsent(prefs: CookiePreferences) {
   if (!window.gtag) return;
@@ -131,7 +119,7 @@ function updateGoogleConsent(prefs: CookiePreferences) {
 }
 
 // ---------------------------------------------------------------------------
-// Facebook Pixel — ładowany TYLKO po zgodzie marketingowej
+// Meta Pixel — only after marketing consent (official snippet loads immediately).
 // ---------------------------------------------------------------------------
 
 function initFacebookPixel() {
@@ -160,60 +148,23 @@ function initFacebookPixel() {
       window.fbq?.('init', FACEBOOK_PIXEL_ID);
       window.__facebookPixelInitialized = true;
     }
-
     window.fbq?.('track', 'PageView');
   };
 
-  const existingScript = document.getElementById(
+  loadScriptOnce(
     FACEBOOK_PIXEL_SCRIPT_ID,
-  ) as HTMLScriptElement | null;
-
-  if (existingScript?.dataset.loaded === 'true') {
-    trackFacebookPageView();
-    return;
-  }
-
-  if (existingScript) {
-    existingScript.addEventListener(
-      'load',
-      () => {
-        existingScript.dataset.loaded = 'true';
-        trackFacebookPageView();
-      },
-      { once: true },
-    );
-    return;
-  }
-
-  const script = document.createElement('script');
-  script.id = FACEBOOK_PIXEL_SCRIPT_ID;
-  script.async = true;
-  script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-  script.addEventListener(
-    'load',
-    () => {
-      script.dataset.loaded = 'true';
-      trackFacebookPageView();
-    },
-    { once: true },
+    'https://connect.facebook.net/en_US/fbevents.js',
+    trackFacebookPageView,
   );
-  document.head.appendChild(script);
 }
 
-// ---------------------------------------------------------------------------
-// Wywoływane po zapisie preferencji cookies
-// ---------------------------------------------------------------------------
-
 export function applyCookieConsent(prefs: CookiePreferences) {
-  // Zawsze aktualizuj Google Consent Mode
   updateGoogleConsent(prefs);
 
-  // Wyślij page_view po udzieleniu zgody analitycznej (pełny hit z cookies)
   if (prefs.analytics) {
     trackGooglePageView();
   }
 
-  // FB Pixel tylko pod zgodą marketingową
   if (prefs.marketing) {
     initFacebookPixel();
   }

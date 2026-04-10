@@ -89,7 +89,8 @@ export async function submitQuiz(data: {
 export function setCookie(name: string, value: string, days: number) {
   const d = new Date();
   d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/;SameSite=Lax`;
+  const secure = window.location.protocol === 'https:' ? ';Secure' : '';
+  document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/;SameSite=Lax${secure}`;
 }
 
 export function getCookie(name: string): string | null {
