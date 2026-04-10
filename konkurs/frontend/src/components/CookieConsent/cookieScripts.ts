@@ -27,9 +27,11 @@ declare global {
 // gtag helper
 // ---------------------------------------------------------------------------
 
-function gtag(...args: unknown[]) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function gtag(..._args: unknown[]) {
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push(args);
+  // eslint-disable-next-line prefer-rest-params
+  window.dataLayer.push(arguments);
 }
 
 // ---------------------------------------------------------------------------
@@ -205,6 +207,11 @@ function initFacebookPixel() {
 export function applyCookieConsent(prefs: CookiePreferences) {
   // Zawsze aktualizuj Google Consent Mode
   updateGoogleConsent(prefs);
+
+  // Wyślij page_view po udzieleniu zgody analitycznej (pełny hit z cookies)
+  if (prefs.analytics) {
+    trackGooglePageView();
+  }
 
   // FB Pixel tylko pod zgodą marketingową
   if (prefs.marketing) {
