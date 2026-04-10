@@ -61,23 +61,27 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
-    // GA ładowane zawsze z Consent Mode v2 (domyślnie denied)
     initGoogleAnalytics();
+  }, []);
 
+  useEffect(() => {
     const stored = readStoredPreferences();
     if (stored) {
       setPreferences(stored);
       setIsConsentGiven(true);
-      applyCookieConsent(stored);
     }
   }, []);
+
+  useEffect(() => {
+    if (!isConsentGiven) return;
+    applyCookieConsent(preferences);
+  }, [isConsentGiven, preferences]);
 
   const save = useCallback((prefs: CookiePreferences) => {
     setPreferences(prefs);
     setIsConsentGiven(true);
     setIsSettingsOpen(false);
     persistPreferences(prefs);
-    applyCookieConsent(prefs);
   }, []);
 
   const acceptAll = useCallback(() => {

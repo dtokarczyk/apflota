@@ -40,13 +40,23 @@ function gtag(...args: unknown[]) {
 // ---------------------------------------------------------------------------
 
 let gaLoaded = false;
+let gaConfigured = false;
 
 function trackGooglePageView() {
-  gtag('event', 'page_view', {
+  window.gtag?.('event', 'page_view', {
     page_title: document.title,
     page_location: window.location.href,
     page_path: `${window.location.pathname}${window.location.search}`,
   });
+}
+
+function configureGoogleAnalytics() {
+  if (gaConfigured || !window.gtag) return;
+
+  gaConfigured = true;
+  window.gtag('js', new Date());
+  window.gtag('config', GOOGLE_ANALYTICS_ID, { send_page_view: false });
+  trackGooglePageView();
 }
 
 export function initGoogleAnalytics() {
@@ -67,15 +77,40 @@ export function initGoogleAnalytics() {
   });
 
   // Load gtag.js script
+  const existingScript = document.getElementById(
+    GOOGLE_ANALYTICS_SCRIPT_ID,
+  ) as HTMLScriptElement | null;
+
+  if (existingScript?.dataset.loaded === 'true') {
+    configureGoogleAnalytics();
+    return;
+  }
+
+  const handleLoad = () => {
+    if (existingScript) {
+      existingScript.dataset.loaded = 'true';
+    }
+    configureGoogleAnalytics();
+  };
+
+  if (existingScript) {
+    existingScript.addEventListener('load', handleLoad, { once: true });
+    return;
+  }
+
   const script = document.createElement('script');
   script.id = GOOGLE_ANALYTICS_SCRIPT_ID;
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`;
+  script.addEventListener(
+    'load',
+    () => {
+      script.dataset.loaded = 'true';
+      configureGoogleAnalytics();
+    },
+    { once: true },
+  );
   document.head.appendChild(script);
-
-  gtag('js', new Date());
-  gtag('config', GOOGLE_ANALYTICS_ID);
-  trackGooglePageView();
 }
 
 // ---------------------------------------------------------------------------
@@ -118,20 +153,49 @@ function initFacebookPixel() {
     window._fbq = fbq;
   }
 
-  if (!document.getElementById(FACEBOOK_PIXEL_SCRIPT_ID)) {
-    const script = document.createElement('script');
-    script.id = FACEBOOK_PIXEL_SCRIPT_ID;
-    script.async = true;
-    script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-    document.head.appendChild(script);
+  const trackFacebookPageView = () => {
+    if (!window.__facebookPixelInitialized) {
+      window.fbq?.('init', FACEBOOK_PIXEL_ID);
+      window.__facebookPixelInitialized = true;
+    }
+
+    window.fbq?.('track', 'PageView');
+  };
+
+  const existingScript = document.getElementById(
+    FACEBOOK_PIXEL_SCRIPT_ID,
+  ) as HTMLScriptElement | null;
+
+  if (existingScript?.dataset.loaded === 'true') {
+    trackFacebookPageView();
+    return;
   }
 
-  if (!window.__facebookPixelInitialized) {
-    window.fbq('init', FACEBOOK_PIXEL_ID);
-    window.__facebookPixelInitialized = true;
+  if (existingScript) {
+    existingScript.addEventListener(
+      'load',
+      () => {
+        existingScript.dataset.loaded = 'true';
+        trackFacebookPageView();
+      },
+      { once: true },
+    );
+    return;
   }
 
-  window.fbq('track', 'PageView');
+  const script = document.createElement('script');
+  script.id = FACEBOOK_PIXEL_SCRIPT_ID;
+  script.async = true;
+  script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+  script.addEventListener(
+    'load',
+    () => {
+      script.dataset.loaded = 'true';
+      trackFacebookPageView();
+    },
+    { once: true },
+  );
+  document.head.appendChild(script);
 }
 
 // ---------------------------------------------------------------------------
