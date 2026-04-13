@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "question": "W którym sezonie zdobyliśmy pierwszy medal Mistrzostw Polski (PlusLigi)?",
+    "question": "W którym sezonie PGE Projekt Warszawa zdobył pierwszy medal Mistrzostw Polski (PlusLigi)?",
     "options": [
       "2019/20",
       "2021/21",
@@ -12,7 +12,7 @@
   },
   {
     "id": 2,
-    "question": "W którym roku klub zdobył pierwsze europejskie trofeum?",
+    "question": "W którym sezonie PGE Projekt Warszawa zdobył pierwsze europejskie trofeum?",
     "options": [
       "2022/23",
       "2023/24",
@@ -34,7 +34,7 @@
   },
   {
     "id": 4,
-    "question": "Ile razy zdobyliśmy brązowy medal Mistrzostw Polski (PlusLigi)?",
+    "question": "Ile razy PGE Projekt Warszawa zdobył brązowy medal Mistrzostw Polski (PlusLigi)?",
     "options": [
       "Raz",
       "Dwa",
@@ -56,7 +56,7 @@
   },
   {
     "id": 6,
-    "question": "Kto jest najstarszy w zespole?",
+    "question": "Kto jest najstarszym zawodnikiem PGE Projektu Warszawa?",
     "options": [
       "Damian Wojtaszek",
       "Kevin Tillie",
@@ -67,7 +67,7 @@
   },
   {
     "id": 7,
-    "question": "Kto jest najwyższy w drużynie?",
+    "question": "Kto jest najwyższy w drużynie PGE Projektu Warszawa?",
     "options": [
       "Semeniuk",
       "Kłos",
@@ -89,10 +89,10 @@
   },
   {
     "id": 9,
-    "question": "Czym zajmuje się AP Flota (www.apflota.pl)?",
+    "question": "Czym zajmuje się AP FLOTA (www.apflota.pl)?",
     "options": [
       "Wynajmem długoterminowym aut",
-      "Sprzedażą samochodów",
+      "Sprzedażą quadów",
       "Sprzedażą motocykli",
       "Wynajmem kamperów"
     ],
@@ -100,13 +100,13 @@
   },
   {
     "id": 10,
-    "question": "Jaki kolor jest charakterystyczny dla AP Floty (www.apflota.pl)?",
+    "question": "Kim firma AP FLOTA jest dla drużyny PGE Projekt Warszawa?",
     "options": [
-      "Czerwony",
-      "Zielony",
-      "Różowy",
-      "Żółty"
+      "Dostawcą piłek do gry",
+      "Partnerem motoryzacyjnym",
+      "Gospodarzem dzisiejszego meczu",
+      "Dostawcą cateringu dla zawodników"
     ],
-    "correctAnswer": "Czerwony"
+    "correctAnswer": "Partnerem motoryzacyjnym"
   }
 ]
