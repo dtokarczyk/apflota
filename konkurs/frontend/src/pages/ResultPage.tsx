@@ -76,7 +76,9 @@ export default function ResultPage({ result }: Props) {
       <footer className="mt-10 pt-8 border-t border-neutral-200 flex flex-col items-stretch text-center gap-3 pb-8">
         <p className="text-xs font-semibold uppercase tracking-wide text-primary">O nas</p>
         <h3 className="text-lg font-bold text-neutral-900">Poznaj nas bliżej</h3>
-        <p className="text-xl font-bold text-neutral-900 tracking-tight">AP FLOTA</p>
+        <div className="flex justify-center">
+          <ApflotaLogo variant="hero" />
+        </div>
         <p className="text-sm text-gray-600 leading-relaxed text-left">
           Jesteśmy wieloletnim ekspertem w zakresie wynajmu długo i średnioterminowego oraz w
           zarządzaniu flotą pojazdów. Oferujemy Państwu kompleksową obsługę flot samochodowych oraz
