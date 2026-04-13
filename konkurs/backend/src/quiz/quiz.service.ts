@@ -80,8 +80,9 @@ export class QuizService {
     const submission = this.submissionRepo.create({
       email: normalizedEmail,
       sessionId,
-      consentRegulations: dto.consentRegulations,
-      consentMarketing: dto.consentMarketing,
+      consentContestRules: dto.consentContestRules,
+      consentPersonalDataMarketing: dto.consentPersonalDataMarketing,
+      consentCommercialInformationEmail: dto.consentCommercialInformationEmail,
       ipAddress,
       startedAt: now,
       totalQuestions: questions.length,

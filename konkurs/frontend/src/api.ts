@@ -49,8 +49,9 @@ export async function getContestStatus(force?: string): Promise<ContestStatusRes
 
 export async function startQuiz(data: {
   email: string;
-  consentRegulations: boolean;
-  consentMarketing: boolean;
+  consentContestRules: boolean;
+  consentPersonalDataMarketing: boolean;
+  consentCommercialInformationEmail: boolean;
 }): Promise<StartResponse> {
   const res = await fetch(`${BASE}/quiz/start`, {
     method: 'POST',

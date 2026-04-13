@@ -19,11 +19,14 @@ export class Submission {
   @Column({ type: 'uuid', name: 'session_id' })
   sessionId: string;
 
-  @Column({ type: 'boolean', name: 'consent_regulations' })
-  consentRegulations: boolean;
+  @Column({ type: 'boolean', name: 'consent_contest_rules' })
+  consentContestRules: boolean;
 
-  @Column({ type: 'boolean', name: 'consent_marketing' })
-  consentMarketing: boolean;
+  @Column({ type: 'boolean', name: 'consent_personal_data_marketing' })
+  consentPersonalDataMarketing: boolean;
+
+  @Column({ type: 'boolean', name: 'consent_commercial_information_email' })
+  consentCommercialInformationEmail: boolean;
 
   @Column({ type: 'varchar', length: 45, name: 'ip_address' })
   ipAddress: string;

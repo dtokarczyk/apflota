@@ -6,8 +6,11 @@ export class StartQuizDto {
 
   @IsBoolean()
   @Equals(true, { message: 'Consent to regulations is required' })
-  consentRegulations: boolean;
+  consentContestRules: boolean;
 
   @IsBoolean()
-  consentMarketing: boolean;
+  consentPersonalDataMarketing: boolean;
+
+  @IsBoolean()
+  consentCommercialInformationEmail: boolean;
 }

@@ -13,8 +13,11 @@ interface Props {
 
 export default function RegisterPage({ onQuizReady }: Props) {
   const [email, setEmail] = useState('');
-  const [consentReg, setConsentReg] = useState(false);
-  const [consentMkt, setConsentMkt] = useState(false);
+  const [consentContestRules, setConsentContestRules] = useState(false);
+  const [consentPersonalDataMarketing, setConsentPersonalDataMarketing] =
+    useState(false);
+  const [consentCommercialInformationEmail, setConsentCommercialInformationEmail] =
+    useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,7 +27,7 @@ export default function RegisterPage({ onQuizReady }: Props) {
     config: config.gentle,
   });
 
-  const fields = [0, 1, 2, 3];
+  const fields = [0, 1, 2, 3, 4];
   const trail = useTrail(fields.length, {
     from: { opacity: 0, transform: 'translateY(20px)' },
     to: { opacity: 1, transform: 'translateY(0px)' },
@@ -39,8 +42,8 @@ export default function RegisterPage({ onQuizReady }: Props) {
       setError('Podaj adres e-mail');
       return;
     }
-    if (!consentReg) {
-      setError('Zaznaczenie pierwszej zgody jest wymagane');
+    if (!consentContestRules) {
+      setError('Akceptacja regulaminu konkursu jest wymagana');
       return;
     }
 
@@ -48,8 +51,9 @@ export default function RegisterPage({ onQuizReady }: Props) {
     try {
       const res = await startQuiz({
         email: email.trim(),
-        consentRegulations: consentReg,
-        consentMarketing: consentMkt,
+        consentContestRules,
+        consentPersonalDataMarketing,
+        consentCommercialInformationEmail,
       });
       onQuizReady(res);
     } catch (err: unknown) {
@@ -81,8 +85,28 @@ export default function RegisterPage({ onQuizReady }: Props) {
         <animated.label style={trail[1]} className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
-            checked={consentReg}
-            onChange={(e) => setConsentReg(e.target.checked)}
+            checked={consentContestRules}
+            onChange={(e) => setConsentContestRules(e.target.checked)}
+            className="mt-1 w-5 h-5 accent-primary shrink-0"
+          />
+          <span className="text-sm leading-snug">
+            <span className="text-red-600">*</span> Akceptuję{' '}
+            <a
+              href="https://apflota.pl/regulaminprojekt/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary underline"
+            >
+              regulamin konkursu
+            </a>
+          </span>
+        </animated.label>
+
+        <animated.label style={trail[2]} className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consentPersonalDataMarketing}
+            onChange={(e) => setConsentPersonalDataMarketing(e.target.checked)}
             className="mt-1 w-5 h-5 accent-primary shrink-0"
           />
           <span className="text-sm leading-snug">
@@ -92,11 +116,11 @@ export default function RegisterPage({ onQuizReady }: Props) {
           </span>
         </animated.label>
 
-        <animated.label style={trail[2]} className="flex items-start gap-3 cursor-pointer">
+        <animated.label style={trail[3]} className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
-            checked={consentMkt}
-            onChange={(e) => setConsentMkt(e.target.checked)}
+            checked={consentCommercialInformationEmail}
+            onChange={(e) => setConsentCommercialInformationEmail(e.target.checked)}
             className="mt-1 w-5 h-5 accent-primary shrink-0"
           />
           <span className="text-sm leading-snug">
@@ -132,7 +156,7 @@ export default function RegisterPage({ onQuizReady }: Props) {
           <p className="text-red-600 text-sm text-center">{error}</p>
         )}
 
-        <animated.div style={trail[3]}>
+        <animated.div style={trail[4]}>
           <button
             onClick={handleSubmit}
             disabled={loading}
