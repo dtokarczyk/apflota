@@ -30,16 +30,12 @@ export default function WelcomePage({ onStart }: Props) {
         <animated.div style={fadeUp} className="flex flex-col items-center gap-5 pt-4 text-center">
           <ApflotaLogo variant="hero" className="w-[min(78vw,240px)]" />
 
-          <div className="inline-flex items-center rounded-full border border-primary/15 bg-primary/8 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.28em] text-primary">
-            Konkurs
-          </div>
-
           <div className="max-w-[340px] space-y-3">
             <h2 className="text-[2rem] font-black uppercase tracking-tight text-neutral-950">
               Wygraj auto
             </h2>
-            <p className="text-[1.7rem] font-bold leading-tight text-gray-700">
-              Do wygrania: Auto z pełnym bakiem na weekend!
+            <p className="text-[1.45rem] font-bold leading-tight text-gray-700">
+              Odpowiedz na 10 pytań i otrzymaj auto z pełnym bakiem na weekend
             </p>
           </div>
         </animated.div>

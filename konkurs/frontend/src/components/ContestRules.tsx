@@ -12,7 +12,7 @@ const rules = [
 export default function ContestRules({ className = '' }: Props) {
   return (
     <div
-      className={`w-full rounded-[28px] border border-primary/10 bg-white/95 p-5 shadow-[0_18px_50px_rgba(17,24,39,0.08)] backdrop-blur ${className}`}
+      className={`w-full rounded-[20px] border border-primary/10 bg-white/95 p-5 shadow-[0_18px_50px_rgba(17,24,39,0.08)] backdrop-blur ${className}`}
     >
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
@@ -25,7 +25,7 @@ export default function ContestRules({ className = '' }: Props) {
 
       <ol className="space-y-3">
         {rules.map((rule, i) => (
-          <li key={i} className="flex items-start gap-3 rounded-2xl bg-neutral-50 px-3 py-3">
+          <li key={i} className="flex items-start gap-3 rounded-xl bg-neutral-50 px-3 py-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
               {i + 1}
             </span>
