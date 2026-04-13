@@ -94,9 +94,6 @@ export default function ResultPage({ result }: Props) {
         >
           Zobacz ofertę
         </a>
-        <div className="flex justify-center mt-6">
-          <ApflotaLogo variant="hero" />
-        </div>
       </footer>
     </div>
   );
