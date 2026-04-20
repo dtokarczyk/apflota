@@ -255,7 +255,7 @@ function qt_custom_breadcrumbs()
             echo '<li class="active item-current item-cat" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-cat">' . __("Blog", "wi") . '</strong></li>';
         }
         if (is_tax('blog-category') && get_queried_object() && get_queried_object()->taxonomy === 'blog-category') {
-            echo '<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="' . esc_url(get_post_type_archive_link('blog')) . '" aria-label="' . esc_attr__('Blog', 'wi') . '"><span itemprop="name">' . __('Blog', 'wi') . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+            echo '<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="' . esc_url(wi_get_blog_home_url()) . '" aria-label="' . esc_attr__('Blog', 'wi') . '"><span itemprop="name">' . __('Blog', 'wi') . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
         }
 
         if (is_archive() && !is_tax() && !is_category() && !is_tag()) {
@@ -500,8 +500,8 @@ function phoneUrl($value)
 
 function set_posts_per_page_for_custom($query): void
 {
-    // Blog archive and blog category (e.g. /blog/kierowca/) – 9 posts per page
-    if (!is_admin() && $query->is_main_query() && (is_post_type_archive('blog') || is_tax('blog-category'))) {
+    // Blog category archive (e.g. /blog/kierowca/) – 9 posts per page
+    if (!is_admin() && $query->is_main_query() && is_tax('blog-category')) {
         $query->set('posts_per_page', '9');
     }
     if (!is_admin() && $query->is_main_query() && is_search()) {

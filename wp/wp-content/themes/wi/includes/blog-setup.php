@@ -51,7 +51,7 @@ function wi_register_blog_cpt(): void
         'show_in_admin_bar'   => true,
         'show_in_nav_menus'   => true,
         'can_export'          => true,
-        'has_archive'         => true,
+        'has_archive'         => false,
         'exclude_from_search' => false,
         'publicly_queryable'  => true,
         'rewrite'             => ['slug' => 'blog', 'with_front' => false],
@@ -96,6 +96,15 @@ add_action('init', 'wi_register_blog_category_taxonomy', 0);
 // Custom rewrite rules: single post blog/{category-slug}/{post-slug}/, category archive blog/slug/
 function wi_blog_add_rewrite_rules(): void
 {
+    // Blog landing page as regular WP page: /blog/
+    add_rewrite_rule('^blog/?$', 'index.php?pagename=blog', 'top');
+
+    // Blog landing page pagination: /blog/page/2/
+    add_rewrite_rule('^blog/page/([0-9]{1,})/?$', 'index.php?pagename=blog&paged=$matches[1]', 'top');
+
+    // Blog category pagination: /blog/{category-slug}/page/2/
+    add_rewrite_rule('^blog/([^/]+)/page/([0-9]{1,})/?$', 'index.php?blog-category=$matches[1]&paged=$matches[2]', 'top');
+
     // Single post: blog/{category-slug}/{post-slug}/ (two segments; must be before one-segment rule)
     add_rewrite_rule('^blog/([^/]+)/([^/]+)/?$', 'index.php?post_type=blog&name=$matches[2]', 'top');
     // Category archive: blog/przyszlosc/
@@ -106,7 +115,7 @@ add_action('init', 'wi_blog_add_rewrite_rules', 1);
 // Flush rewrite rules once when version changes
 function wi_blog_maybe_flush_rewrite_rules(): void
 {
-    $version = 4;
+    $version = 5;
     if ((int) get_option('wi_blog_rewrite_flushed') === $version) {
         return;
     }
@@ -395,6 +404,18 @@ function wi_blog_archive_tax_query($query): void
     ]);
 }
 add_action('pre_get_posts', 'wi_blog_archive_tax_query');
+
+// Redirect legacy blog archive endpoint to blog landing page (regular WP page).
+function wi_blog_redirect_legacy_archive(): void
+{
+    if (! is_post_type_archive('blog')) {
+        return;
+    }
+
+    wp_safe_redirect(wi_get_blog_home_url(), 301);
+    exit;
+}
+add_action('template_redirect', 'wi_blog_redirect_legacy_archive');
 
 // --- Yoast SEO integration for blog CPT ---
 

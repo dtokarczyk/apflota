@@ -7,6 +7,23 @@ declare(strict_types=1);
  */
 
 /**
+ * Get the canonical URL for the blog landing page.
+ *
+ * Prefers a real WordPress page with slug "blog", then falls back to /blog/.
+ *
+ * @return string
+ */
+function wi_get_blog_home_url(): string
+{
+    $blog_page = get_page_by_path('blog');
+    if ($blog_page instanceof WP_Post) {
+        return (string) get_permalink($blog_page);
+    }
+
+    return trailingslashit(home_url('/blog'));
+}
+
+/**
  * Generate table of contents from content headings (h2, h3, h4) and add ids to headings.
  *
  * Wraps content in a single root element before parsing so DOMDocument correctly handles
@@ -35,6 +52,10 @@ function wi_generate_toc($content)
     $used_ids = [];
 
     foreach ($headings as $heading) {
+        if (! $heading instanceof DOMElement) {
+            continue;
+        }
+
         $text = trim($heading->textContent);
         if (empty($text)) {
             continue;

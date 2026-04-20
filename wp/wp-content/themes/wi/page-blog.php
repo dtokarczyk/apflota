@@ -1,25 +1,46 @@
 <?php
 
 /**
- * Archive template for blog CPT. Hero, category bar, grid 3/2/1, pagination.
+ * Template Name: Blog Page
+ * Description: Blog landing page rendered as a regular WordPress page.
  */
 get_header();
 
-$hero_title   = get_field('blog_hero_title', 'option');
+$hero_title    = get_field('blog_hero_title', 'option');
 $hero_subtitle = get_field('blog_hero_subtitle', 'option');
-$hero_image   = get_field('blog_hero_image', 'option');
+$hero_image    = get_field('blog_hero_image', 'option');
 $current_slug  = get_query_var('kategoria');
-$is_blog_main  = empty($current_slug); // "Wszystkie artykuły" – show hero with overlay
+$is_blog_main  = empty($current_slug);
 
 $categories = get_terms([
     'taxonomy'   => 'blog-category',
     'hide_empty' => true,
 ]);
+
+$paged = max(1, (int) get_query_var('paged'), (int) get_query_var('page'));
+$query_args = [
+    'post_type'           => 'blog',
+    'post_status'         => 'publish',
+    'posts_per_page'      => 9,
+    'paged'               => $paged,
+    'ignore_sticky_posts' => true,
+];
+
+if (! empty($current_slug)) {
+    $query_args['tax_query'] = [
+        [
+            'taxonomy' => 'blog-category',
+            'field'    => 'slug',
+            'terms'    => $current_slug,
+        ],
+    ];
+}
+
+$blog_query = new WP_Query($query_args);
 ?>
 
-<section id="blogArchive" class="blog-archive">
+<section id="blogListing" class="blog-listing">
 	<?php if ($is_blog_main) : ?>
-		<!-- Hero: only on main blog (all posts), hidden in category view -->
 		<div class="blog-hero">
 			<?php if (! empty($hero_image['sizes']) && isset($hero_image['sizes']['blog-hero'])) : ?>
 				<div class="blog-hero-bg" style="background-image: url('<?php echo esc_url($hero_image['sizes']['blog-hero']); ?>');"></div>
@@ -44,7 +65,7 @@ $categories = get_terms([
 		</div>
 	<?php endif; ?>
 
-	<div class="blog-archive-container">
+	<div class="blog-listing-container">
 		<?php if (! $is_blog_main && $current_slug) : ?>
 			<?php
             $current_term = get_term_by('slug', $current_slug, 'blog-category');
@@ -54,7 +75,7 @@ $categories = get_terms([
 					<li class="item-home" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-link bread-home" href="<?php echo esc_url(get_home_url()); ?>" aria-label="<?php esc_attr_e('Strona główna', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Strona główna', 'wi'); ?></span></a>
 						<meta itemprop="position" content="1" />
 					</li>
-					<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" aria-label="<?php esc_attr_e('Blog', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Blog', 'wi'); ?></span></a>
+					<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="<?php echo esc_url(wi_get_blog_home_url()); ?>" aria-label="<?php esc_attr_e('Blog', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Blog', 'wi'); ?></span></a>
 						<meta itemprop="position" content="2" />
 					</li>
 					<li class="active item-current item-cat" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-cat"><?php echo esc_html($current_term->name); ?></strong>
@@ -63,15 +84,15 @@ $categories = get_terms([
 				</ol>
 			<?php endif; ?>
 		<?php endif; ?>
-		<!-- Category bar -->
+
 		<nav class="blog-category-bar displayFlex flexWrap flexXstart flexYcenter">
-			<a href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" class="blog-category-link <?php echo empty($current_slug) ? 'blog-category-link-active' : ''; ?>"><?php esc_html_e('Wszystkie artykuły', 'wi'); ?></a>
+			<a href="<?php echo esc_url(wi_get_blog_home_url()); ?>" class="blog-category-link <?php echo empty($current_slug) ? 'blog-category-link-active' : ''; ?>"><?php esc_html_e('Wszystkie artykuły', 'wi'); ?></a>
 			<?php if ($categories && ! is_wp_error($categories)) : ?>
 				<?php foreach ($categories as $term) : ?>
 					<?php
 		                $term_link = get_term_link($term, 'blog-category');
 				    if (is_wp_error($term_link)) {
-				        $term_link = add_query_arg('kategoria', $term->slug, get_post_type_archive_link('blog'));
+				        $term_link = add_query_arg('kategoria', $term->slug, wi_get_blog_home_url());
 				    }
 				    ?>
 					<a href="<?php echo esc_url($term_link); ?>" class="blog-category-link <?php echo $current_slug === $term->slug ? 'blog-category-link-active' : ''; ?>"><?php echo esc_html($term->name); ?></a>
@@ -79,10 +100,9 @@ $categories = get_terms([
 			<?php endif; ?>
 		</nav>
 
-		<!-- Posts grid -->
 		<div class="blog-grid">
-			<?php if (have_posts()) : ?>
-				<?php while (have_posts()) : the_post(); ?>
+			<?php if ($blog_query->have_posts()) : ?>
+				<?php while ($blog_query->have_posts()) : $blog_query->the_post(); ?>
 					<?php get_template_part('template-parts/blog', 'card'); ?>
 				<?php endwhile; ?>
 			<?php else : ?>
@@ -90,7 +110,13 @@ $categories = get_terms([
 			<?php endif; ?>
 		</div>
 
-		<?php wpbeginner_numeric_posts_nav(); ?>
+		<?php
+        $original_wp_query = $GLOBALS['wp_query'];
+$GLOBALS['wp_query'] = $blog_query;
+wpbeginner_numeric_posts_nav();
+$GLOBALS['wp_query'] = $original_wp_query;
+wp_reset_postdata();
+?>
 	</div>
 </section>
 

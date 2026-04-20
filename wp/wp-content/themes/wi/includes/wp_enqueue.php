@@ -78,7 +78,7 @@ function wi_wp_enqueue_scripts(): void
     wp_enqueue_script('main');
 
     // Blog: conditional script and nonce for like/dislike
-    if (is_post_type_archive('blog') || is_singular('blog') || is_tax('blog-category')) {
+    if (is_page('blog') || is_page_template('page-blog.php') || is_singular('blog') || is_tax('blog-category')) {
         wp_enqueue_script(
             'blog-js',
             get_template_directory_uri() . '/js/blog.js',

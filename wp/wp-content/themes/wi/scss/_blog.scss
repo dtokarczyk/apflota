@@ -1,12 +1,12 @@
 // Blog styles – uses theme variables and mixins (imported in style.scss)
 
-// ========== Archive ==========
-.blog-archive {
+// ========== Listing ==========
+.blog-listing {
   padding-bottom: 4rem;
 }
 
 // Same content width as single (max 1200px, centered)
-.blog-archive-container {
+.blog-listing-container {
   max-width: 1200px;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -20,7 +20,7 @@
   }
 }
 
-// Hero – inner content same width as .blog-archive-container (max 1200px, centered)
+// Hero – inner content same width as .blog-listing-container (max 1200px, centered)
 .blog-hero .containerBig {
   max-width: 1200px;
   margin-left: auto !important;
@@ -249,7 +249,7 @@
 }
 
 // Pagination (uses existing .paginationNewBox from theme – no overrides needed)
-#blogArchive .paginationNewBox {
+#blogListing .paginationNewBox {
   margin-top: 2rem;
 }
 

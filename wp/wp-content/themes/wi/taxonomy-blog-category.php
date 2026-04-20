@@ -9,7 +9,7 @@ get_header();
 $current_term = get_queried_object();
 if (! $current_term || ! isset($current_term->slug)) {
     // Fallback: redirect to blog archive
-    wp_safe_redirect(get_post_type_archive_link('blog'), 302);
+    wp_safe_redirect(wi_get_blog_home_url(), 302);
     exit;
 }
 
@@ -25,13 +25,13 @@ $categories = get_terms([
 ]);
 ?>
 
-<section id="blogArchive" class="blog-archive">
-	<div class="blog-archive-container">
+<section id="blogListing" class="blog-listing">
+	<div class="blog-listing-container">
 		<ol id="breadcrumbs" class="breadcrumb displaFlex flexWrap flexXstart flexYcenter" itemscope itemtype="http://schema.org/BreadcrumbList">
 			<li class="item-home" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-link bread-home" href="<?php echo esc_url(get_home_url()); ?>" aria-label="<?php esc_attr_e('Strona główna', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Strona główna', 'wi'); ?></span></a>
 				<meta itemprop="position" content="1" />
 			</li>
-			<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" aria-label="<?php esc_attr_e('Blog', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Blog', 'wi'); ?></span></a>
+			<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="<?php echo esc_url(wi_get_blog_home_url()); ?>" aria-label="<?php esc_attr_e('Blog', 'wi'); ?>"><span itemprop="name"><?php esc_html_e('Blog', 'wi'); ?></span></a>
 				<meta itemprop="position" content="2" />
 			</li>
 			<li class="active item-current item-cat" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-cat"><?php echo esc_html($current_term->name); ?></strong>
@@ -41,13 +41,13 @@ $categories = get_terms([
 
 		<!-- Category bar -->
 		<nav class="blog-category-bar displayFlex flexWrap flexXstart flexYcenter">
-			<a href="<?php echo esc_url(get_post_type_archive_link('blog')); ?>" class="blog-category-link"><?php esc_html_e('Wszystkie artykuły', 'wi'); ?></a>
+			<a href="<?php echo esc_url(wi_get_blog_home_url()); ?>" class="blog-category-link"><?php esc_html_e('Wszystkie artykuły', 'wi'); ?></a>
 			<?php if ($categories && ! is_wp_error($categories)) : ?>
 				<?php foreach ($categories as $term) : ?>
 					<?php
                     $term_link = get_term_link($term, 'blog-category');
 				    if (is_wp_error($term_link)) {
-				        $term_link = get_post_type_archive_link('blog');
+				        $term_link = wi_get_blog_home_url();
 				    }
 				    ?>
 					<a href="<?php echo esc_url($term_link); ?>" class="blog-category-link <?php echo $current_slug === $term->slug ? 'blog-category-link-active' : ''; ?>"><?php echo esc_html($term->name); ?></a>
