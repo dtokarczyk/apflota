@@ -636,8 +636,44 @@ function lowest_price_update($post_ID): void
 add_action('init', 'wi_panel_router');
 function wi_panel_router(): void
 {
+    // Prefer dedicated calculator page over category archive with the same slug.
+    add_rewrite_rule('^kalkulator/?$', 'index.php?pagename=kalkulator', 'top');
     add_rewrite_rule('^carapi', 'index.php?wi_carapi=1', 'top');
 }
+
+/**
+ * Flush rewrite rules once after adding kalkulator rewrite rule.
+ */
+function wi_kalkulator_maybe_flush_rewrite_rules(): void
+{
+    $version = 1;
+    if ((int) get_option('wi_kalkulator_rewrite_flushed') === $version) {
+        return;
+    }
+
+    flush_rewrite_rules();
+    update_option('wi_kalkulator_rewrite_flushed', $version);
+}
+add_action('init', 'wi_kalkulator_maybe_flush_rewrite_rules', 99);
+
+/**
+ * Redirect direct category archive access to calculator page.
+ */
+function wi_kalkulator_redirect_category_archive(): void
+{
+    if (! is_category('kalkulator')) {
+        return;
+    }
+
+    $kalkulator_page = get_page_by_path('kalkulator');
+    if (! ($kalkulator_page instanceof WP_Post)) {
+        return;
+    }
+
+    wp_safe_redirect(get_permalink($kalkulator_page), 301);
+    exit;
+}
+add_action('template_redirect', 'wi_kalkulator_redirect_category_archive');
 // add to query vars
 add_filter('query_vars', 'add_router_slug');
 function add_router_slug($query_vars)
