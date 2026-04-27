@@ -7,14 +7,6 @@
         </div>
     <?php } ?><?php } ?>
 
-    <?php $markiAuta = get_terms(['taxonomy' => 'marka-auta', 'hide_empty' => false]); ?>
-    <?php if (!empty($markiAuta)) { ?><?php foreach ($markiAuta as $markaAuta) { ?>
-        <div class="searchSelectedButton searchSelectedButtonMark displayFlex flexXcenter flexYcenter mark<?php echo $markaAuta->term_id; ?>" data-id="mark<?php echo $markaAuta->term_id; ?>">
-            <?php echo $markaAuta->name; ?>
-            <img src="<?php echo get_template_directory_uri(); ?>/images/remove.svg" class="svg searchSelectedRemove" alt="remove">
-        </div>
-    <?php } ?><?php } ?>
-
     <div class="searchSelectedButton searchSelectedButtonInstallment displayFlex flexXcenter flexYcenter<?php if ($_GET["installment"] > 0) { ?> show<?php } ?>" data-id="installment">
         <span><?php echo intval($_GET["installment"]); ?></span>zł
         <img src="<?php echo get_template_directory_uri(); ?>/images/remove.svg" class="svg searchSelectedRemove" alt="remove">

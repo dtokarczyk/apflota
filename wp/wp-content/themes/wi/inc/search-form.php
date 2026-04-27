@@ -1,3 +1,53 @@
+<?php
+$wi_form_ctx = wi_offer_get_resolved_terms();
+$wi_form_base = untrailingslashit(wi_offer_base_url());
+?>
+<style>
+    @media (min-width: 1251px) {
+
+        .sectionOfferSearch .sectionSearch .selectBodies,
+        .sectionOfferSearch .sectionSearch .selectOfferBrand,
+        .sectionOfferSearch .sectionSearch .selectOfferModel {
+            width: calc(100% / 3) !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectInstallment,
+        .sectionOfferSearch .sectionSearch .selectFuels,
+        .sectionOfferSearch .sectionSearch .selectTransmission,
+        .sectionOfferSearch .sectionSearch .selectSegment {
+            width: 25% !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectBodies {
+            order: 1 !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectOfferBrand {
+            order: 2 !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectOfferModel {
+            order: 3 !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectInstallment {
+            order: 4 !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectFuels {
+            order: 5 !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectTransmission {
+            order: 6 !important;
+        }
+
+        .sectionOfferSearch .sectionSearch .selectSegment {
+            order: 7 !important;
+        }
+    }
+</style>
+
 <div class="sectionOfferSearch">
     <h2><?php echo __('Oferta', 'wi'); ?></h2>
     <div class="sectionSearch formSearch displayFlex flexWrap flexXstart flexYcenter">
@@ -21,25 +71,82 @@
             </div>
         <?php } ?>
 
-        <?php $markiAuta = get_terms(['taxonomy' => 'marka-auta', 'hide_empty' => false]); ?>
-        <?php if (!empty($markiAuta)) { ?>
-            <div class="selectMark">
+        <?php
+        $markiAuta = get_terms(['taxonomy' => 'marka-auta', 'hide_empty' => false]);
+
+if (is_array($markiAuta) && ! is_wp_error($markiAuta) && $markiAuta !== []) {
+    $wi_cur_brand_slug = $wi_form_ctx['brand'] instanceof WP_Term ? $wi_form_ctx['brand']->slug : '';
+    $wi_brand_button_label = $wi_form_ctx['brand'] instanceof WP_Term ? $wi_form_ctx['brand']->name : __("Wszystkie marki", "wi");
+    ?>
+            <div class="selectOfferBrand">
                 <div class="checkboxBox">
-                    <div class="checkboxTitle"><?php echo __("Marka", "wi"); ?></div>
-                    <div class="checkboxButton"><?php echo __("Wybierz", "wi"); ?></div>
+                    <div class="checkboxTitle"><?php echo esc_html(__("Marka", "wi")); ?></div>
+                    <div class="checkboxButton checkboxButtonCenter displayFlex flexXcenter flexYcenter"><?php echo esc_html($wi_brand_button_label); ?></div>
                     <div class="checkboxList displayFlex flexWrap flexXstart flexYcenter">
+                        <div class="checkboxListItem displayFlex flexXstart flexYcenter">
+                            <input type="radio" id="wi-offer-brand-all" name="wi_offer_brand" <?php checked('', $wi_cur_brand_slug); ?>
+                                onchange="if(this.checked){var b='<?php echo esc_url($wi_form_base); ?>',q=window.location.search||'';window.location.href=b+'/'+q;}">
+                            <label for="wi-offer-brand-all"><span></span><?php echo esc_html(__("Wszystkie marki", "wi")); ?></label>
+                        </div>
                         <?php foreach ($markiAuta as $markaAuta) { ?>
                             <div class="checkboxListItem displayFlex flexXstart flexYcenter">
-                                <input type="checkbox" id="mark<?php echo $markaAuta->term_id; ?>" name="mark" value="<?php echo $markaAuta->term_id; ?>" <?php if (in_array($markaAuta->term_id, explode(",", $_GET["mark"]))) {
-                                    echo ' checked';
-                                } ?> />
-                                <label for="mark<?php echo $markaAuta->term_id; ?>"><span></span><?php echo $markaAuta->name; ?></label>
+                                <input type="radio"
+                                    id="wi-offer-brand-<?php echo esc_attr($markaAuta->term_id); ?>"
+                                    name="wi_offer_brand"
+                                    <?php checked($wi_cur_brand_slug, $markaAuta->slug); ?>
+                                    onchange="if(this.checked){var b='<?php echo esc_url($wi_form_base); ?>',q=window.location.search||'';window.location.href=b+'/'+encodeURIComponent('<?php echo esc_js($markaAuta->slug); ?>').replace(/%2F/g,'/')+'/'+q;}">
+                                <label for="wi-offer-brand-<?php echo esc_attr($markaAuta->term_id); ?>"><span></span><?php echo esc_html($markaAuta->name); ?></label>
                             </div>
                         <?php } ?>
                     </div>
                 </div>
             </div>
-        <?php } ?>
+        <?php
+}
+?>
+
+        <?php
+$wi_models_for_brand = $wi_form_ctx['brand'] instanceof WP_Term ? wi_offer_get_models_for_brand($wi_form_ctx['brand']) : [];
+$wi_cur_model_slug = $wi_form_ctx['model'] instanceof WP_Term ? $wi_form_ctx['model']->slug : '';
+$wi_model_button_label = $wi_form_ctx['model'] instanceof WP_Term ? $wi_form_ctx['model']->name : __("Wszystkie modele", "wi");
+?>
+        <div class="selectOfferModel">
+            <div class="checkboxBox">
+                <div class="checkboxTitle"><?php echo esc_html(__("Model", "wi")); ?></div>
+                <div class="checkboxButton checkboxButtonCenter displayFlex flexXcenter flexYcenter"><?php echo esc_html($wi_model_button_label); ?></div>
+                <div class="checkboxList displayFlex flexWrap flexXstart flexYcenter">
+                    <?php if ($wi_form_ctx['brand'] instanceof WP_Term) { ?>
+                        <div class="checkboxListItem displayFlex flexXstart flexYcenter">
+                            <input type="radio" id="wi-offer-model-all" name="wi_offer_model" <?php checked('', $wi_cur_model_slug); ?>
+                                onchange="if(this.checked){var b='<?php echo esc_url($wi_form_base); ?>',q=window.location.search||'';window.location.href=b+'/'+encodeURIComponent('<?php echo esc_js($wi_form_ctx['brand']->slug); ?>').replace(/%2F/g,'/')+'/'+q;}">
+                            <label for="wi-offer-model-all"><span></span><?php echo esc_html(__("Wszystkie modele", "wi")); ?></label>
+                        </div>
+                        <?php if ($wi_models_for_brand !== []) { ?>
+                            <?php foreach ($wi_models_for_brand as $model_term) { ?>
+                                <div class="checkboxListItem displayFlex flexXstart flexYcenter">
+                                    <input type="radio"
+                                        id="wi-offer-model-<?php echo esc_attr($model_term->term_id); ?>"
+                                        name="wi_offer_model"
+                                        <?php checked($wi_cur_model_slug, $model_term->slug); ?>
+                                        onchange="if(this.checked){var b='<?php echo esc_url($wi_form_base); ?>',q=window.location.search||'';window.location.href=b+'/'+encodeURIComponent('<?php echo esc_js($wi_form_ctx['brand']->slug); ?>').replace(/%2F/g,'/')+'/'+encodeURIComponent('<?php echo esc_js($model_term->slug); ?>').replace(/%2F/g,'/')+'/'+q;}">
+                                    <label for="wi-offer-model-<?php echo esc_attr($model_term->term_id); ?>"><span></span><?php echo esc_html($model_term->name); ?></label>
+                                </div>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <div class="checkboxListItem displayFlex flexXstart flexYcenter">
+                                <input type="radio" id="wi-offer-model-none" name="wi_offer_model_disabled" disabled>
+                                <label for="wi-offer-model-none"><span></span><?php echo esc_html(__("Brak modeli dla wybranej marki", "wi")); ?></label>
+                            </div>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <div class="checkboxListItem displayFlex flexXstart flexYcenter">
+                            <input type="radio" id="wi-offer-model-select-brand" name="wi_offer_model_disabled" disabled>
+                            <label for="wi-offer-model-select-brand"><span></span><?php echo esc_html(__("Najpierw wybierz markę", "wi")); ?></label>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
 
         <?php $ratyDo = get_terms(['taxonomy' => 'rata-do', 'hide_empty' => false]); ?>
         <?php if (!empty($ratyDo)) { ?>

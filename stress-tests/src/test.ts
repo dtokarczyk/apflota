@@ -32,8 +32,8 @@ export const options: Options = {
 };
 
 const PAGES: string[] = [
-  'https://apflota.pl/kalkulator/',
-  'https://apflota.pl/kalkulator/toyota-rav4-25-plug-in-hybrid-306km-aut-4x4-dynamic/',
+  'https://apflota.pl/wynajem-dlugoterminowy/',
+  'https://apflota.pl/wynajem-dlugoterminowy/toyota-rav4-25-plug-in-hybrid-306km-aut-4x4-dynamic/',
   'https://apflota.pl/o-nas/',
 ];
 

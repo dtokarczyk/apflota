@@ -724,7 +724,7 @@ $(window).on('load', function() {
             }, 300);
         }
         setTimeout(function(){
-            refreshListItem(["bodies","mark","fuels","installment","transmission","segment"]);
+            refreshListItem(["bodies","fuels","installment","transmission","segment"]);
         }, 400);
 
 
@@ -732,8 +732,6 @@ $(window).on('load', function() {
         function refreshDataComposition() {
             // hide bodies
             $(".selectBodies .checkboxListItem").removeClass("hide");
-            // hide mark
-            $(".selectMark .checkboxListItem").removeClass("hide");
             // hide fuels
             $(".selectFuels .checkboxListItem").removeClass("hide");
             // hide installment
@@ -759,7 +757,6 @@ $(window).on('load', function() {
             $(".selectInstallment input").val($(".selectInstallment input").attr("max"));
             var url = new URL(window.location);
             url.searchParams.delete('bodies');
-            url.searchParams.delete('mark');
             url.searchParams.delete('fuels');
             url.searchParams.delete('installment');
             url.searchParams.delete('transmission');
@@ -767,8 +764,8 @@ $(window).on('load', function() {
             history.pushState({}, "", url);
             $(".searchSelectedButton").removeClass("show");
             $(".buttonReset").removeClass("show");
-            refreshData(["bodies","mark","fuels","installment","transmission","segment"]);
-            refreshListItem(["bodies","mark","fuels","installment","transmission","segment"]);
+            refreshData(["bodies","fuels","installment","transmission","segment"]);
+            refreshListItem(["bodies","fuels","installment","transmission","segment"]);
         }
         
       
@@ -781,8 +778,8 @@ $(window).on('load', function() {
             dataUrlUpdate($checboxArray,$getName);
             // show button
             $(".searchSelectedButton").removeClass("show");
-            refreshData(["bodies","mark","fuels","installment","transmission","segment"]);
-            refreshListItem(["bodies","mark","fuels","installment","transmission","segment"]);
+            refreshData(["bodies","fuels","installment","transmission","segment"]);
+            refreshListItem(["bodies","fuels","installment","transmission","segment"]);
             return $checboxArray;
         }
         
@@ -795,8 +792,8 @@ $(window).on('load', function() {
             dataUrlUpdate($checboxArray,$getName);
             // show button
             $(".searchSelectedButton").removeClass("show");
-            refreshData(["bodies","mark","fuels","installment","transmission","segment"]);
-            refreshListItem(["bodies","mark","fuels","installment","transmission","segment"]);
+            refreshData(["bodies","fuels","installment","transmission","segment"]);
+            refreshListItem(["bodies","fuels","installment","transmission","segment"]);
             return $checboxArray;
         }
         
@@ -836,7 +833,7 @@ $(window).on('load', function() {
 
 
         searchRefresh();
-        refreshData(["bodies","mark","fuels","installment","transmission","segment"]);
+        refreshData(["bodies","fuels","installment","transmission","segment"]);
 
         setTimeout(function(){
             $(".sectionOfferItemNone").removeClass("show");
@@ -857,9 +854,6 @@ $(window).on('load', function() {
         // Checbox change detected
         $(".selectBodies input").on('click', function() {
             checboxArray(".selectBodies", "bodies", $(this));
-        });
-        $(".selectMark input").on('click', function() {
-            checboxArray(".selectMark", "mark", $(this));
         });
         $(".selectInstallment input").on("change", function(event) {
             checboxArrayTransmission(".selectInstallment", "installment", event);
@@ -886,15 +880,13 @@ $(window).on('load', function() {
             $(".selectInstallment input").val($(".selectInstallment input").attr("max"));
             var url = new URL(window.location);
             url.searchParams.delete('bodies');
-            url.searchParams.delete('mark');
             url.searchParams.delete('fuels');
             url.searchParams.delete('installment');
             url.searchParams.delete('transmission');
             url.searchParams.delete('segment');
             history.pushState({}, "", url);
-            refreshListItem(["bodies","mark","fuels","installment","transmission","segment"]);
+            refreshListItem(["bodies","fuels","installment","transmission","segment"]);
             $(".selectBodies .checkboxListItem").removeClass("hide");
-            $(".selectMark .checkboxListItem").removeClass("hide");
             $(".selectFuels .checkboxListItem").removeClass("hide");
             $(".selectInstallment .checkboxListItem").removeClass("hide");
             $(".selectTransmission .checkboxListItem").removeClass("hide");
@@ -908,7 +900,7 @@ $(window).on('load', function() {
                 $(this).removeClass("show");
                 $("#inputSearch").val("");
                 searchRefresh();
-                refreshData(["bodies","mark","fuels","installment","transmission","segment"]);
+                refreshData(["bodies","fuels","installment","transmission","segment"]);
             } else {
                 $("#" + $(this).attr("data-id")).click();
             }

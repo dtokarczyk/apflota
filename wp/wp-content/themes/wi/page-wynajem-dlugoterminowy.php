@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Template Name: Kalkulator Page
- * Description: Calculator landing page rendered as a regular WordPress page.
+ * Template Name: Wynajem długoterminowy
+ * Description: Long-term rental offer listing (filters + grid).
  */
 
 get_header();

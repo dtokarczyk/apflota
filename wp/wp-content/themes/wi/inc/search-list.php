@@ -1,3 +1,43 @@
+<?php
+
+/**
+ * @param array<int|string, mixed>|\WP_Error|false $terms
+ * @return list<\WP_Term>
+ */
+function wi_offer_normalize_terms($terms): array
+{
+    if (! is_array($terms)) {
+        return [];
+    }
+
+    $out = [];
+    foreach ($terms as $t) {
+        if ($t instanceof WP_Term) {
+            $out[] = $t;
+        }
+    }
+
+    return $out;
+}
+
+$wi_offer_ctx = wi_offer_get_resolved_terms();
+$wi_tax_parts = [];
+if ($wi_offer_ctx['brand'] instanceof WP_Term) {
+    $wi_tax_parts[] = [
+        'taxonomy' => 'marka-auta',
+        'field'    => 'term_id',
+        'terms'    => (int) $wi_offer_ctx['brand']->term_id,
+    ];
+}
+if ($wi_offer_ctx['model'] instanceof WP_Term) {
+    $wi_tax_parts[] = [
+        'taxonomy' => 'model',
+        'field'    => 'term_id',
+        'terms'    => (int) $wi_offer_ctx['model']->term_id,
+    ];
+}
+
+?>
     <div class="sectionOfferOrder displayFlex flexXend flexYcenter">
         <div class="sectionOfferOrderTitle"><?php echo __("Sortuj według:", "wi"); ?></div>
         <div class="sectionOfferOrderBox">
@@ -47,7 +87,18 @@
         <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'meta_key' => 'cena_od', 'orderby' => 'meta_value_num', 'order' => 'ASC']; ?>
     <?php } elseif ($_GET["order"] == "ph") { ?>
         <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'meta_key' => 'cena_od', 'orderby' => 'meta_value_num', 'order' => 'DESC']; ?>
+    <?php } else { ?>
+        <?php $args = ['post_type' => 'post', 'posts_per_page' => '-1', 'orderby' => 'menu_order', 'order' => 'ASC']; ?>
     <?php } ?>
+
+    <?php
+    if ($wi_tax_parts !== []) {
+        $args['tax_query'] = array_merge(
+            ['relation' => 'AND'],
+            $wi_tax_parts
+        );
+    }
+?>
 
     <?php $wp_query = new WP_Query($args); ?>
     <?php if (have_posts()) { ?>
@@ -55,7 +106,7 @@
             the_post(); ?>
             <?php // rodzaj nadwozia?>
             <?php $rodzajeNadwoziaClass = [];
-            $rodzajeNadwozia = get_the_terms(get_the_ID(), 'rodzaj-nadwozia'); ?>
+            $rodzajeNadwozia = wi_offer_normalize_terms(get_the_terms(get_the_ID(), 'rodzaj-nadwozia')); ?>
             <?php foreach ($rodzajeNadwozia as $rodzajNadwozia) { ?>
                 <?php $rodzajeNadwoziaClass[] = $rodzajNadwozia->term_id; ?>
             <?php } ?>
@@ -63,15 +114,23 @@
 
             <?php // marka auta?>
             <?php $markiAutaClass = [];
-            $markiAuta = get_the_terms(get_the_ID(), 'marka-auta'); ?>
+            $markiAuta = wi_offer_normalize_terms(get_the_terms(get_the_ID(), 'marka-auta')); ?>
             <?php foreach ($markiAuta as $markaAuta) { ?>
                 <?php $markiAutaClass[] = $markaAuta->term_id; ?>
             <?php } ?>
             <?php $markiAutaClass = implode(",", $markiAutaClass); ?>
 
+            <?php // model?>
+            <?php $modeleClass = [];
+            $modele = wi_offer_normalize_terms(get_the_terms(get_the_ID(), 'model')); ?>
+            <?php foreach ($modele as $modelTerm) { ?>
+                <?php $modeleClass[] = $modelTerm->term_id; ?>
+            <?php } ?>
+            <?php $modeleClass = implode(",", $modeleClass); ?>
+
             <?php // rodzaj paliwa?>
             <?php $rodzajePaliwaClass = [];
-            $rodzajePaliwa = get_the_terms(get_the_ID(), 'rodzaj-paliwa'); ?>
+            $rodzajePaliwa = wi_offer_normalize_terms(get_the_terms(get_the_ID(), 'rodzaj-paliwa')); ?>
             <?php foreach ($rodzajePaliwa as $rodzajPaliwa) { ?>
                 <?php $rodzajePaliwaClass[] = $rodzajPaliwa->term_id; ?>
             <?php } ?>
@@ -79,7 +138,7 @@
 
             <?php // skrzynia biegow?>
             <?php $skrzynieBiegowClass = [];
-            $skrzynieBiegowDo = get_the_terms(get_the_ID(), 'skrzynia-biegow'); ?>
+            $skrzynieBiegowDo = wi_offer_normalize_terms(get_the_terms(get_the_ID(), 'skrzynia-biegow')); ?>
             <?php foreach ($skrzynieBiegowDo as $skrzyniaBiegowDo) { ?>
                 <?php $skrzynieBiegowClass[] = $skrzyniaBiegowDo->term_id; ?>
             <?php } ?>
@@ -87,45 +146,52 @@
 
             <?php // segment?>
             <?php $segmentyClass = [];
-            $segmenty = get_the_terms(get_the_ID(), 'segment'); ?>
+            $segmenty = wi_offer_normalize_terms(get_the_terms(get_the_ID(), 'segment')); ?>
             <?php foreach ($segmenty as $segment) { ?>
                 <?php $segmentyClass[] = $segment->term_id; ?>
             <?php } ?>
             <?php $segmentyClass = implode(",", $segmentyClass); ?>
 
-            <a href="<?php echo get_permalink(); ?>" class="sectionOfferItem"
-               data-name="<?php echo get_the_title(); ?>"
-               data-bodies="<?php echo $rodzajeNadwoziaClass; ?>"
-               data-mark="<?php echo $markiAutaClass; ?>"
-               data-fuels="<?php echo $rodzajePaliwaClass; ?>"
-               data-installment="<?php echo get_field('cena_od'); ?>"
-               data-transmission="<?php echo $skrzynieBiegowClass; ?>"
-               data-segment="<?php echo $segmentyClass; ?>"
+            <?php
+            $fuel_label = $rodzajePaliwa[0]->name ?? '';
+            $gear_label = $skrzynieBiegowDo[0]->name ?? '';
+            $segment_label = $segmenty[0]->name ?? '';
+            ?>
+
+            <a href="<?php echo esc_url(get_permalink()); ?>" class="sectionOfferItem"
+               data-name="<?php echo esc_attr(get_the_title()); ?>"
+               data-bodies="<?php echo esc_attr($rodzajeNadwoziaClass); ?>"
+               data-mark="<?php echo esc_attr($markiAutaClass); ?>"
+               data-model="<?php echo esc_attr($modeleClass); ?>"
+               data-fuels="<?php echo esc_attr($rodzajePaliwaClass); ?>"
+               data-installment="<?php echo esc_attr((string) get_field('cena_od')); ?>"
+               data-transmission="<?php echo esc_attr($skrzynieBiegowClass); ?>"
+               data-segment="<?php echo esc_attr($segmentyClass); ?>"
             >
                 <span class="sectionOfferItemInside">
                     <span class="sectionOfferItemsImg">
-                        <img class="img-full" alt="<?php echo get_the_title(); ?>" src="<?php $grafiki = get_field('zdjecie_glowne');
-            echo $grafiki['sizes']['produkt-500x250']; ?>" />
+                        <img class="img-full" alt="<?php echo esc_attr(get_the_title()); ?>" src="<?php $grafiki = get_field('zdjecie_glowne');
+            echo isset($grafiki['sizes']['produkt-500x250']) ? esc_url($grafiki['sizes']['produkt-500x250']) : ''; ?>" />
                     </span>
                     <span class="sectionOfferItemDesc">
                         <span class="sectionOfferItemDesc1 displayFlex flexWrap flexXstart flexYcenter">
                             <span class="displayFlex flexXcenter flexYcenter">
-                                <img src="<?php echo get_template_directory_uri(); ?>/images/fuel.svg" alt="fuel">
-                                <?php echo $rodzajePaliwa[0]->name;?>
+                                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/images/fuel.svg" alt="fuel">
+                                <?php echo esc_html($fuel_label); ?>
                             </span>
                             <span class="displayFlex flexXcenter flexYcenter">
-                                <img src="<?php echo get_template_directory_uri(); ?>/images/gearbox.svg" alt="gearbox">
-                                <?php echo $skrzynieBiegowDo[0]->name; ?>
+                                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/images/gearbox.svg" alt="gearbox">
+                                <?php echo esc_html($gear_label); ?>
                             </span>
                             <span class="displayFlex flexXcenter flexYcenter">
-                                <img src="<?php echo get_template_directory_uri(); ?>/images/segment.svg" alt="segment">
-                                <?php echo $segmenty[0]->name; ?>
+                                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/images/segment.svg" alt="segment">
+                                <?php echo esc_html($segment_label); ?>
                             </span>
                         </span>
                         <span class="sectionOfferItemDesc2">
-                            <span class="sectionOfferItemDescTitle"><?php echo get_the_title(); ?></span>
-                            <?php echo get_field('silnik'); ?>
-                            <span class="sectionOfferItemDescTitle"><?php echo __("od", "wi"); ?> <?php echo get_field('cena_od'); ?> <?php echo __("zł", "wi"); ?></span>
+                            <span class="sectionOfferItemDescTitle"><?php echo esc_html(get_the_title()); ?></span>
+                            <?php echo esc_html((string) get_field('silnik')); ?>
+                            <span class="sectionOfferItemDescTitle"><?php echo __("od", "wi"); ?> <?php echo esc_html((string) get_field('cena_od')); ?> <?php echo __("zł", "wi"); ?></span>
                             <?php echo __("za miesiąc", "wi"); ?>
                         </span>
                     </span>

@@ -11,6 +11,7 @@ declare(strict_types=1);
 //@include 'includes/cookie.php';
 @include 'includes/wp_enqueue.php';
 @include 'includes/shortcode_widget.php';
+@include 'includes/offer-listing.php';
 @include 'includes/source_backend.php';
 @include 'includes/source_frontend.php';
 @include 'includes/blog-setup.php';

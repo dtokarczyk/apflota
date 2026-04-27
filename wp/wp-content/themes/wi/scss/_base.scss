@@ -2577,6 +2577,28 @@ footer {
                 } 
             }
         }
+        @media (min-width: 1251px) {
+            .selectBodies,
+            .selectOfferBrand,
+            .selectOfferModel {
+                width: calc(100% / 3);
+            }
+
+            .selectInstallment,
+            .selectFuels,
+            .selectTransmission,
+            .selectSegment {
+                width: 25%;
+            }
+
+            .selectBodies { order: 1; }
+            .selectOfferBrand { order: 2; }
+            .selectOfferModel { order: 3; }
+            .selectInstallment { order: 4; }
+            .selectFuels { order: 5; }
+            .selectTransmission { order: 6; }
+            .selectSegment { order: 7; }
+        }
         .inputSearch {
             font-weight: 400;
             position: relative;
