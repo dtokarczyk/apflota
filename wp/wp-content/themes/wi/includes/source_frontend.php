@@ -237,13 +237,11 @@ function qt_custom_breadcrumbs()
     // Do not display on the homepage
     if (!is_front_page() || is_front_page()) {
 
-        $schemaPosition = 2;
-
         // Build the breadcrums
-        echo '<ol id="' . $breadcrums_id . '" class="' . $breadcrums_class . ' displaFlex flexWrap flexXstart flexYcenter" itemscope itemtype="http://schema.org/BreadcrumbList">';
+        echo '<ol id="' . $breadcrums_id . '" class="' . $breadcrums_class . ' displaFlex flexWrap flexXstart flexYcenter">';
 
         // Home page
-        echo '<li class="item-home" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-link bread-home" href="' . get_home_url() . '" aria-label="' . __('Strona główna', 'wi') . '"><span itemprop="name">' . __('Strona główna', 'wi') . '</span></a><meta itemprop="position" content="1" /></li>';
+        echo '<li class="item-home"><a class="bread-link bread-home" href="' . get_home_url() . '" aria-label="' . __('Strona główna', 'wi') . '"><span>' . __('Strona główna', 'wi') . '</span></a></li>';
 
         // If post is a custom post type
         $post_type = get_post_type();
@@ -252,10 +250,10 @@ function qt_custom_breadcrumbs()
 
         // POST TYPE - Blog
         if (is_post_type_archive('blog')) {
-            echo '<li class="active item-current item-cat" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-cat">' . __("Blog", "wi") . '</strong></li>';
+            echo '<li class="active item-current item-cat"><strong class="bread-current bread-cat">' . __("Blog", "wi") . '</strong></li>';
         }
         if (is_tax('blog-category') && get_queried_object() && get_queried_object()->taxonomy === 'blog-category') {
-            echo '<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="' . esc_url(wi_get_blog_home_url()) . '" aria-label="' . esc_attr__('Blog', 'wi') . '"><span itemprop="name">' . __('Blog', 'wi') . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+            echo '<li><a href="' . esc_url(wi_get_blog_home_url()) . '" aria-label="' . esc_attr__('Blog', 'wi') . '"><span>' . __('Blog', 'wi') . '</span></a></li>';
         }
 
         if (is_archive() && !is_tax() && !is_category() && !is_tag()) {
@@ -268,11 +266,11 @@ function qt_custom_breadcrumbs()
                 $post_type_object = get_post_type_object($post_type);
                 $post_type_archive = get_post_type_archive_link($post_type);
 
-                //echo '<li class="item-cat item-custom-post-type-' . $post_type . '" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat bread-custom-post-type-' . $post_type . '" href="' . $post_type_archive . '" title="' . $post_type_object->labels->name . '"><span itemprop="name">' . $post_type_object->labels->name . '</span></a><meta itemprop="position" content="'.$schemaPosition++.'" /></li>';
+                //echo '<li class="item-cat item-custom-post-type-' . $post_type . '"><a class="bread-cat bread-custom-post-type-' . $post_type . '" href="' . $post_type_archive . '" title="' . $post_type_object->labels->name . '"><span>' . $post_type_object->labels->name . '</span></a><meta itemprop="position" content="'.$schemaPosition++.'" /></li>';
             }
 
             $custom_tax_name = get_queried_object()->name;
-            echo '<li class="active item-current item-archive" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-archive"><h1>' . $custom_tax_name . '</h1></strong></li>';
+            echo '<li class="active item-current item-archive" aria-hidden="true"><strong class="bread-current bread-archive"><h1>' . $custom_tax_name . '</h1></strong></li>';
         } elseif (is_single()) {
 
             // If post is a custom post type
@@ -284,7 +282,7 @@ function qt_custom_breadcrumbs()
                 $post_type_object = get_post_type_object($post_type);
                 $post_type_archive = get_post_type_archive_link($post_type);
 
-                echo '<li class="item-cat item-custom-post-type-' . $post_type . '"  aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat bread-custom-post-type-' . $post_type . '" href="' . $post_type_archive . '" title="' . $post_type_object->labels->name . '" aria-label="' . $post_type_object->labels->name . '"><span itemprop="name">' . $post_type_object->labels->name . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                echo '<li class="item-cat item-custom-post-type-' . $post_type . '"  aria-hidden="true"><a class="bread-cat bread-custom-post-type-' . $post_type . '" href="' . $post_type_archive . '" title="' . $post_type_object->labels->name . '" aria-label="' . $post_type_object->labels->name . '"><span>' . $post_type_object->labels->name . '</span></a></li>';
             }
             if ($post_type == 'post') {
                 $category = get_the_category($page_id_gt);
@@ -292,10 +290,10 @@ function qt_custom_breadcrumbs()
                 $top_level_cat = smart_category_top_parent_id($catid);
                 $top_level_cat_array = get_category($top_level_cat);
                 if ($top_level_cat_array->name != "" && (single_cat_title('', false) != $top_level_cat_array->name)) {
-                    echo '<li class="item-cat" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat" href="' . get_home_url() . '/' . $top_level_cat_array->slug . '" title="' . $top_level_cat_array->name . '" aria-label="' . $top_level_cat_array->name . '"><span itemprop="name">' . $top_level_cat_array->name . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                    echo '<li class="item-cat" aria-hidden="true"><a class="bread-cat" href="' . get_home_url() . '/' . $top_level_cat_array->slug . '" title="' . $top_level_cat_array->name . '" aria-label="' . $top_level_cat_array->name . '"><span>' . $top_level_cat_array->name . '</span></a></li>';
                 }
                 $categories = get_the_category();
-                echo '<li aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="' . esc_url(get_category_link($categories[0]->term_id)) . '" aria-label="' . $categories[0]->name . '"><span itemprop="name">' . $categories[0]->name . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                echo '<li aria-hidden="true"><a href="' . esc_url(get_category_link($categories[0]->term_id)) . '" aria-label="' . $categories[0]->name . '"><span>' . $categories[0]->name . '</span></a></li>';
             }
             if ($post_type == 'blog') {
                 $blog_terms = get_the_terms($post->ID, 'blog-category');
@@ -322,7 +320,7 @@ function qt_custom_breadcrumbs()
                 // Loop through parent categories and store in variable $cat_display
                 $cat_display = '';
                 foreach ($cat_parents as $parents) {
-                    //$cat_display .= '<li class="item-cat" itemscope itemtype="http://schema.org/ListItem">' . $parents . '</li>';
+                    //$cat_display .= '<li class="item-cat">' . $parents . '</li>';
                 }
             }
 
@@ -340,34 +338,34 @@ function qt_custom_breadcrumbs()
             // Check if the post is in a category
             if (!empty($last_category)) {
                 echo $cat_display;
-                //echo '<li class="active item-current item-' . $post->ID . '" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
-                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '" aria-hidden="true">...</strong></li>';
+                //echo '<li class="active item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
+                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '" aria-hidden="true">...</strong></li>';
 
                 // Else if post is in a custom taxonomy
             } elseif (!empty($cat_id)) {
 
-                echo '<li class="item-cat item-cat-' . $cat_id . ' item-cat-' . $cat_nicename . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat bread-cat-' . $cat_id . ' bread-cat-' . $cat_nicename . '" href="' . $cat_link . '" title="' . $cat_name . '" aria-label="' . $cat_name . '"><span itemprop="name">' . $cat_name . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                echo '<li class="item-cat item-cat-' . $cat_id . ' item-cat-' . $cat_nicename . '" aria-hidden="true"><a class="bread-cat bread-cat-' . $cat_id . ' bread-cat-' . $cat_nicename . '" href="' . $cat_link . '" title="' . $cat_name . '" aria-label="' . $cat_name . '"><span>' . $cat_name . '</span></a></li>';
 
-                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '" aria-hidden="true">' . get_the_title() . '</strong></li>';
+                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '" aria-hidden="true">' . get_the_title() . '</strong></li>';
             }
         } elseif (is_category()) {
             // POST TYPE - Referencje
             if (get_queried_object()->taxonomy == 'category' && get_queried_object()->term_id != wpmlIDTax(1, 'category') && get_queried_object()->term_id != wpmlIDTax(10, 'category')) {
                 $category = get_term(wpmlIDTax(1, 'category'), 'category');
-                echo '<li class="item-cat" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat" href="' . get_term_link(wpmlIDTax(1, 'category'), 'category') . '" title="' . koncowki_luk_mod($category->name) . '"><span itemprop="name">' . koncowki_luk_mod($category->name) . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                echo '<li class="item-cat" aria-hidden="true"><a class="bread-cat" href="' . get_term_link(wpmlIDTax(1, 'category'), 'category') . '" title="' . koncowki_luk_mod($category->name) . '"><span>' . koncowki_luk_mod($category->name) . '</span></a></li>';
                 $category = get_term(wpmlIDTax(10, 'category'), 'category');
-                echo '<li class="item-cat" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat" href="' . get_term_link(wpmlIDTax(10, 'category'), 'category') . '" title="' . koncowki_luk_mod($category->name) . '"><span itemprop="name">' . koncowki_luk_mod($category->name) . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                echo '<li class="item-cat" aria-hidden="true"><a class="bread-cat" href="' . get_term_link(wpmlIDTax(10, 'category'), 'category') . '" title="' . koncowki_luk_mod($category->name) . '"><span>' . koncowki_luk_mod($category->name) . '</span></a></li>';
             } else {
                 $category = get_the_category($page_id_gt);
                 $catid = $category[0]->cat_ID;
                 $top_level_cat = smart_category_top_parent_id($catid);
                 $top_level_cat_array = get_category($top_level_cat);
                 if ($top_level_cat_array->name != "" && (single_cat_title('', false) != $top_level_cat_array->name)) {
-                    echo '<li class="item-cat" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-cat" href="' . get_home_url() . '/' . $top_level_cat_array->slug . '" title="' . $top_level_cat_array->name . '" aria-label="' . $top_level_cat_array->name . '"><span itemprop="name">' . $top_level_cat_array->name . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                    echo '<li class="item-cat" aria-hidden="true"><a class="bread-cat" href="' . get_home_url() . '/' . $top_level_cat_array->slug . '" title="' . $top_level_cat_array->name . '" aria-label="' . $top_level_cat_array->name . '"><span>' . $top_level_cat_array->name . '</span></a></li>';
                 }
             }
             // Category page
-            echo '<li class="active item-current item-cat" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-cat" aria-hidden="true">' . single_cat_title('', false) . '</strong></li>';
+            echo '<li class="active item-current item-cat" aria-hidden="true"><strong class="bread-current bread-cat" aria-hidden="true">' . single_cat_title('', false) . '</strong></li>';
 
         } elseif (is_page()) {
 
@@ -382,18 +380,18 @@ function qt_custom_breadcrumbs()
 
                 // Parent page loop
                 foreach ($anc as $ancestor) {
-                    $parents .= '<li class="item-parent item-parent-' . $ancestor . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-parent bread-parent-' . $ancestor . '" href="' . get_permalink($ancestor) . '" title="' . get_the_title($ancestor) . '" aria-label="' . get_the_title($ancestor) . '"><span itemprop="name">' . get_the_title($ancestor) . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+                    $parents .= '<li class="item-parent item-parent-' . $ancestor . '" aria-hidden="true"><a class="bread-parent bread-parent-' . $ancestor . '" href="' . get_permalink($ancestor) . '" title="' . get_the_title($ancestor) . '" aria-label="' . get_the_title($ancestor) . '"><span>' . get_the_title($ancestor) . '</span></a></li>';
                 }
 
                 // Display parent pages
                 echo $parents;
 
                 // Current page
-                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong title="' . get_the_title() . '"> ' . get_the_title() . '</strong></li>';
+                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true"><strong title="' . get_the_title() . '"> ' . get_the_title() . '</strong></li>';
             } else {
 
                 // Just display current page if not parents
-                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-' . $post->ID . '"> ' . get_the_title() . '</strong></li>';
+                echo '<li class="active item-current item-' . $post->ID . '" aria-hidden="true"><strong class="bread-current bread-' . $post->ID . '"> ' . get_the_title() . '</strong></li>';
             }
         } elseif (is_tag()) {
 
@@ -408,26 +406,26 @@ function qt_custom_breadcrumbs()
             $get_term_name = $terms[0]->name;
 
             // Display the tag name
-            echo '<li class="active item-current item-tag-' . $get_term_id . ' item-tag-' . $get_term_slug . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-tag-' . $get_term_id . ' bread-tag-' . $get_term_slug . '" aria-hidden="true" aria-label="' . $get_term_name . '">' . $get_term_name . '</strong></li>';
+            echo '<li class="active item-current item-tag-' . $get_term_id . ' item-tag-' . $get_term_slug . '" aria-hidden="true"><strong class="bread-current bread-tag-' . $get_term_id . ' bread-tag-' . $get_term_slug . '" aria-hidden="true" aria-label="' . $get_term_name . '">' . $get_term_name . '</strong></li>';
         } elseif (is_day()) {
 
             // Day archive
             // Year link
-            echo '<li class="item-year item-year-' . get_the_time('Y') . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-year bread-year-' . get_the_time('Y') . '" href="' . get_year_link(get_the_time('Y')) . '" title="' . get_the_time('Y') . '" aria-label="' . get_the_time('Y') . ' Archives"><span itemprop="name">' . get_the_time('Y') . ' Archives</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+            echo '<li class="item-year item-year-' . get_the_time('Y') . '" aria-hidden="true"><a class="bread-year bread-year-' . get_the_time('Y') . '" href="' . get_year_link(get_the_time('Y')) . '" title="' . get_the_time('Y') . '" aria-label="' . get_the_time('Y') . ' Archives"><span>' . get_the_time('Y') . ' Archives</span></a></li>';
 
             // Month link
-            echo '<li class="item-month item-month-' . get_the_time('m') . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-month bread-month-' . get_the_time('m') . '" href="' . get_month_link(get_the_time('Y'), get_the_time('m')) . '" title="' . get_the_time('M') . '" aria-label="' . get_the_time('M') . ' Archives"><span itemprop="name">' . get_the_time('M') . ' Archives</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+            echo '<li class="item-month item-month-' . get_the_time('m') . '" aria-hidden="true"><a class="bread-month bread-month-' . get_the_time('m') . '" href="' . get_month_link(get_the_time('Y'), get_the_time('m')) . '" title="' . get_the_time('M') . '" aria-label="' . get_the_time('M') . ' Archives"><span>' . get_the_time('M') . ' Archives</span></a></li>';
 
             // Day display
-            echo '<li class="active item-current item-' . get_the_time('j') . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-' . get_the_time('j') . '"> ' . get_the_time('jS') . ' ' . get_the_time('M') . ' Archives</strong></li>';
+            echo '<li class="active item-current item-' . get_the_time('j') . '" aria-hidden="true"><strong class="bread-current bread-' . get_the_time('j') . '"> ' . get_the_time('jS') . ' ' . get_the_time('M') . ' Archives</strong></li>';
         } elseif (is_month()) {
 
             // Month Archive
             // Year link
-            echo '<li class="item-year item-year-' . get_the_time('Y') . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" class="bread-year bread-year-' . get_the_time('Y') . '" href="' . get_year_link(get_the_time('Y')) . '" title="' . get_the_time('Y') . '" aria-label="' . get_the_time('Y') . ' Archives"><span itemprop="name">' . get_the_time('Y') . ' Archives</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+            echo '<li class="item-year item-year-' . get_the_time('Y') . '" aria-hidden="true"><a class="bread-year bread-year-' . get_the_time('Y') . '" href="' . get_year_link(get_the_time('Y')) . '" title="' . get_the_time('Y') . '" aria-label="' . get_the_time('Y') . ' Archives"><span>' . get_the_time('Y') . ' Archives</span></a></li>';
 
             // Month display
-            echo '<li class="active item-month item-month-' . get_the_time('m') . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-month bread-month-' . get_the_time('m') . '" title="' . get_the_time('M') . '">' . get_the_time('M') . ' Archives</strong></li>';
+            echo '<li class="active item-month item-month-' . get_the_time('m') . '" aria-hidden="true"><strong class="bread-month bread-month-' . get_the_time('m') . '" title="' . get_the_time('M') . '">' . get_the_time('M') . ' Archives</strong></li>';
         } elseif (is_year()) {
 
             // Display year archive
@@ -440,19 +438,19 @@ function qt_custom_breadcrumbs()
             $userdata = get_userdata($author);
 
             // Display author name
-            echo '<li class="active item-current item-current-' . $userdata->user_nicename . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-current-' . $userdata->user_nicename . '" title="' . $userdata->display_name . '">' . 'Author: ' . $userdata->display_name . '</strong></li>';
+            echo '<li class="active item-current item-current-' . $userdata->user_nicename . '" aria-hidden="true"><strong class="bread-current bread-current-' . $userdata->user_nicename . '" title="' . $userdata->display_name . '">' . 'Author: ' . $userdata->display_name . '</strong></li>';
         } elseif (get_query_var('paged')) {
 
             // Paginated archives
-            echo '<li class="active item-current item-current-' . get_query_var('paged') . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-current-' . get_query_var('paged') . '" title="Page ' . get_query_var('paged') . '">' . __('Wyszukiwanie strona', 'wi') . ' ' . get_query_var('paged') . '</strong></li>';
+            echo '<li class="active item-current item-current-' . get_query_var('paged') . '" aria-hidden="true"><strong class="bread-current bread-current-' . get_query_var('paged') . '" title="Page ' . get_query_var('paged') . '">' . __('Wyszukiwanie strona', 'wi') . ' ' . get_query_var('paged') . '</strong></li>';
         } elseif (is_search()) {
 
             // Search results page
-            echo '<li class="active item-current item-current-' . get_search_query() . '" aria-hidden="true" itemscope itemtype="http://schema.org/ListItem"><strong class="bread-current bread-current-' . get_search_query() . '" title="' . __("Wyszukiwarka", "wi") . '">' . __("Wyszukiwarka", "wi") . '</strong></li>';
+            echo '<li class="active item-current item-current-' . get_search_query() . '" aria-hidden="true"><strong class="bread-current bread-current-' . get_search_query() . '" title="' . __("Wyszukiwarka", "wi") . '">' . __("Wyszukiwarka", "wi") . '</strong></li>';
         } elseif (is_404()) {
 
             // 404 page
-            echo '<li class="active item-current item-cat"><strong class="bread-current bread-cat" itemscope itemtype="http://schema.org/ListItem">' . 'Error 404' . '</strong></li>';
+            echo '<li class="active item-current item-cat"><strong class="bread-current bread-cat">' . 'Error 404' . '</strong></li>';
         }
 
         // POST TYPE ===========================================================
@@ -461,9 +459,9 @@ function qt_custom_breadcrumbs()
         if ($post_type == 'baza-wiedzy' && is_single()) {
             $cat_id_slug = get_query_var('blog-category');
             $cat_id_array = get_term_by('slug', $cat_id_slug, 'blog-category');
-            echo '<li itemscope itemtype="http://schema.org/ListItem"><a itemprop="item" href="' . get_term_link($cat_id_array->slug, 'blog-category') . '"><span itemprop="name">' . $cat_id_array->name . '</span></a><meta itemprop="position" content="' . $schemaPosition++ . '" /></li>';
+            echo '<li><a href="' . get_term_link($cat_id_array->slug, 'blog-category') . '"><span>' . $cat_id_array->name . '</span></a></li>';
 
-            //echo '<li class="active item-current" aria-hidden="true"><strong class="bread-current" itemscope itemtype="http://schema.org/ListItem">' . wp_trim_words(get_the_title(), 3, '...' ) . '</strong></li>';
+            //echo '<li class="active item-current" aria-hidden="true"><strong class="bread-current">' . wp_trim_words(get_the_title(), 3, '...' ) . '</strong></li>';
         }
 
         echo '</ul>';
