@@ -143,7 +143,7 @@
 
 
     <?php if (is_front_page() || is_home() || get_field('topbanner_-_typ') == 1) {
-    } elseif (is_page('blog') || is_page_template('page-blog.php') || is_singular('blog') || is_tax('blog-category') || is_page_template('page-wynajem-dlugoterminowy.php')) {
+    } elseif (is_page('blog') || is_page_template('page-blog.php') || is_singular('blog') || is_tax('blog-category') || (function_exists('wi_offer_is_listing_page') && wi_offer_is_listing_page())) {
         // Blog has its own hero in page-blog.php / single-blog.php
     } else { ?>
         <div id="topBanner" class="<?php if (get_post_type() == 'post') { ?>topBannerOffer<?php } ?><?php if (get_post_type() == 'post' && is_single()) { ?>Single<?php } ?>">

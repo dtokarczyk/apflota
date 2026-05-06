@@ -113,5 +113,11 @@ function wi_migrations_render_page(): void
         $class  = $run ? '' : ' style="color:#b32d2e"';
         echo '<tr><td>' . esc_html($name) . '</td><td' . $class . '>' . esc_html($label) . '</td></tr>';
     }
-    echo '</tbody></table></div>';
+    echo '</tbody></table>';
+
+    if (function_exists('wi_offer_render_generate_pages_section')) {
+        wi_offer_render_generate_pages_section();
+    }
+
+    echo '</div>';
 }

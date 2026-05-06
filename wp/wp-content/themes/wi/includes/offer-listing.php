@@ -3,18 +3,24 @@
 declare(strict_types=1);
 
 /**
- * Long-term rental offer listing: URL context (marka / model path segments) and helpers.
+ * Long-term rental offer listing: page-hierarchy context and helpers.
  *
- * Deployment (WordPress admin, after theme deploy):
- * - Create or set the listing page slug to "wynajem-dlugoterminowy" and assign template "Wynajem długoterminowy".
- * - Flush permalinks once (Settings > Permalinks > Save) if rewrite rules do not apply automatically.
+ * Pages use the "Wynajem długoterminowy" template in a parent/child hierarchy:
+ *  - Level 1: base listing page (slug: wynajem-dlugoterminowy)
+ *  - Level 2: brand pages  (children of base; slug = marka-auta term slug)
+ *  - Level 3: model pages  (children of brand; slug = model term slug)
+ *
+ * Deployment (WordPress admin):
+ *  - Create the base page with slug "wynajem-dlugoterminowy" and template "Wynajem długoterminowy".
+ *  - Use the page generator (Settings → Generuj strony ofertowe) to create brand/model pages.
+ *  - Flush permalinks once (Settings > Permalinks > Save).
  */
 
 if (! defined('ABSPATH')) {
     return;
 }
 
-/** Public page slug for the offer listing (must match the WordPress page slug). */
+/** Public page slug for the base offer listing (must match the WordPress page slug). */
 function wi_offer_page_slug(): string
 {
     return 'wynajem-dlugoterminowy';
@@ -40,42 +46,66 @@ function wi_offer_base_url(): string
 }
 
 // ---------------------------------------------------------------------------
-// 1. Fix post permalinks: /kalkulator/post-slug/ → /wynajem-dlugoterminowy/post-slug/
+// 1. Listing-page detection and auto-template assignment
 // ---------------------------------------------------------------------------
 
 /**
- * Rewrite permalink for posts in the legacy "kalkulator" category so that
- * get_permalink() returns /wynajem-dlugoterminowy/post-slug/ instead.
+ * Whether the current request is any page in the offer-listing hierarchy
+ * (base page, brand child, or model grandchild).
  */
-function wi_offer_rewrite_post_permalink(string $permalink, WP_Post $post): string
+function wi_offer_is_listing_page(): bool
 {
-    if ($post->post_type !== 'post') {
-        return $permalink;
+    if (! is_page()) {
+        return false;
     }
 
-    if (! has_category(wi_offer_legacy_category_slug(), $post)) {
-        return $permalink;
+    if (is_page_template('page-wynajem-dlugoterminowy.php')) {
+        return true;
     }
 
-    $legacy = '/' . wi_offer_legacy_category_slug() . '/';
-    $new    = '/' . wi_offer_page_slug() . '/';
-
-    $path = (string) (wp_parse_url($permalink, PHP_URL_PATH) ?? '');
-    if (!str_contains($path, $legacy)) {
-        return $permalink;
+    $current = get_queried_object();
+    if (! ($current instanceof WP_Post)) {
+        return false;
     }
 
-    return str_replace($legacy, $new, $permalink);
+    $base = get_page_by_path(wi_offer_page_slug());
+    if (! ($base instanceof WP_Post)) {
+        return false;
+    }
+
+    if ($current->ID === $base->ID) {
+        return true;
+    }
+
+    return in_array($base->ID, get_post_ancestors($current), true);
 }
 
-add_filter('post_link', 'wi_offer_rewrite_post_permalink', 10, 2);
+/**
+ * Force the listing template for any descendant of the base listing page,
+ * even if the template was not explicitly set in Page Attributes.
+ */
+function wi_offer_template_include(string $template): string
+{
+    if (! wi_offer_is_listing_page()) {
+        return $template;
+    }
+
+    $listing_template = get_template_directory() . '/page-wynajem-dlugoterminowy.php';
+    if (file_exists($listing_template)) {
+        return $listing_template;
+    }
+
+    return $template;
+}
+
+add_filter('template_include', 'wi_offer_template_include');
 
 // ---------------------------------------------------------------------------
-// 2. Resolve /wynajem-dlugoterminowy/post-slug/ to the actual post
+// 2. Page-hierarchy context: resolve brand & model from parent/child structure
 // ---------------------------------------------------------------------------
 
 /**
- * Resolve marka-auta / model terms from current main query vars.
+ * Resolve brand and model terms from the current page's position in the hierarchy.
  *
  * @return array{brand: ?WP_Term, model: ?WP_Term}
  */
@@ -83,17 +113,39 @@ function wi_offer_get_resolved_terms(): array
 {
     $brand = null;
     $model = null;
-    $marka_slug = (string) get_query_var('wi_calc_marka');
-    $model_slug = (string) get_query_var('wi_calc_model');
 
-    if ($marka_slug !== '') {
-        $t = get_term_by('slug', $marka_slug, 'marka-auta');
+    if (! is_page()) {
+        return ['brand' => $brand, 'model' => $model];
+    }
+
+    $current_page = get_queried_object();
+    if (! ($current_page instanceof WP_Post)) {
+        return ['brand' => $brand, 'model' => $model];
+    }
+
+    $ancestors = get_post_ancestors($current_page);
+
+    if ($ancestors === []) {
+        return ['brand' => $brand, 'model' => $model];
+    }
+
+    if (count($ancestors) === 1) {
+        // Level 2: current page is a brand page (child of base)
+        $t = get_term_by('slug', $current_page->post_name, 'marka-auta');
         if ($t instanceof WP_Term && ! is_wp_error($t)) {
             $brand = $t;
         }
-    }
-    if ($model_slug !== '' && $brand instanceof WP_Term) {
-        $t = get_term_by('slug', $model_slug, 'model');
+    } elseif (count($ancestors) >= 2) {
+        // Level 3+: parent is the brand page, current is the model page
+        $brand_page = get_post($current_page->post_parent);
+        if ($brand_page instanceof WP_Post) {
+            $t = get_term_by('slug', $brand_page->post_name, 'marka-auta');
+            if ($t instanceof WP_Term && ! is_wp_error($t)) {
+                $brand = $t;
+            }
+        }
+
+        $t = get_term_by('slug', $current_page->post_name, 'model');
         if ($t instanceof WP_Term && ! is_wp_error($t)) {
             $model = $t;
         }
@@ -156,10 +208,44 @@ function wi_offer_get_models_for_brand(WP_Term $brand): array
     return $terms;
 }
 
+// ---------------------------------------------------------------------------
+// 3. Fix post permalinks: /kalkulator/post-slug/ → /wynajem-dlugoterminowy/post-slug/
+// ---------------------------------------------------------------------------
+
+/**
+ * Rewrite permalink for posts in the legacy "kalkulator" category so that
+ * get_permalink() returns /wynajem-dlugoterminowy/post-slug/ instead.
+ */
+function wi_offer_rewrite_post_permalink(string $permalink, WP_Post $post): string
+{
+    if ($post->post_type !== 'post') {
+        return $permalink;
+    }
+
+    if (! has_category(wi_offer_legacy_category_slug(), $post)) {
+        return $permalink;
+    }
+
+    $legacy = '/' . wi_offer_legacy_category_slug() . '/';
+    $new    = '/' . wi_offer_page_slug() . '/';
+
+    $path = (string) (wp_parse_url($permalink, PHP_URL_PATH) ?? '');
+    if (!str_contains($path, $legacy)) {
+        return $permalink;
+    }
+
+    return str_replace($legacy, $new, $permalink);
+}
+
+add_filter('post_link', 'wi_offer_rewrite_post_permalink', 10, 2);
+
+// ---------------------------------------------------------------------------
+// 4. Resolve /wynajem-dlugoterminowy/post-slug/ to the actual post
+// ---------------------------------------------------------------------------
+
 /**
  * When WP parsed /{page-slug}/{something}/ as category+post:
  *  - if the post exists in the legacy "kalkulator" category → resolve it
- *  - if it's a marka-auta term → load the listing page with brand filter
  *
  * @param array<string, string> $query_vars
  * @return array<string, string>
@@ -179,7 +265,6 @@ function wi_offer_request_filter(array $query_vars): array
         return $query_vars;
     }
 
-    // Post in new category slug?
     $in_new = get_posts([
         'name'                   => $candidate,
         'post_type'              => 'post',
@@ -201,7 +286,6 @@ function wi_offer_request_filter(array $query_vars): array
         return $query_vars;
     }
 
-    // Post in legacy "kalkulator" category? → rewrite category so WP resolves it.
     $in_legacy = get_posts([
         'name'                   => $candidate,
         'post_type'              => 'post',
@@ -224,69 +308,14 @@ function wi_offer_request_filter(array $query_vars): array
         return $query_vars;
     }
 
-    // marka-auta term? → load listing page with brand filter.
-    $term = get_term_by('slug', $candidate, 'marka-auta');
-    if ($term instanceof WP_Term && ! is_wp_error($term)) {
-        return [
-            'pagename'      => $page_slug,
-            'wi_calc_marka' => $term->slug,
-        ];
-    }
-
     return $query_vars;
 }
 
 add_filter('request', 'wi_offer_request_filter');
 
 // ---------------------------------------------------------------------------
-// 3. template_redirect hooks
+// 5. template_redirect hooks
 // ---------------------------------------------------------------------------
-
-/**
- * Validate path taxonomies: unknown brand → 404; unknown model → redirect to brand URL.
- */
-function wi_offer_template_redirect_validate_terms(): void
-{
-    if (is_admin()) {
-        return;
-    }
-
-    $marka_raw = (string) get_query_var('wi_calc_marka');
-    $model_raw = (string) get_query_var('wi_calc_model');
-
-    if ($marka_raw === '' && $model_raw === '') {
-        return;
-    }
-
-    if (! is_page(wi_offer_page_slug())) {
-        return;
-    }
-
-    $resolved = wi_offer_get_resolved_terms();
-
-    if ($marka_raw !== '' && ! ($resolved['brand'] instanceof WP_Term)) {
-        global $wp_query;
-        $wp_query->set_404();
-        status_header(404);
-        nocache_headers();
-        include get_template_directory() . '/404.php';
-        exit;
-    }
-
-    if ($model_raw !== '' && ! ($resolved['model'] instanceof WP_Term)) {
-        $base = wi_offer_base_url();
-        $brand_slug = $resolved['brand'] instanceof WP_Term ? $resolved['brand']->slug : $marka_raw;
-        $target = trailingslashit($base . $brand_slug);
-        $qs = $_SERVER['QUERY_STRING'] ?? '';
-        if ($qs !== '') {
-            $target .= '?' . $qs;
-        }
-        wp_safe_redirect($target, 301);
-        exit;
-    }
-}
-
-add_action('template_redirect', 'wi_offer_template_redirect_validate_terms', 2);
 
 /**
  * Strip legacy ?mark= from offer URLs (301 to same path without it).
@@ -296,7 +325,7 @@ function wi_offer_redirect_strip_legacy_mark_get(): void
     if (is_admin() || ! isset($_GET['mark'])) {
         return;
     }
-    if (! is_page(wi_offer_page_slug())) {
+    if (! wi_offer_is_listing_page()) {
         return;
     }
 
@@ -308,31 +337,12 @@ function wi_offer_redirect_strip_legacy_mark_get(): void
 add_action('template_redirect', 'wi_offer_redirect_strip_legacy_mark_get', 1);
 
 // ---------------------------------------------------------------------------
-// 4. Rewrite rules
+// 6. Rewrite-rule cleanup (flush stale rules from previous dynamic routing)
 // ---------------------------------------------------------------------------
 
-/**
- * Register rewrite rules for the offer listing page and marka/model path segments.
- */
-function wi_offer_register_rewrite_rules(): void
-{
-    $slug = wi_offer_page_slug();
-    add_rewrite_rule('^' . $slug . '/?$', 'index.php?pagename=' . $slug, 'top');
-    add_rewrite_rule(
-        '^' . $slug . '/(?!page/)([^/]+)/([^/]+)/?$',
-        'index.php?pagename=' . $slug . '&wi_calc_marka=$matches[1]&wi_calc_model=$matches[2]',
-        'top'
-    );
-}
-
-add_action('init', 'wi_offer_register_rewrite_rules', 5);
-
-/**
- * Flush rewrite rules once after offer URL rules change.
- */
 function wi_offer_maybe_flush_rewrite_rules(): void
 {
-    $version = 2;
+    $version = 3;
     if ((int) get_option('wi_offer_rewrite_flushed') === $version) {
         return;
     }
@@ -344,7 +354,7 @@ function wi_offer_maybe_flush_rewrite_rules(): void
 add_action('init', 'wi_offer_maybe_flush_rewrite_rules', 99);
 
 // ---------------------------------------------------------------------------
-// 5. Legacy redirects
+// 7. Legacy redirects
 // ---------------------------------------------------------------------------
 
 /**
@@ -436,3 +446,145 @@ function wi_offer_block_canonical_to_legacy($redirect_url, string $requested_url
 }
 
 add_filter('redirect_canonical', 'wi_offer_block_canonical_to_legacy', 10, 2);
+
+// ---------------------------------------------------------------------------
+// 8. Page generator (admin UI)
+// ---------------------------------------------------------------------------
+
+/**
+ * Render the "Generate offer pages" section (embedded in the Migracje admin page).
+ */
+function wi_offer_render_generate_pages_section(): void
+{
+    if (! current_user_can('manage_options')) {
+        return;
+    }
+
+    $created = 0;
+    $skipped = 0;
+    $errors  = [];
+    $ran     = false;
+
+    if (isset($_POST['wi_offer_generate']) && check_admin_referer('wi_offer_generate_pages')) {
+        $ran = true;
+        $base_page = get_page_by_path(wi_offer_page_slug());
+        if (! ($base_page instanceof WP_Post)) {
+            $errors[] = sprintf(
+                'Base page with slug "%s" not found. Create it first.',
+                wi_offer_page_slug()
+            );
+        } else {
+            $brands = get_terms([
+                'taxonomy'   => 'marka-auta',
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+            ]);
+            if (! is_array($brands) || is_wp_error($brands)) {
+                $brands = [];
+            }
+
+            foreach ($brands as $brand) {
+                $brand_result = wi_offer_ensure_page(
+                    $brand->name,
+                    $brand->slug,
+                    $base_page->ID
+                );
+                if ($brand_result === true) {
+                    $created++;
+                } else {
+                    $skipped++;
+                }
+
+                $brand_page = get_page_by_path(
+                    wi_offer_page_slug() . '/' . $brand->slug
+                );
+                if (! ($brand_page instanceof WP_Post)) {
+                    continue;
+                }
+
+                $models = wi_offer_get_models_for_brand($brand);
+                foreach ($models as $model_term) {
+                    $model_result = wi_offer_ensure_page(
+                        $model_term->name,
+                        $model_term->slug,
+                        $brand_page->ID
+                    );
+                    if ($model_result === true) {
+                        $created++;
+                    } else {
+                        $skipped++;
+                    }
+                }
+            }
+        }
+    }
+
+    echo '<hr style="margin:32px 0 16px">';
+    echo '<h2>' . esc_html__('Generuj strony ofertowe', 'wi') . '</h2>';
+
+    if ($ran && $errors === []) {
+        echo '<div class="notice notice-success inline"><p>';
+        echo sprintf(
+            esc_html__('Done. Created: %d, skipped (already exist): %d.', 'wi'),
+            $created,
+            $skipped
+        );
+        echo '</p></div>';
+    }
+
+    foreach ($errors as $err) {
+        echo '<div class="notice notice-error inline"><p>' . esc_html($err) . '</p></div>';
+    }
+
+    echo '<p>' . esc_html__(
+        'Generates pages for all marka-auta and model terms in the listing hierarchy. Existing pages are skipped.',
+        'wi'
+    ) . '</p>';
+    echo '<form method="post">';
+    wp_nonce_field('wi_offer_generate_pages');
+    echo '<input type="hidden" name="wi_offer_generate" value="1">';
+    submit_button(__('Generuj strony', 'wi'));
+    echo '</form>';
+}
+
+/**
+ * Create a page with the given title/slug under a parent, if it doesn't exist yet.
+ *
+ * @return bool True if created, false if already exists.
+ */
+function wi_offer_ensure_page(string $title, string $slug, int $parent_id): bool
+{
+    $existing = get_posts([
+        'post_type'   => 'page',
+        'post_parent' => $parent_id,
+        'name'        => $slug,
+        'post_status' => ['publish', 'draft', 'private', 'trash', 'pending'],
+        'numberposts' => 1,
+        'fields'      => 'ids',
+    ]);
+
+    if ($existing !== []) {
+        $existing_id = (int) $existing[0];
+        if (get_post_meta($existing_id, '_wp_page_template', true) !== 'page-wynajem-dlugoterminowy.php') {
+            update_post_meta($existing_id, '_wp_page_template', 'page-wynajem-dlugoterminowy.php');
+        }
+        return false;
+    }
+
+    $page_id = wp_insert_post([
+        'post_title'  => $title,
+        'post_name'   => $slug,
+        'post_parent' => $parent_id,
+        'post_type'   => 'page',
+        'post_status' => 'publish',
+    ], true);
+
+    if (is_wp_error($page_id)) {
+        return false;
+    }
+
+    update_post_meta($page_id, '_wp_page_template', 'page-wynajem-dlugoterminowy.php');
+
+    return true;
+}

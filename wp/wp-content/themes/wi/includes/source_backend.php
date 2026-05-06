@@ -669,8 +669,6 @@ add_filter('query_vars', 'add_router_slug');
 function add_router_slug($query_vars)
 {
     $query_vars[] = 'wi_carapi';
-    $query_vars[] = 'wi_calc_marka';
-    $query_vars[] = 'wi_calc_model';
 
     return $query_vars;
 }

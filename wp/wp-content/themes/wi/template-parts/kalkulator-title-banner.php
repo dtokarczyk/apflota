@@ -1,22 +1,9 @@
 <?php
 
 /**
- * Stacked title for long-term rental listing (base → +marka → +model).
+ * Title banner for the offer listing pages.
+ * Uses the page title set in WordPress admin (editable per page, Yoast-friendly).
  */
-
-$wi_title_base = __('Wynajem długoterminowy', 'wi');
-$wi_title_brand = null;
-$wi_title_model = null;
-
-if (function_exists('wi_offer_get_resolved_terms')) {
-    $wi_ctx = wi_offer_get_resolved_terms();
-    if ($wi_ctx['brand'] instanceof WP_Term) {
-        $wi_title_brand = $wi_ctx['brand'];
-    }
-    if ($wi_ctx['model'] instanceof WP_Term) {
-        $wi_title_model = $wi_ctx['model'];
-    }
-}
 
 ?>
 
@@ -25,16 +12,7 @@ if (function_exists('wi_offer_get_resolved_terms')) {
         <div class="containerBig">
             <div class="topBannerContainer displayFlex flexWrap flexXstart flexYstretch">
                 <div class="topBannerTitle displayFlex flexXstart flexYcenter" style="width:100%;">
-                    <?php
-                    $wi_header_title = $wi_title_base;
-if ($wi_title_brand instanceof WP_Term) {
-    $wi_header_title .= ' ' . $wi_title_brand->name;
-}
-if ($wi_title_model instanceof WP_Term) {
-    $wi_header_title .= ' ' . $wi_title_model->name;
-}
-?>
-                    <h1 style="margin:0;"><?php echo esc_html($wi_header_title); ?></h1>
+                    <h1 style="margin:0;"><?php echo esc_html(get_the_title()); ?></h1>
                 </div>
             </div>
         </div>
