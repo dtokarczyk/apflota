@@ -143,7 +143,7 @@
 
 
     <?php if (is_front_page() || is_home() || get_field('topbanner_-_typ') == 1) {
-    } elseif (is_page('blog') || is_page_template('page-blog.php') || is_singular('blog') || is_tax('blog-category') || (function_exists('wi_offer_is_listing_page') && wi_offer_is_listing_page())) {
+    } elseif (is_page('blog') || is_page_template('page-blog.php') || is_singular('blog') || is_tax('blog-category')) {
         // Blog has its own hero in page-blog.php / single-blog.php
     } else { ?>
         <div id="topBanner" class="<?php if (get_post_type() == 'post') { ?>topBannerOffer<?php } ?><?php if (get_post_type() == 'post' && is_single()) { ?>Single<?php } ?>">
@@ -178,13 +178,10 @@
                             </div>
                         </div>
                         <?php if (get_post_type() == 'post') {
-                        } else { ?>
+                        } elseif (get_field('topbanner')) { ?>
                             <div class="topBannerImg displayFlex flexXstart flexYcenter">
-                                <?php $topbanner = get_template_directory_uri() . '/images/topBanner.jpg' ?>
-                                <?php if (get_field('topbanner') != "") { ?>
-                                    <?php $topbanner = get_field('topbanner');
-                                    $topbanner = $topbanner["sizes"]["topbanner-712x440"]; ?>
-                                <?php } ?>
+                                <?php $topbanner = get_field('topbanner');
+                            $topbanner = $topbanner["sizes"]["topbanner-712x440"]; ?>
                                 <img src="<?php echo $topbanner; ?>" class="img-full topBannerImg" alt="topbanner">
                             </div>
                         <?php } ?>
