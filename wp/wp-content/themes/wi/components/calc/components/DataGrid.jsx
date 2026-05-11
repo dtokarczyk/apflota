@@ -67,13 +67,7 @@ export default function DataGrid() {
           map[String(item.car_id)] = item.title || '';
         });
         setCarTitles(map);
-        const ids = [...items]
-          .sort((a, b) =>
-            String(a.title || '').localeCompare(String(b.title || ''), 'pl', {
-              sensitivity: 'base',
-            }),
-          )
-          .map((i) => i.car_id);
+        const ids = items.map((i) => i.car_id).sort((a, b) => Number(a) - Number(b));
         setCarIds(ids);
       })
       .catch(() => {

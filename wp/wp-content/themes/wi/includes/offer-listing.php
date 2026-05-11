@@ -205,7 +205,7 @@ function wi_offer_get_models_for_brand(WP_Term $brand): array
     }
 
     /** @var list<WP_Term> $terms */
-    return wp_list_sort($terms, 'name', 'ASC');
+    return $terms;
 }
 
 // ---------------------------------------------------------------------------

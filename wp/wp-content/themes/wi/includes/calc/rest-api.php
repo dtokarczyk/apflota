@@ -126,7 +126,7 @@ function wi_calc_rest_get_cars(WP_REST_Request $request): WP_REST_Response
     $posts = get_posts([
         'post_type'      => 'post',
         'posts_per_page' => -1,
-        'orderby'        => 'title',
+        'orderby'        => 'menu_order',
         'order'          => 'ASC',
         'meta_key'       => 'id',
         'meta_compare'   => 'EXISTS',
