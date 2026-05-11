@@ -152,11 +152,11 @@ $images = get_field('galeria'); ?>
                             <div class="buttonCalc buttonCalcActive displayFlex flexXcenter flexYcenter"><span class="val val20" value="20">----</span><span class="ins"><?php echo __("zł", "wi"); ?></span></div>
                         </div>
                         <div class="sectioOfferCalcTitle"><?php echo get_field('kalkulator_-_roczny_limit_kilometrow', wpmlID(2)); ?></div>
-                        <div class="sectioOfferCalcKilometers buttonCalcContainer displayFlex flexXcenter flexYcenter" tys="<?php echo __("tyś", "wi"); ?>">
-                            <div class="buttonCalc buttonCalcActive displayFlex flexXcenter flexYcenter"><span value="1">--</span><span class="ins"><?php echo __("tyś", "wi"); ?></span></div>
-                            <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="2">--</span><span class="ins"><?php echo __("tyś", "wi"); ?></span></div>
-                            <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="3">--</span><span class="ins"><?php echo __("tyś", "wi"); ?></span></div>
-                            <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="4">--</span><span class="ins"><?php echo __("tyś", "wi"); ?></span></div>
+                        <div class="sectioOfferCalcKilometers buttonCalcContainer displayFlex flexXcenter flexYcenter" tys="<?php echo __("tys.", "wi"); ?>">
+                            <div class="buttonCalc buttonCalcActive displayFlex flexXcenter flexYcenter"><span value="1">--</span><span class="ins"><?php echo __("tys.", "wi"); ?></span></div>
+                            <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="2">--</span><span class="ins"><?php echo __("tys.", "wi"); ?></span></div>
+                            <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="3">--</span><span class="ins"><?php echo __("tys.", "wi"); ?></span></div>
+                            <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="4">--</span><span class="ins"><?php echo __("tys.", "wi"); ?></span></div>
                         </div>
                         <div class="sectioOfferCalcButton">
                             <a class="button displayFlex flexXcenter flexYcenter" href="<?php echo get_permalink(wpmlID(168)); ?>"><?php echo get_field('kalkulator_-_zapytaj_o_szczegoly', wpmlID(2)); ?></a>
