@@ -2324,6 +2324,29 @@ footer {
                     }
                 }
             }
+            .offerPriceWrapper {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 0 6px;
+            }
+            .offerPriceOriginal {
+                color: $colorGray;
+                font-size: 16px;
+                font-weight: 500;
+                text-decoration: line-through;
+                line-height: 1.3;
+            }
+            .offerPriceCurrent {
+                color: $colorRedLight;
+            }
+            .offerPriceLowest30 {
+                font-size: 12px;
+                font-weight: 400;
+                color: $colorGray;
+                line-height: 1.4;
+            }
             &:hover {
                 .sectionOfferItemsImg {
                     > img {
@@ -2687,6 +2710,7 @@ footer {
             z-index: 2;
             opacity: 0;
             max-height: 0;
+            overflow: scroll;
             padding: 20px 32px;
             background: white;
             pointer-events: none;
@@ -2781,7 +2805,7 @@ footer {
             }
             .checkboxList {
                 opacity: 1;
-                max-height: 1000px;
+                max-height: 400px;
                 pointer-events: auto;
                 @include transitionDuration(0.3s,all);
             }
@@ -2803,6 +2827,7 @@ footer {
                 z-index: 2;
                 opacity: 0;
                 max-height: 0;
+                overflow: scroll;
                 padding: 2px 0;
                 pointer-events: none;
                 @include position(absolute,48.5px,8px,auto,8px);
@@ -2934,7 +2959,7 @@ footer {
             &.checkboxBoxShow {
                 .checkboxList {
                     opacity: 1;
-                    max-height: 1000px;
+                    max-height: 400px;
                     pointer-events: auto;
                     @include transitionDuration(0.3s,all);
                 }
@@ -4711,6 +4736,21 @@ footer {
 
 // sectioOfferCalc
 .sectioOfferCalc {
+    .sectioOfferCalcOriginalPrice {
+        color: $colorGray;
+        font-size: 18px;
+        font-weight: 500;
+        text-decoration: line-through;
+        line-height: 1.3;
+        margin-bottom: 4px;
+    }
+    .sectioOfferCalcLowest30 {
+        font-size: 12px;
+        color: $colorGray;
+        line-height: 1.4;
+        margin-top: 4px;
+        margin-bottom: 2rem;
+    }
     .sectioOfferCalcPrice {
         color: black;
         font-weight: 700;

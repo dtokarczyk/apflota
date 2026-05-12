@@ -12,6 +12,8 @@ const COLUMN_IDS = {
   percent: 'percent',
   fee: 'fee',
   rate: 'rate',
+  discount_rate: 'discount_rate',
+  lowest_price_30_days: 'lowest_price_30_days',
 };
 
 const COLUMNS = [
@@ -23,6 +25,8 @@ const COLUMNS = [
   { columnId: COLUMN_IDS.percent, width: 80 },
   { columnId: COLUMN_IDS.fee, width: 110 },
   { columnId: COLUMN_IDS.rate, width: 100 },
+  { columnId: COLUMN_IDS.discount_rate, width: 130 },
+  { columnId: COLUMN_IDS.lowest_price_30_days, width: 180 },
 ];
 
 function rateToRow(rate) {
@@ -37,6 +41,8 @@ function rateToRow(rate) {
       { type: 'number', value: rate.percent },
       { type: 'number', value: rate.fee },
       { type: 'number', value: rate.rate },
+      { type: 'number', value: rate.discount_rate ?? null },
+      { type: 'number', value: rate.lowest_price_30_days ?? null },
     ],
   };
 }

@@ -191,8 +191,20 @@ if ($wi_offer_ctx['model'] instanceof WP_Term) {
                         <span class="sectionOfferItemDesc2">
                             <span class="sectionOfferItemDescTitle"><?php echo esc_html(get_the_title()); ?></span>
                             <?php echo esc_html((string) get_field('silnik')); ?>
-                            <span class="sectionOfferItemDescTitle"><?php echo __("od", "wi"); ?> <?php echo esc_html((string) get_field('cena_od')); ?> <?php echo __("zł", "wi"); ?></span>
-                            <?php echo __("za miesiąc", "wi"); ?>
+                            <?php
+                                $_sl_pricing   = wi_calc_get_min_rate_pricing((string) get_field('id'));
+            $_sl_disc      = $_sl_pricing['discount_rate'];
+            $_sl_old_price = $_sl_disc ? (int) get_field('cena_od') : null;
+            ?>
+                            <span class="offerPriceWrapper">
+                                <?php if ($_sl_old_price): ?>
+                                    <span class="offerPriceOriginal"><?php echo esc_html((string) $_sl_old_price); ?> <?php echo __("zł", "wi"); ?></span>
+                                <?php endif; ?>
+                                <span class="sectionOfferItemDescTitle<?php echo $_sl_old_price ? ' offerPriceCurrent' : ''; ?>">
+                                    <?php echo __("od", "wi"); ?> <?php echo esc_html((string) ($_sl_disc ?? get_field('cena_od'))); ?> <?php echo __("zł", "wi"); ?>
+                                </span>
+                                <?php echo __("za miesiąc", "wi"); ?>
+                            </span>
                         </span>
                     </span>
                 </span>

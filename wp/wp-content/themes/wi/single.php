@@ -138,7 +138,9 @@ $images = get_field('galeria'); ?>
                 <?php if (get_field('csv', wpmlID(2)) != "") { ?>
                     <div class="sectioOfferCalc" carid="<?php echo get_field('id'); ?>">
                         <div class="sectioOfferCalcTitle"><?php echo get_field('kalkulator_-_twoja_rata_miesieczna', wpmlID(2)); ?></div>
+                        <div class="sectioOfferCalcOriginalPrice" style="display:none"><span></span> <?php echo __("zł", "wi"); ?></div>
                         <div class="sectioOfferCalcPrice"><span>----</span><?php echo __("zł", "wi"); ?></div>
+                        <div class="sectioOfferCalcLowest30" style="display:none"><?php echo __("Najniższa cena z 30 dni:", "wi"); ?> <span></span> <?php echo __("zł", "wi"); ?></div>
                         <div class="sectioOfferCalcTitle"><?php echo get_field('kalkulator_-_okres_finasowania_w_miesiacach', wpmlID(2)); ?></div>
                         <div class="sectioOfferCalcMonths buttonCalcContainer displayFlex flexXcenter flexYcenter">
                             <div class="buttonCalc buttonCalcActive displayFlex flexXcenter flexYcenter"><span class="val" value="1">--</span></div>
@@ -223,8 +225,20 @@ $images = get_field('galeria'); ?>
                                 <span class="sectionOfferItemDesc2">
                                     <span class="sectionOfferItemDescTitle"><?php echo get_the_title(); ?></span>
                                     <?php echo get_field('silnik'); ?>
-                                    <span class="sectionOfferItemDescTitle"><?php echo __("od", "wi"); ?> <?php echo get_field('cena_od'); ?> <?php echo __("zł", "wi"); ?></span>
-                                    <?php echo __("za miesiąc", "wi"); ?>
+                                    <?php
+                                        $_r_pricing   = wi_calc_get_min_rate_pricing((string) get_field('id'));
+                    $_r_disc      = $_r_pricing['discount_rate'];
+                    $_r_old_price = $_r_disc ? (int) get_field('cena_od') : null;
+                    ?>
+                                    <span class="offerPriceWrapper">
+                                        <?php if ($_r_old_price): ?>
+                                            <span class="offerPriceOriginal"><?php echo esc_html((string) $_r_old_price); ?> <?php echo __("zł", "wi"); ?></span>
+                                        <?php endif; ?>
+                                        <span class="sectionOfferItemDescTitle<?php echo $_r_old_price ? ' offerPriceCurrent' : ''; ?>">
+                                            <?php echo __("od", "wi"); ?> <?php echo esc_html((string) ($_r_disc ?? get_field('cena_od'))); ?> <?php echo __("zł", "wi"); ?>
+                                        </span>
+                                        <?php echo __("za miesiąc", "wi"); ?>
+                                    </span>
                                 </span>
                             </span>
                         </span>
@@ -270,8 +284,20 @@ $images = get_field('galeria'); ?>
                                 <span class="sectionOfferItemDesc2">
                                     <span class="sectionOfferItemDescTitle"><?php echo get_the_title(); ?></span>
                                     <?php echo get_field('silnik'); ?>
-                                    <span class="sectionOfferItemDescTitle"><?php echo __("od", "wi"); ?> <?php echo get_field('cena_od'); ?> <?php echo __("zł", "wi"); ?></span>
-                                    <?php echo __("za miesiąc", "wi"); ?>
+                                    <?php
+                                        $_r2_pricing   = wi_calc_get_min_rate_pricing((string) get_field('id'));
+                    $_r2_disc      = $_r2_pricing['discount_rate'];
+                    $_r2_old_price = $_r2_disc ? (int) get_field('cena_od') : null;
+                    ?>
+                                    <span class="offerPriceWrapper">
+                                        <?php if ($_r2_old_price): ?>
+                                            <span class="offerPriceOriginal"><?php echo esc_html((string) $_r2_old_price); ?> <?php echo __("zł", "wi"); ?></span>
+                                        <?php endif; ?>
+                                        <span class="sectionOfferItemDescTitle<?php echo $_r2_old_price ? ' offerPriceCurrent' : ''; ?>">
+                                            <?php echo __("od", "wi"); ?> <?php echo esc_html((string) ($_r2_disc ?? get_field('cena_od'))); ?> <?php echo __("zł", "wi"); ?>
+                                        </span>
+                                        <?php echo __("za miesiąc", "wi"); ?>
+                                    </span>
                                 </span>
                             </span>
                         </span>

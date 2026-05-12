@@ -21,14 +21,18 @@ class CalcRate extends Model
         'percent',
         'fee',
         'rate',
+        'discount_rate',
+        'lowest_price_30_days',
     ];
 
     /** @var array<string, string> */
     protected $casts = [
-        'month'   => 'integer',
-        'km'      => 'integer',
-        'percent' => 'integer',
-        'fee'     => 'integer',
-        'rate'    => 'integer',
+        'month'                 => 'integer',
+        'km'                    => 'integer',
+        'percent'               => 'integer',
+        'fee'                   => 'integer',
+        'rate'                  => 'integer',
+        'discount_rate'         => 'integer',
+        'lowest_price_30_days'  => 'integer',
     ];
 }

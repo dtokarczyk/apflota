@@ -1131,6 +1131,21 @@ $(window).on('load', function() {
             calcPriceAnimFrame = requestAnimationFrame(tick);
         }
 
+        function updateDiscountDisplay(rate, discountRate, lowest30) {
+            if (discountRate) {
+                $(".sectioOfferCalcOriginalPrice span").text(formatPrice(rate));
+                $(".sectioOfferCalcOriginalPrice").show();
+            } else {
+                $(".sectioOfferCalcOriginalPrice").hide();
+            }
+            if (lowest30) {
+                $(".sectioOfferCalcLowest30 span").text(formatPrice(lowest30));
+                $(".sectioOfferCalcLowest30").show();
+            } else {
+                $(".sectioOfferCalcLowest30").hide();
+            }
+        }
+
         $.getJSON($("body").attr("path") + "/carapi?all=1&id=" + $(".sectioOfferCalc").attr("carid"), function (data) {
             lowpriceData = data.lowprice || {};
             priceData = data.price || {};
@@ -1141,24 +1156,29 @@ $(window).on('load', function() {
             animateCalcPrice(data.lowpriceall);
             var low_price_val = data.lowpriceall != null ? String(data.lowpriceall) : $(".sectioOfferCalcPrice span").text();
             lastCalcPriceTarget = data.lowpriceall;
+            var initMeta = data.lowpriceallmeta || {};
+            updateDiscountDisplay(initMeta.rate, initMeta.discount_rate, initMeta.lowest_price_30_days);
             mon_km_per(low_price_val);
         });
-        
+
         // najnizsza rata dla miesiecy
         function low_price(mon) {
             $.each(lowpriceData, function (key_top, val_top) {
                 if(mon == key_top) {
                     animateCalcPrice(val_top.price);
+                    updateDiscountDisplay(val_top.rate, val_top.discount_rate, val_top.lowest_price_30_days);
                 }
             });
-        } 
+        }
         // najnizsza rata dla wybranych wartosci
         function low_price_checked() {
             var monValue = $(".sectioOfferCalcMonths .buttonCalcActive .val").attr("value");
             var kilValue = $(".sectioOfferCalcKilometers .buttonCalcActive .val").attr("value");
             var perValue = $(".sectioOfferCalcPercent .buttonCalcActive .val").attr("value");
-            animateCalcPrice(rateData[monValue][kilValue.toString() + "000"][perValue].rate);
-        } 
+            var entry = rateData[monValue][kilValue.toString() + "000"][perValue];
+            animateCalcPrice(entry.effective_rate);
+            updateDiscountDisplay(entry.rate, entry.discount_rate, entry.lowest_price_30_days);
+        }
         // mesiace, km, procent dla danej kwoty _ zaznaczenie
         function mon_km_per(price) {
             var monValue = $(".sectioOfferCalcMonths .buttonCalcActive .val").attr("value");

@@ -712,22 +712,31 @@ function wi_calc_build_api_structures_from_db(string $carID): ?array
         ];
     }
 
-    $feeArray      = [];
-    $rateArray     = [];
-    $priceArray    = [];
-    $priceArrayLow = [];
+    $feeArray         = [];
+    $rateArray        = [];
+    $priceArray       = [];
+    $priceArrayLow    = [];
     $priceArrayLowAll = null;
-    $months        = [];
+    $priceArrayLowAllMeta = null;
+    $months           = [];
 
     foreach ($rates as $r) {
-        $month   = (int) $r->month;
-        $km      = (int) $r->km;
-        $percent = (int) $r->percent;
-        $rate    = (int) $r->rate;
+        $month        = (int) $r->month;
+        $km           = (int) $r->km;
+        $percent      = (int) $r->percent;
+        $rate         = (int) $r->rate;
+        $discRate      = $r->discount_rate ? (int) $r->discount_rate : null;
+        $effectiveRate = $discRate ?? $rate;
+        $lowest30      = $r->lowest_price_30_days ? (int) $r->lowest_price_30_days : null;
         $months[$month] = true;
         $feeArray[$month][$km][$percent] = ['fee' => (int) $r->fee];
-        $rateArray[$month][$km][$percent] = ['rate' => $rate];
-        $key = $rate . 'mon' . $month;
+        $rateArray[$month][$km][$percent] = [
+            'rate'                 => $rate,
+            'discount_rate'        => $discRate,
+            'effective_rate'       => $effectiveRate,
+            'lowest_price_30_days' => $lowest30,
+        ];
+        $key = $effectiveRate . 'mon' . $month;
         $priceArray[$key] = [
             'idv'     => $r->idv,
             'month'   => $month,
@@ -735,11 +744,21 @@ function wi_calc_build_api_structures_from_db(string $carID): ?array
             'percent' => $percent,
             'fee'     => (int) $r->fee,
         ];
-        if (! isset($priceArrayLow[$month]['price']) || $priceArrayLow[$month]['price'] > $rate) {
-            $priceArrayLow[$month] = ['price' => $rate];
+        if (! isset($priceArrayLow[$month]['price']) || $priceArrayLow[$month]['price'] > $effectiveRate) {
+            $priceArrayLow[$month] = [
+                'price'                => $effectiveRate,
+                'rate'                 => $rate,
+                'discount_rate'        => $discRate,
+                'lowest_price_30_days' => $lowest30,
+            ];
         }
-        if ($priceArrayLowAll === null || $priceArrayLowAll > $rate) {
-            $priceArrayLowAll = $rate;
+        if ($priceArrayLowAll === null || $priceArrayLowAll > $effectiveRate) {
+            $priceArrayLowAll = $effectiveRate;
+            $priceArrayLowAllMeta = [
+                'rate'                 => $rate,
+                'discount_rate'        => $discRate,
+                'lowest_price_30_days' => $lowest30,
+            ];
         }
     }
 
@@ -758,12 +777,25 @@ function wi_calc_build_api_structures_from_db(string $carID): ?array
     }
 
     return [
-        'lowprice'    => $priceArrayLow,
-        'lowpriceall' => $priceArrayLowAll,
-        'price'       => $priceArray,
-        'monthkm'     => $monthArrayKM,
-        'fee'         => $feeArray,
-        'rate'        => $rateArray,
+        'lowprice'        => $priceArrayLow,
+        'lowpriceall'     => $priceArrayLowAll,
+        'lowpriceallmeta' => $priceArrayLowAllMeta ?? ['rate' => null, 'discount_rate' => null, 'lowest_price_30_days' => null],
+        'price'           => $priceArray,
+        'monthkm'         => $monthArrayKM,
+        'fee'             => $feeArray,
+        'rate'            => $rateArray,
+    ];
+}
+
+function wi_calc_get_min_rate_pricing(string $car_id): array
+{
+    if (! class_exists('CalcRate') || empty($car_id)) {
+        return ['discount_rate' => null, 'lowest_price_30_days' => null];
+    }
+    $rate = CalcRate::where('car_id', $car_id)->orderBy('rate', 'asc')->first();
+    return [
+        'discount_rate'        => $rate?->discount_rate,
+        'lowest_price_30_days' => $rate?->lowest_price_30_days,
     ];
 }
 

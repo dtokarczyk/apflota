@@ -59,14 +59,16 @@ function wi_calc_register_rest_routes(): void
         'callback'            => 'wi_calc_rest_update_rate',
         'permission_callback' => $check,
         'args'                => [
-            'id'      => ['type' => 'integer', 'required' => true],
-            'car_id'  => ['type' => 'string', 'required' => false],
-            'idv'     => ['type' => 'string', 'required' => false],
-            'month'   => ['type' => 'integer', 'required' => false],
-            'km'      => ['type' => 'integer', 'required' => false],
-            'percent' => ['type' => 'integer', 'required' => false],
-            'fee'     => ['type' => 'integer', 'required' => false],
-            'rate'    => ['type' => 'integer', 'required' => false],
+            'id'                    => ['type' => 'integer', 'required' => true],
+            'car_id'                => ['type' => 'string', 'required' => false],
+            'idv'                   => ['type' => 'string', 'required' => false],
+            'month'                 => ['type' => 'integer', 'required' => false],
+            'km'                    => ['type' => 'integer', 'required' => false],
+            'percent'               => ['type' => 'integer', 'required' => false],
+            'fee'                   => ['type' => 'integer', 'required' => false],
+            'rate'                  => ['type' => 'integer', 'required' => false],
+            'discount_rate'         => ['type' => ['integer', 'null'], 'required' => false],
+            'lowest_price_30_days'  => ['type' => ['integer', 'null'], 'required' => false],
         ],
     ]);
 
@@ -189,10 +191,23 @@ function wi_calc_rest_update_rate(WP_REST_Request $request): WP_REST_Response
     if (! $rate) {
         return new WP_REST_Response(['message' => 'Not found'], 404);
     }
-    $params = ['car_id', 'idv', 'month', 'km', 'percent', 'fee', 'rate'];
-    foreach ($params as $key) {
+    $strParams = ['car_id', 'idv'];
+    $intParams  = ['month', 'km', 'percent', 'fee', 'rate'];
+    $nullableIntParams = ['discount_rate', 'lowest_price_30_days'];
+    foreach ($strParams as $key) {
         if ($request->get_param($key) !== null) {
-            $rate->$key = $key === 'car_id' || $key === 'idv' ? $request->get_param($key) : (int) $request->get_param($key);
+            $rate->$key = $request->get_param($key);
+        }
+    }
+    foreach ($intParams as $key) {
+        if ($request->get_param($key) !== null) {
+            $rate->$key = (int) $request->get_param($key);
+        }
+    }
+    foreach ($nullableIntParams as $key) {
+        if ($request->has_param($key)) {
+            $v = $request->get_param($key);
+            $rate->$key = ($v === null || $v === '') ? null : (int) $v;
         }
     }
     $rate->save();
