@@ -204,6 +204,11 @@ function wi_offer_get_models_for_brand(WP_Term $brand): array
         return [];
     }
 
+    usort(
+        $terms,
+        static fn(WP_Term $a, WP_Term $b): int => strcasecmp($a->name, $b->name)
+    );
+
     /** @var list<WP_Term> $terms */
     return $terms;
 }
