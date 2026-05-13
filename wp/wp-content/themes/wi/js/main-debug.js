@@ -1285,32 +1285,17 @@ $(window).on('load', function() {
         });
     }
     
-    // car specification - url to button
-    if($(".sectioOfferItem > div").hasClass("sectioOfferCalc")) {
-        function carSpecification() {
-            var carHref = $(".sectioOfferCalcButton a").attr('href').split('?');
-            /*
-            var carID = $(".sectioOfferCalc").attr('carid');
-            var carTitle = $(".topBannerTitle h1 p").text();
-            var carMonths = $(".sectioOfferCalcMonths .buttonCalcActive span").attr('value');
-            var carPercent = $(".sectioOfferCalcPercent .buttonCalcActive span").attr('value');
-            var carKilometers = $(".sectioOfferCalcKilometers .buttonCalcActive span").attr('value');
-            if(carMonths > 1 && carPercent > 1 && carKilometers > 1) {
-                $(".sectioOfferCalcButton a").attr('href',carHref[0] + "?" + encodeURI("car-specification=" + carTitle + " - " + carID + " id - " + carMonths + " mies - " + carPercent + " proc - " + carKilometers / (carMonths / 12) + " km"));
-            }
-            */
-            var carIDV = $(".sectioOfferCalc").attr('caridv');
-            if (typeof carIDV !== 'undefined') {
-                $(".sectioOfferCalcButton a").attr('href',carHref[0] + "?" + encodeURI("car-idv=" + carIDV));
-            } else {
-                $(".sectioOfferCalcButton a").attr('href',carHref[0]);
-            }
-            setTimeout(function() {
-                carSpecification();
-            }, 1000);
-        }
-        carSpecification();
-    }
+    // show inquiry form on calc button click
+    $(document).on('click', '.sectioOfferCalcAsk', function() {
+        var $item = $(this).closest('.sectioOfferItem');
+        $item.find('.sectioOfferCalc').hide();
+        $item.find('.sectioOfferInquiry').show();
+    });
+    $(document).on('click', '.sectioOfferInquiryBack', function() {
+        var $item = $(this).closest('.sectioOfferItem');
+        $item.find('.sectioOfferInquiry').hide();
+        $item.find('.sectioOfferCalc').show();
+    });
     // car specification add to form
     if($(".wpcf7-text").hasClass("carSpecification")) {
         setTimeout(function() {

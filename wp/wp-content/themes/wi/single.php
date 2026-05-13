@@ -161,8 +161,17 @@ $images = get_field('galeria'); ?>
                             <div class="buttonCalc displayFlex flexXcenter flexYcenter"><span class="val" value="4">--</span><span class="ins"><?php echo __("tys.", "wi"); ?></span></div>
                         </div>
                         <div class="sectioOfferCalcButton">
-                            <a class="button displayFlex flexXcenter flexYcenter" href="<?php echo get_permalink(wpmlID(168)); ?>"><?php echo get_field('kalkulator_-_zapytaj_o_szczegoly', wpmlID(2)); ?></a>
+                            <button type="button" class="button displayFlex flexXcenter flexYcenter sectioOfferCalcAsk"><?php echo get_field('kalkulator_-_zapytaj_o_szczegoly', wpmlID(2)); ?></button>
                         </div>
+                    </div>
+                    <div class="sectioOfferInquiry" style="display:none">
+                        <button type="button" class="sectioOfferInquiryBack"><?php echo __('← Wróć do kalkulatora', 'wi'); ?></button>
+                        <div class="sectioOfferInquiryTitle"><?php echo __('Zapytaj o ofertę', 'wi'); ?></div>
+                        <div class="sectioOfferInquiryFields">
+                            <input type="email" name="inquiry_email" placeholder="<?php echo __('Adres e-mail', 'wi'); ?>" class="sectioOfferInquiryInput" />
+                            <input type="tel" name="inquiry_phone" placeholder="<?php echo __('Numer telefonu', 'wi'); ?>" class="sectioOfferInquiryInput" />
+                        </div>
+                        <button type="button" class="button displayFlex flexXcenter flexYcenter sectioOfferInquirySubmit"><?php echo __('Zapytaj o ofertę', 'wi'); ?></button>
                     </div>
                 <?php } ?>
                 <?php if (get_field('w_pakiecie')) { ?>
